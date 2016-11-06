@@ -1,9 +1,19 @@
 package com.ls.ui.activity;
 
-import com.google.android.gms.analytics.GoogleAnalytics;
+import android.app.Activity;
+import android.content.Intent;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.Toolbar;
+import android.view.View;
+import android.widget.ListView;
 
+import com.google.android.gms.analytics.GoogleAnalytics;
 import com.ls.drupalcon.R;
-import com.ls.drupalcon.app.App;
 import com.ls.drupalcon.model.Model;
 import com.ls.drupalcon.model.UpdatesManager;
 import com.ls.drupalcon.model.data.Level;
@@ -19,18 +29,6 @@ import com.ls.ui.drawer.DrawerMenuItem;
 import com.ls.utils.AnalyticsManager;
 import com.ls.utils.KeyboardUtils;
 import com.ls.utils.ScheduleManager;
-
-import android.app.Activity;
-import android.content.Intent;
-import android.os.AsyncTask;
-import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.widget.Toolbar;
-import android.view.View;
-import android.widget.ListView;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -117,7 +115,7 @@ public class HomeActivity extends StateActivity implements FilterDialog.OnFilter
     }
 
     private void initToolbar() {
-        mPresentTitle = DrawerMenu.MENU_STRING_ARRAY[0];
+        mPresentTitle = getString(DrawerMenu.MENU_STRING_RES_ARRAY[0]);
         mToolbar = (Toolbar) findViewById(R.id.toolBar);
         mToolbar.setTitle(mPresentTitle);
         setSupportActionBar(mToolbar);
@@ -168,7 +166,7 @@ public class HomeActivity extends StateActivity implements FilterDialog.OnFilter
 
         ListView listView = (ListView) findViewById(R.id.leftDrawer);
         listView.addHeaderView(
-                getLayoutInflater().inflate(R.layout.nav_drawer_header, null),
+                getLayoutInflater().inflate(R.layout.nav_drawer_header, listView, false),
                 null,
                 false);
         listView.setAdapter(mAdapter);
@@ -250,40 +248,32 @@ public class HomeActivity extends StateActivity implements FilterDialog.OnFilter
 
     private void changeFragment() {
         mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+        DrawerMenuItem item = mAdapter.getItem(mSelectedItem);
+        if (!item.isGroup() && mFrManager != null) {
+            mFrManager.setFragment(DrawerMenu.DrawerItem.values()[mSelectedItem]);
+            mPresentTitle = getString(DrawerMenu.MENU_STRING_RES_ARRAY[mSelectedItem]);
+            mToolbar.setTitle(mPresentTitle);
 
-//        if (mSelectedItem == DrawerMenu.DrawerItem.About.ordinal()) {
-//            AboutActivity.startThisActivity(this);
-//            mSelectedItem = mLastSelectedItem;
-//
-//        } else
-        {
-            DrawerMenuItem item = mAdapter.getItem(mSelectedItem);
-            if (!item.isGroup() && mFrManager != null) {
-                mFrManager.setFragment(DrawerMenu.DrawerItem.values()[mSelectedItem]);
-                mPresentTitle = DrawerMenu.MENU_STRING_ARRAY[mSelectedItem];
-                mToolbar.setTitle(mPresentTitle);
+            mAdapter.setSelectedPos(mSelectedItem);
+            mAdapter.notifyDataSetChanged();
 
-                mAdapter.setSelectedPos(mSelectedItem);
-                mAdapter.notifyDataSetChanged();
-
-                AnalyticsManager.sendEvent(this, mPresentTitle + " screen", R.string.action_open);
-            }
+            AnalyticsManager.sendEvent(this, mPresentTitle + " screen", R.string.action_open);
         }
         mLastSelectedItem = mSelectedItem;
     }
 
     private void initFragmentManager() {
         mFrManager = DrawerManager.getInstance(getSupportFragmentManager(), R.id.mainFragment);
-        AnalyticsManager.sendEvent(this, App.getContext().getString(R.string.Sessions) + " screen", R.string.action_open);
-        mFrManager.setFragment(DrawerMenu.DrawerItem.Program);
+        AnalyticsManager.sendEvent(this, getString(R.string.Sessions) + " screen", R.string.action_open);
+        mFrManager.setFragment(DrawerMenu.DrawerItem.PROGRAM);
     }
 
-    private static List<DrawerMenuItem> getNavigationDrawerItems() {
+    private List<DrawerMenuItem> getNavigationDrawerItems() {
         List<DrawerMenuItem> result = new ArrayList<DrawerMenuItem>();
 
-        for (int i = 0; i < DrawerMenu.MENU_STRING_ARRAY.length; i++) {
+        for (int i = 0; i < DrawerMenu.MENU_STRING_RES_ARRAY.length; i++) {
             DrawerMenuItem menuItem = new DrawerMenuItem();
-            String name = DrawerMenu.MENU_STRING_ARRAY[i];
+            String name = getString(DrawerMenu.MENU_STRING_RES_ARRAY[i]);
 
             menuItem.setId(i);
             menuItem.setName(name);
@@ -297,7 +287,7 @@ public class HomeActivity extends StateActivity implements FilterDialog.OnFilter
         return result;
     }
 
-     private void showIrrelevantTimezoneDialogIfNeeded() {
+    private void showIrrelevantTimezoneDialogIfNeeded() {
         if (!IrrelevantTimezoneDialogFragment.isCurrentTimezoneRelevant()
                 && IrrelevantTimezoneDialogFragment.canPresentMessage(this)
                 && !isFinishing()) {

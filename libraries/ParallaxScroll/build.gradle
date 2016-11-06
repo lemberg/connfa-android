@@ -1,8 +1,8 @@
-apply plugin: 'android-library'
+apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 19
-    buildToolsVersion "20.0.0"
+    compileSdkVersion 25
+    buildToolsVersion "25.0.0"
 
     sourceSets {
         main {
@@ -22,5 +22,10 @@ android {
                 srcDir 'src'
             }
         }
+    }
+
+    lintOptions {
+        lintConfig file("$rootProject.projectDir/config/lint.xml")
+        abortOnError false
     }
 }

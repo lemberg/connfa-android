@@ -1,31 +1,10 @@
 package com.ls.ui.activity;
 
-import com.ls.drupalcon.R;
-import com.ls.drupalcon.model.Model;
-import com.ls.drupalcon.model.PreferencesManager;
-import com.ls.drupalcon.model.UpdatesManager;
-import com.ls.drupalcon.model.data.EventDetailsEvent;
-import com.ls.drupalcon.model.data.Level;
-import com.ls.drupalcon.model.data.Speaker;
-import com.ls.drupalcon.model.managers.EventManager;
-import com.ls.drupalcon.model.managers.FavoriteManager;
-import com.ls.drupalcon.model.managers.SpeakerManager;
-import com.ls.ui.receiver.ReceiverManager;
-import com.ls.ui.view.CircleImageView;
-import com.ls.ui.view.NotifyingScrollView;
-import com.ls.utils.AnalyticsManager;
-import com.ls.utils.DateUtils;
-import com.ls.utils.ScheduleManager;
-import com.ls.utils.WebviewUtils;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.PersistableBundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.ShareCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
@@ -44,9 +23,25 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.ls.drupalcon.R;
+import com.ls.drupalcon.model.Model;
+import com.ls.drupalcon.model.PreferencesManager;
+import com.ls.drupalcon.model.UpdatesManager;
+import com.ls.drupalcon.model.data.EventDetailsEvent;
+import com.ls.drupalcon.model.data.Level;
+import com.ls.drupalcon.model.data.Speaker;
+import com.ls.drupalcon.model.managers.EventManager;
+import com.ls.drupalcon.model.managers.FavoriteManager;
+import com.ls.drupalcon.model.managers.SpeakerManager;
+import com.ls.ui.receiver.ReceiverManager;
+import com.ls.ui.view.CircleImageView;
+import com.ls.ui.view.NotifyingScrollView;
+import com.ls.utils.AnalyticsManager;
+import com.ls.utils.DateUtils;
+import com.ls.utils.ScheduleManager;
+import com.ls.utils.WebviewUtils;
+
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 public class EventDetailsActivity extends StackKeeperActivity {
@@ -169,7 +164,9 @@ public class EventDetailsActivity extends StackKeeperActivity {
     }
 
     private void loadEvent() {
-        if (mEventId == -1) return;
+        if (mEventId == -1) {
+            return;
+        }
 
         new AsyncTask<Void, Void, EventDetailsEvent>() {
             @Override
@@ -197,7 +194,7 @@ public class EventDetailsActivity extends StackKeeperActivity {
         fillDate(mEvent);
         fillPreDescription(mEvent);
         fillFavoriteState(mEvent);
-        fillSpeakers(mEvent);
+        fillSpeakers();
         fillDescription(mEvent);
         updatePlaceholderVisibility(mEvent);
     }
@@ -288,7 +285,7 @@ public class EventDetailsActivity extends StackKeeperActivity {
         if (TextUtils.isEmpty(event.getTrack()) &&
                 TextUtils.isEmpty(event.getLevel()) &&
                 TextUtils.isEmpty(event.getDescription()) &&
-                mSpeakerList.isEmpty()){
+                mSpeakerList.isEmpty()) {
             findViewById(R.id.imgEmptyView).setVisibility(View.VISIBLE);
         } else {
             findViewById(R.id.imgEmptyView).setVisibility(View.GONE);
@@ -302,11 +299,9 @@ public class EventDetailsActivity extends StackKeeperActivity {
         checkBoxFavorite.setChecked(mIsFavorite);
 
         RelativeLayout layoutFavorite = (RelativeLayout) findViewById(R.id.layoutFavorite);
-        layoutFavorite.setOnClickListener(new View.OnClickListener()
-        {
+        layoutFavorite.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
+            public void onClick(View v) {
                 checkBoxFavorite.setChecked(!checkBoxFavorite.isChecked());
                 mIsFavorite = checkBoxFavorite.isChecked();
                 setFavorite();
@@ -314,7 +309,7 @@ public class EventDetailsActivity extends StackKeeperActivity {
         });
     }
 
-    private void fillSpeakers(@NonNull EventDetailsEvent event) {
+    private void fillSpeakers() {
         List<Speaker> speakerList = new ArrayList<>();
         speakerList.addAll(mSpeakerList);
 
@@ -324,7 +319,7 @@ public class EventDetailsActivity extends StackKeeperActivity {
 
         if (!speakerList.isEmpty()) {
             for (Speaker speaker : speakerList) {
-                View speakerView = inflater.inflate(R.layout.item_speaker_no_letter, null);
+                View speakerView = inflater.inflate(R.layout.item_speaker_no_letter, holderSpeakers, false);
                 fillSpeakerView(speaker, speakerView);
                 holderSpeakers.addView(speakerView);
             }
@@ -361,10 +356,10 @@ public class EventDetailsActivity extends StackKeeperActivity {
     }
 
     private void setFavorite() {
+        final FavoriteManager manager = new FavoriteManager(EventDetailsActivity.this.getApplicationContext());
         new Thread(new Runnable() {
             @Override
             public void run() {
-                FavoriteManager manager = new FavoriteManager();
                 manager.setFavoriteEvent(mEventId, mIsFavorite);
             }
         }).start();
