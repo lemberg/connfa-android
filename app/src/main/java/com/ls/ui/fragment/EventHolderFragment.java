@@ -2,6 +2,7 @@ package com.ls.ui.fragment;
 
 import com.astuetz.PagerSlidingTabStrip;
 import com.ls.drupalcon.R;
+import com.ls.drupalcon.app.App;
 import com.ls.drupalcon.model.Model;
 import com.ls.drupalcon.model.PreferencesManager;
 import com.ls.drupalcon.model.UpdatesManager;
@@ -257,7 +258,7 @@ public class EventHolderFragment extends Fragment {
                 }
 
                 mImageViewNoContent.setImageResource(imageResId);
-                mTextViewNoContent.setText(getString(textResId));
+                mTextViewNoContent.setText(App.getContext().getText(textResId));
             }
         } else {
             mLayoutPlaceholder.setVisibility(View.GONE);
