@@ -31,6 +31,10 @@
         )
     </string>
 
+  <string name="create_table_speaker_index" translatable="false">
+        CREATE INDEX idx_speaker_id ON table_speaker(_id)
+    </string>
+
   <string name="create_table_level" translatable="false">
         CREATE TABLE table_level (
         _id				        INTEGER,
@@ -38,6 +42,10 @@
         _order                  DOUBLE,
         _deleted                BOOLEAN
         )
+    </string>
+
+  <string name="create_table_level_index" translatable="false">
+        CREATE INDEX idx_level_id ON table_level(_id)
     </string>
 
   <string name="create_table_track" translatable="false">
@@ -49,6 +57,10 @@
         )
     </string>
 
+  <string name="create_table_track_index" translatable="false">
+        CREATE INDEX idx_track_id ON table_track(_id)
+    </string>
+
   <string name="create_table_location" translatable="false">
         CREATE TABLE table_location (
         _id				        INTEGER,
@@ -57,6 +69,16 @@
         number				    TEXT,
         lat				        DOUBLE,
         lon				        DOUBLE,
+        _order				    DOUBLE,
+        _deleted 				BOOLEAN
+        )
+    </string>
+
+  <string name="create_table_house_plans" translatable="false">
+        CREATE TABLE table_house_plans (
+        _id				        INTEGER,
+        plan_name    			TEXT,
+        plan_image_url		    TEXT,
         _order				    DOUBLE,
         _deleted 				BOOLEAN
         )
@@ -104,11 +126,19 @@
         )
     </string>
 
+  <string name="create_table_event_index" translatable="false">
+        CREATE INDEX idx_event_event_class ON table_event(_event_class)
+    </string>
+
   <string name="create_table_event_and_speaker" translatable="false">
         CREATE TABLE table_event_and_speaker (
         _event_id		         INTEGER,
         _speaker_id			     INTEGER
         )
+    </string>
+
+  <string name="create_table_event_and_speaker_index" translatable="false">
+        CREATE INDEX index_table_event_and_speaker ON table_event_and_speaker(_event_id)
     </string>
 
   <string name="create_table_favorite_events" translatable="false">
