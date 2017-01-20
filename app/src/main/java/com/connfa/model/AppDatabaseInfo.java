@@ -5,6 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.connfa.R;
 import com.connfa.model.dao.EventDao;
+import com.connfa.model.dao.FloorPlanDao;
 import com.connfa.model.dao.InfoDao;
 import com.connfa.model.dao.LevelDao;
 import com.connfa.model.dao.LocationDao;
@@ -12,6 +13,7 @@ import com.connfa.model.dao.POIDao;
 import com.connfa.model.dao.SpeakerDao;
 import com.connfa.model.dao.TrackDao;
 import com.connfa.model.dao.TypeDao;
+import com.connfa.model.data.FloorPlan;
 import com.connfa.model.database.DBInfo;
 import com.connfa.model.database.IMigrationTask;
 import com.connfa.utils.FileUtils;
@@ -53,6 +55,7 @@ public class AppDatabaseInfo implements DBInfo, IMigrationTask {
         dbTableNameList.add(InfoDao.TABLE_NAME);
         dbTableNameList.add(TABLE_EVENT_SPEAKER);
         dbTableNameList.add(TABLE_FAVORITE_EVENTS);
+        dbTableNameList.add(FloorPlanDao.TABLE_NAME);
         return dbTableNameList;
     }
 
