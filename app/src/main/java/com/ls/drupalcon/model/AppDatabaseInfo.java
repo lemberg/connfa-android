@@ -3,6 +3,7 @@ package com.ls.drupalcon.model;
 import com.ls.drupalcon.R;
 import com.ls.drupalcon.app.App;
 import com.ls.drupalcon.model.dao.EventDao;
+import com.ls.drupalcon.model.dao.FloorPlanDao;
 import com.ls.drupalcon.model.dao.InfoDao;
 import com.ls.drupalcon.model.dao.LevelDao;
 import com.ls.drupalcon.model.dao.LocationDao;
@@ -55,6 +56,7 @@ public class AppDatabaseInfo implements DBInfo, IMigrationTask {
         dbTableNameList.add(InfoDao.TABLE_NAME);
         dbTableNameList.add(TABLE_EVENT_SPEAKER);
         dbTableNameList.add(TABLE_FAVORITE_EVENTS);
+        dbTableNameList.add(FloorPlanDao.TABLE_NAME);
         return dbTableNameList;
     }
 
