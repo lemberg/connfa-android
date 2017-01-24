@@ -35,22 +35,22 @@ public class DrawerManager {
 
 		switch (mode) {
 			case Program:
-				fragment = EventHolderFragment.newInstance(DrawerMenu.DrawerItem.Program.ordinal());
+				fragment = EventHolderFragment.newInstance(EventMode.Program.ordinal());
 				fragmentTag = EventHolderFragment.TAG;
 				break;
 
 			case Bofs:
-				fragment = EventHolderFragment.newInstance(DrawerMenu.DrawerItem.Bofs.ordinal());
+				fragment = EventHolderFragment.newInstance(EventMode.Bofs.ordinal());
 				fragmentTag = EventHolderFragment.TAG;
 				break;
 
 			case Social:
-				fragment = EventHolderFragment.newInstance(DrawerMenu.DrawerItem.Social.ordinal());
+				fragment = EventHolderFragment.newInstance(EventMode.Social.ordinal());
 				fragmentTag = EventHolderFragment.TAG;
 				break;
 
 			case Favorites:
-				fragment = EventHolderFragment.newInstance(DrawerMenu.DrawerItem.Favorites.ordinal());
+				fragment = EventHolderFragment.newInstance(EventMode.Favorites.ordinal());
 				fragmentTag = EventHolderFragment.TAG;
 				break;
 
