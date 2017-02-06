@@ -10,6 +10,7 @@ import com.ls.http.base.BaseRequest;
 import com.ls.http.base.RequestConfig;
 import com.ls.http.base.ResponseData;
 import com.ls.ui.drawer.DrawerManager;
+import com.ls.ui.drawer.DrawerMenu;
 import com.ls.util.L;
 import com.ls.util.ObserverHolder;
 import org.jetbrains.annotations.NotNull;
@@ -44,11 +45,11 @@ public class UpdatesManager {
     public static int convertEventIdToEventModePos(int eventModePos) {
         switch (eventModePos) {
             case PROGRAMS_REQUEST_ID:
-                return DrawerManager.EventMode.Program.ordinal();
+                return DrawerMenu.DrawerItem.Program.ordinal();
             case BOFS_REQUEST_ID:
-                return DrawerManager.EventMode.Bofs.ordinal();
+                return DrawerMenu.DrawerItem.Bofs.ordinal();
             case SOCIALS_REQUEST_ID:
-                return DrawerManager.EventMode.Social.ordinal();
+                return DrawerMenu.DrawerItem.Social.ordinal();
         }
         return 0;
     }

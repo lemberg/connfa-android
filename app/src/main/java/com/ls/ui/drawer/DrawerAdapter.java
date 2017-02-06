@@ -2,6 +2,7 @@ package com.ls.ui.drawer;
 
 import com.ls.drupalcon.R;
 import com.ls.drupalcon.app.App;
+import com.ls.utils.L;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -40,7 +41,7 @@ public class DrawerAdapter extends BaseAdapter {
 
     @Override
     public long getItemId(int position) {
-        return menu.get(position).getId();
+        return position;
     }
 
     @Override
@@ -48,12 +49,7 @@ public class DrawerAdapter extends BaseAdapter {
         View result;
 
         DrawerMenuItem item = menu.get(position);
-
-        if (item.isGroup()) {
-            result = inflater.inflate(R.layout.item_drawer_group, null);
-        } else {
-            result = inflater.inflate(R.layout.item_drawer, null);
-        }
+        result = inflater.inflate(R.layout.item_drawer, parent, false);
 
         LinearLayout layoutDrawerItem = (LinearLayout) result.findViewById(R.id.layoutDrawerItem);
         TextView txtName = (TextView) result.findViewById(R.id.txtName);
@@ -68,8 +64,11 @@ public class DrawerAdapter extends BaseAdapter {
             image.setImageResource(item.getIconRes());
         }
 
-        if (position == 3 | position == 7) {
+
+        if (item.isGroup()) {
             result.findViewById(R.id.divider).setVisibility(View.VISIBLE);
+        } else {
+            result.findViewById(R.id.divider).setVisibility(View.GONE);
         }
 
         layoutDrawerItem.setOnClickListener(new View.OnClickListener() {
@@ -93,7 +92,7 @@ public class DrawerAdapter extends BaseAdapter {
         }
     }
 
-    public OnDrawerItemClickListener mListener;
+    private OnDrawerItemClickListener mListener;
 
     public interface OnDrawerItemClickListener {
         public void onDrawerItemClicked(int position);

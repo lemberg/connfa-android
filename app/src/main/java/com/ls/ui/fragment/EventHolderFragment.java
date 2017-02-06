@@ -13,6 +13,7 @@ import com.ls.drupalcon.model.managers.SocialManager;
 import com.ls.ui.activity.HomeActivity;
 import com.ls.ui.adapter.BaseEventDaysPagerAdapter;
 import com.ls.ui.drawer.DrawerManager;
+import com.ls.ui.drawer.DrawerMenu;
 import com.ls.ui.receiver.ReceiverManager;
 import com.ls.utils.DateUtils;
 
@@ -46,7 +47,7 @@ public class EventHolderFragment extends Fragment {
     private PagerSlidingTabStrip mPagerTabs;
     private BaseEventDaysPagerAdapter mAdapter;
 
-    private DrawerManager.EventMode mEventMode;
+    private DrawerMenu.DrawerItem mEventMode;
 
     private View mLayoutPlaceholder;
     private ImageView mImageViewNoContent;
@@ -150,8 +151,8 @@ public class EventHolderFragment extends Fragment {
     private void initData() {
         Bundle bundle = getArguments();
         if (bundle != null) {
-            int eventPos = bundle.getInt(EXTRAS_ARG_MODE, DrawerManager.EventMode.Program.ordinal());
-            mEventMode = DrawerManager.EventMode.values()[eventPos];
+            int eventPos = bundle.getInt(EXTRAS_ARG_MODE,DrawerMenu.DrawerItem.Program.ordinal());
+            mEventMode = DrawerMenu.DrawerItem.values()[eventPos];
         }
     }
 
@@ -174,9 +175,9 @@ public class EventHolderFragment extends Fragment {
         mTextViewNoContent = (TextView) view.findViewById(R.id.text_view_placeholder);
         mImageViewNoContent = (ImageView) view.findViewById(R.id.image_view_placeholder);
 
-        if (mEventMode == DrawerManager.EventMode.Program ||
-                mEventMode == DrawerManager.EventMode.Bofs ||
-                mEventMode == DrawerManager.EventMode.Social) {
+        if (mEventMode == DrawerMenu.DrawerItem.Program ||
+                mEventMode == DrawerMenu.DrawerItem.Bofs ||
+                mEventMode == DrawerMenu.DrawerItem.Social) {
             setHasOptionsMenu(true);
         } else {
             setHasOptionsMenu(false);
@@ -311,7 +312,7 @@ public class EventHolderFragment extends Fragment {
         for (int id : requestIds) {
             int eventModePos = UpdatesManager.convertEventIdToEventModePos(id);
             if (eventModePos == mEventMode.ordinal() ||
-                    (mEventMode == DrawerManager.EventMode.Favorites && isEventItem(id)) ) {
+                    (mEventMode == DrawerMenu.DrawerItem.Favorites && isEventItem(id)) ) {
                 new LoadData().execute();
                 break;
             }
@@ -326,7 +327,7 @@ public class EventHolderFragment extends Fragment {
 
     private void updateFavorites() {
         if (getView() != null) {
-            if (mEventMode == DrawerManager.EventMode.Favorites) {
+            if (mEventMode == DrawerMenu.DrawerItem.Favorites) {
                 new LoadData().execute();
             }
         }

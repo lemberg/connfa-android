@@ -12,6 +12,7 @@ import com.ls.ui.adapter.item.ProgramItem;
 import com.ls.ui.adapter.item.SocialItem;
 import com.ls.ui.adapter.item.TimeRangeItem;
 import com.ls.ui.drawer.DrawerManager;
+import com.ls.ui.drawer.DrawerMenu;
 import com.ls.utils.DateUtils;
 
 import android.content.Context;
@@ -40,7 +41,7 @@ public class EventsAdapter extends BaseAdapter {
     private List<EventListItem> mData;
     private LayoutInflater mInflater;
 
-    private DrawerManager.EventMode mEventMode;
+    private DrawerMenu.DrawerItem mEventMode;
     private Listener mListener;
 
     public interface Listener {
@@ -78,7 +79,7 @@ public class EventsAdapter extends BaseAdapter {
         return position;
     }
 
-    public void setData(List<EventListItem> data, DrawerManager.EventMode mode) {
+    public void setData(List<EventListItem> data, DrawerMenu.DrawerItem mode) {
         mData.clear();
         mData.addAll(data);
         mEventMode = mode;
@@ -315,7 +316,7 @@ public class EventsAdapter extends BaseAdapter {
     }
 
     private void fillFavorite(EventHolder holder) {
-        if (mEventMode == DrawerManager.EventMode.Favorites) {
+        if (mEventMode == DrawerMenu.DrawerItem.Favorites) {
             holder.layoutTime.setBackgroundColor(Color.TRANSPARENT);
         } else {
             holder.layoutTime.setBackgroundColor(mContext.getResources().getColor(R.color.grey_400_trans));

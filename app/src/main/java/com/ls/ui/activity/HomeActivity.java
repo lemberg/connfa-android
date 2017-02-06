@@ -32,7 +32,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ListView;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -117,7 +116,7 @@ public class HomeActivity extends StateActivity implements FilterDialog.OnFilter
     }
 
     private void initToolbar() {
-        mPresentTitle = DrawerMenu.MENU_STRING_ARRAY[0];
+        mPresentTitle = DrawerMenu.getNavigationDrawerItems().get(0).getName();
         mToolbar = (Toolbar) findViewById(R.id.toolBar);
         mToolbar.setTitle(mPresentTitle);
         setSupportActionBar(mToolbar);
@@ -157,7 +156,7 @@ public class HomeActivity extends StateActivity implements FilterDialog.OnFilter
     }
 
     private void initNavigationDrawerList() {
-        List<DrawerMenuItem> menu = getNavigationDrawerItems();
+        List<DrawerMenuItem> menu = DrawerMenu.getNavigationDrawerItems();
         mAdapter = new DrawerAdapter(this, menu);
         mAdapter.setDrawerItemClickListener(new DrawerAdapter.OnDrawerItemClickListener() {
             @Override
@@ -257,10 +256,10 @@ public class HomeActivity extends StateActivity implements FilterDialog.OnFilter
 //
 //        } else
         {
-            DrawerMenuItem item = mAdapter.getItem(mSelectedItem);
+            DrawerMenuItem item = mAdapter.getItem(mSelectedItem + 1);
             if (!item.isGroup() && mFrManager != null) {
                 mFrManager.setFragment(DrawerMenu.DrawerItem.values()[mSelectedItem]);
-                mPresentTitle = DrawerMenu.MENU_STRING_ARRAY[mSelectedItem];
+                mPresentTitle = DrawerMenu.getNavigationDrawerItems().get(mSelectedItem).getName();
                 mToolbar.setTitle(mPresentTitle);
 
                 mAdapter.setSelectedPos(mSelectedItem);
@@ -278,24 +277,24 @@ public class HomeActivity extends StateActivity implements FilterDialog.OnFilter
         mFrManager.setFragment(DrawerMenu.DrawerItem.Program);
     }
 
-    private static List<DrawerMenuItem> getNavigationDrawerItems() {
-        List<DrawerMenuItem> result = new ArrayList<DrawerMenuItem>();
-
-        for (int i = 0; i < DrawerMenu.MENU_STRING_ARRAY.length; i++) {
-            DrawerMenuItem menuItem = new DrawerMenuItem();
-            String name = DrawerMenu.MENU_STRING_ARRAY[i];
-
-            menuItem.setId(i);
-            menuItem.setName(name);
-            menuItem.setGroup(false);
-            menuItem.setIconRes(DrawerMenu.MENU_ICON_RES[i]);
-            menuItem.setSelIconRes(DrawerMenu.MENU_ICON_RES_SEL[i]);
-
-            result.add(menuItem);
-        }
-
-        return result;
-    }
+//    private static List<DrawerMenuItem> getNavigationDrawerItems() {
+//        List<DrawerMenuItem> result = new ArrayList<DrawerMenuItem>();
+//
+//        for (int i = 0; i < DrawerMenu.MENU_STRING_ARRAY.length; i++) {
+//            DrawerMenuItem menuItem = new DrawerMenuItem();
+//            String name = DrawerMenu.MENU_STRING_ARRAY[i];
+//
+//            menuItem.setId(i);
+//            menuItem.setName(name);
+//            menuItem.setGroup(false);
+//            menuItem.setIconRes(DrawerMenu.MENU_ICON_RES[i]);
+//            menuItem.setSelIconRes(DrawerMenu.MENU_ICON_RES_SEL[i]);
+//
+//            result.add(menuItem);
+//        }
+//
+//        return result;
+//    }
 
      private void showIrrelevantTimezoneDialogIfNeeded() {
         if (!IrrelevantTimezoneDialogFragment.isCurrentTimezoneRelevant()

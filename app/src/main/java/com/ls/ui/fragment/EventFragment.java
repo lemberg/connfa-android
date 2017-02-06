@@ -10,6 +10,7 @@ import com.ls.ui.adapter.item.EventListItem;
 import com.ls.ui.adapter.item.SimpleTimeRangeCreator;
 import com.ls.ui.adapter.item.TimeRangeItem;
 import com.ls.ui.drawer.DrawerManager;
+import com.ls.ui.drawer.DrawerMenu;
 import com.ls.ui.receiver.ReceiverManager;
 import com.ls.utils.AnalyticsManager;
 import com.ls.utils.DateUtils;
@@ -37,7 +38,7 @@ public class EventFragment extends Fragment implements EventsAdapter.Listener {
     private List<Long> trackIds;
     private long mDay;
 
-    private DrawerManager.EventMode mEventMode;
+    private DrawerMenu.DrawerItem mEventMode;
     private EventsAdapter mAdapter;
 
     private ListView mListView;
@@ -49,7 +50,7 @@ public class EventFragment extends Fragment implements EventsAdapter.Listener {
             new ReceiverManager.FavoriteUpdatedListener() {
                 @Override
                 public void onFavoriteUpdated(long eventId, boolean isFavorite) {
-                    if (mEventMode != DrawerManager.EventMode.Favorites) {
+                    if (mEventMode != DrawerMenu.DrawerItem.Favorites) {
                         new LoadData().execute();
                     }
                 }
@@ -94,8 +95,8 @@ public class EventFragment extends Fragment implements EventsAdapter.Listener {
     private void initData() {
         Bundle bundle = getArguments();
         if (bundle != null) {
-            int eventPost = bundle.getInt(EXTRAS_ARG_MODE, DrawerManager.EventMode.Program.ordinal());
-            mEventMode = DrawerManager.EventMode.values()[eventPost];
+            int eventPost = bundle.getInt(EXTRAS_ARG_MODE, DrawerMenu.DrawerItem.Program.ordinal());
+            mEventMode = DrawerMenu.DrawerItem.values()[eventPost];
 
             mDay = bundle.getLong(EXTRAS_ARG_DAY, 0);
             levelIds = PreferencesManager.getInstance().loadExpLevel();
@@ -167,7 +168,7 @@ public class EventFragment extends Fragment implements EventsAdapter.Listener {
         }
 
         mAdapter.setData(eventListItems, mEventMode);
-        if (DateUtils.getInstance().isToday(mDay) && mEventMode != DrawerManager.EventMode.Favorites) {
+        if (DateUtils.getInstance().isToday(mDay) && mEventMode != DrawerMenu.DrawerItem.Favorites) {
             int index = getCurrentTimePosition(eventListItems);
             mListView.setSelection(index);
         }
