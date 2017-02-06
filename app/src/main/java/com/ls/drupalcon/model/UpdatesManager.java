@@ -9,9 +9,7 @@ import com.ls.drupalcon.model.managers.SynchronousItemManager;
 import com.ls.http.base.BaseRequest;
 import com.ls.http.base.RequestConfig;
 import com.ls.http.base.ResponseData;
-import com.ls.ui.drawer.DrawerManager;
 import com.ls.ui.drawer.DrawerMenu;
-import com.ls.util.L;
 import com.ls.util.ObserverHolder;
 import org.jetbrains.annotations.NotNull;
 
@@ -45,11 +43,11 @@ public class UpdatesManager {
     public static int convertEventIdToEventModePos(int eventModePos) {
         switch (eventModePos) {
             case PROGRAMS_REQUEST_ID:
-                return DrawerMenu.DrawerItem.Program.ordinal();
+                return DrawerMenu.EventMode.Program.ordinal();
             case BOFS_REQUEST_ID:
-                return DrawerMenu.DrawerItem.Bofs.ordinal();
+                return DrawerMenu.EventMode.Bofs.ordinal();
             case SOCIALS_REQUEST_ID:
-                return DrawerMenu.DrawerItem.Social.ordinal();
+                return DrawerMenu.EventMode.Social.ordinal();
         }
         return 0;
     }

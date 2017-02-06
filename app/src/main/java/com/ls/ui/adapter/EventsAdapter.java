@@ -11,7 +11,6 @@ import com.ls.ui.adapter.item.HeaderItem;
 import com.ls.ui.adapter.item.ProgramItem;
 import com.ls.ui.adapter.item.SocialItem;
 import com.ls.ui.adapter.item.TimeRangeItem;
-import com.ls.ui.drawer.DrawerManager;
 import com.ls.ui.drawer.DrawerMenu;
 import com.ls.utils.DateUtils;
 
@@ -41,7 +40,7 @@ public class EventsAdapter extends BaseAdapter {
     private List<EventListItem> mData;
     private LayoutInflater mInflater;
 
-    private DrawerMenu.DrawerItem mEventMode;
+    private DrawerMenu.EventMode mEventMode;
     private Listener mListener;
 
     public interface Listener {
@@ -79,7 +78,7 @@ public class EventsAdapter extends BaseAdapter {
         return position;
     }
 
-    public void setData(List<EventListItem> data, DrawerMenu.DrawerItem mode) {
+    public void setData(List<EventListItem> data, DrawerMenu.EventMode mode) {
         mData.clear();
         mData.addAll(data);
         mEventMode = mode;
@@ -316,7 +315,7 @@ public class EventsAdapter extends BaseAdapter {
     }
 
     private void fillFavorite(EventHolder holder) {
-        if (mEventMode == DrawerMenu.DrawerItem.Favorites) {
+        if (mEventMode == DrawerMenu.EventMode.Favorites) {
             holder.layoutTime.setBackgroundColor(Color.TRANSPARENT);
         } else {
             holder.layoutTime.setBackgroundColor(mContext.getResources().getColor(R.color.grey_400_trans));

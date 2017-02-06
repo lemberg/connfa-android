@@ -42,7 +42,6 @@ public class HomeActivity extends StateActivity implements FilterDialog.OnFilter
     private DrawerAdapter mAdapter;
     private String mPresentTitle;
     private int mSelectedItem = 0;
-    private int mLastSelectedItem = 0;
     private boolean isIntentHandled = false;
 
     private Toolbar mToolbar;
@@ -54,7 +53,6 @@ public class HomeActivity extends StateActivity implements FilterDialog.OnFilter
     private UpdatesManager.DataUpdatedListener updateReceiver = new UpdatesManager.DataUpdatedListener() {
         @Override
         public void onDataUpdated(List<Integer> requestIds) {
-//            closeFilterDialog();
             initFilterDialog();
         }
     };
@@ -112,7 +110,7 @@ public class HomeActivity extends StateActivity implements FilterDialog.OnFilter
 
     @Override
     public void onNewFilterApplied() {
-        mFrManager.reloadPrograms(DrawerMenu.DrawerItem.values()[mSelectedItem]);
+        mFrManager.reloadPrograms(DrawerMenu.getNavigationDrawerItems().get(mSelectedItem).getEventMode());
     }
 
     private void initToolbar() {
@@ -125,11 +123,9 @@ public class HomeActivity extends StateActivity implements FilterDialog.OnFilter
     private void initNavigationDrawer() {
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
         ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar, R.string.app_name, R.string.app_name);
-
-        mDrawerLayout.setDrawerListener(drawerToggle);
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
         mDrawerLayout.closeDrawers();
-        mDrawerLayout.setDrawerListener(new DrawerLayout.DrawerListener() {
+        mDrawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
             @Override
             public void onDrawerSlide(View drawerView, float slideOffset) {
                 KeyboardUtils.hideKeyboard(getCurrentFocus());
@@ -167,7 +163,7 @@ public class HomeActivity extends StateActivity implements FilterDialog.OnFilter
 
         ListView listView = (ListView) findViewById(R.id.leftDrawer);
         listView.addHeaderView(
-                getLayoutInflater().inflate(R.layout.nav_drawer_header, null),
+                getLayoutInflater().inflate(R.layout.nav_drawer_header, listView, false),
                 null,
                 false);
         listView.setAdapter(mAdapter);
@@ -250,15 +246,9 @@ public class HomeActivity extends StateActivity implements FilterDialog.OnFilter
     private void changeFragment() {
         mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
 
-//        if (mSelectedItem == DrawerMenu.DrawerItem.About.ordinal()) {
-//            AboutActivity.startThisActivity(this);
-//            mSelectedItem = mLastSelectedItem;
-//
-//        } else
         {
-            DrawerMenuItem item = mAdapter.getItem(mSelectedItem + 1);
-            if (!item.isGroup() && mFrManager != null) {
-                mFrManager.setFragment(DrawerMenu.DrawerItem.values()[mSelectedItem]);
+            if (mFrManager != null) {
+                mFrManager.setFragment(DrawerMenu.getNavigationDrawerItems().get(mSelectedItem).getEventMode());
                 mPresentTitle = DrawerMenu.getNavigationDrawerItems().get(mSelectedItem).getName();
                 mToolbar.setTitle(mPresentTitle);
 
@@ -268,35 +258,15 @@ public class HomeActivity extends StateActivity implements FilterDialog.OnFilter
                 AnalyticsManager.sendEvent(this, mPresentTitle + " screen", R.string.action_open);
             }
         }
-        mLastSelectedItem = mSelectedItem;
     }
 
     private void initFragmentManager() {
         mFrManager = DrawerManager.getInstance(getSupportFragmentManager(), R.id.mainFragment);
         AnalyticsManager.sendEvent(this, App.getContext().getString(R.string.Sessions) + " screen", R.string.action_open);
-        mFrManager.setFragment(DrawerMenu.DrawerItem.Program);
+        mFrManager.setFragment(DrawerMenu.EventMode.Program);
     }
 
-//    private static List<DrawerMenuItem> getNavigationDrawerItems() {
-//        List<DrawerMenuItem> result = new ArrayList<DrawerMenuItem>();
-//
-//        for (int i = 0; i < DrawerMenu.MENU_STRING_ARRAY.length; i++) {
-//            DrawerMenuItem menuItem = new DrawerMenuItem();
-//            String name = DrawerMenu.MENU_STRING_ARRAY[i];
-//
-//            menuItem.setId(i);
-//            menuItem.setName(name);
-//            menuItem.setGroup(false);
-//            menuItem.setIconRes(DrawerMenu.MENU_ICON_RES[i]);
-//            menuItem.setSelIconRes(DrawerMenu.MENU_ICON_RES_SEL[i]);
-//
-//            result.add(menuItem);
-//        }
-//
-//        return result;
-//    }
-
-     private void showIrrelevantTimezoneDialogIfNeeded() {
+    private void showIrrelevantTimezoneDialogIfNeeded() {
         if (!IrrelevantTimezoneDialogFragment.isCurrentTimezoneRelevant()
                 && IrrelevantTimezoneDialogFragment.canPresentMessage(this)
                 && !isFinishing()) {

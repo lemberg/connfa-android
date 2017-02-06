@@ -80,17 +80,17 @@ public class DrawerAdapter extends BaseAdapter {
 
         return result;
     }
-
-    @Override
-    public boolean isEnabled(int position) {
-        DrawerMenuItem item = menu.get(position);
-
-        if (item.isGroup()) {
-            return false;
-        } else {
-            return true;
-        }
-    }
+//
+//    @Override
+//    public boolean isEnabled(int position) {
+//        DrawerMenuItem item = menu.get(position);
+//
+//        if (item.isGroup()) {
+//            return false;
+//        } else {
+//            return true;
+//        }
+//    }
 
     private OnDrawerItemClickListener mListener;
 
