@@ -40,16 +40,17 @@ public class UpdatesManager {
     public static final String IF_MODIFIED_SINCE_HEADER = "If-Modified-Since";
     public static final String LAST_MODIFIED_HEADER = "Last-Modified";
 
-    public static int convertEventIdToEventModePos(int eventModePos) {
-        switch (eventModePos) {
-            case PROGRAMS_REQUEST_ID:
-                return DrawerMenu.EventMode.Program.ordinal();
-            case BOFS_REQUEST_ID:
-                return DrawerMenu.EventMode.Bofs.ordinal();
-            case SOCIALS_REQUEST_ID:
-                return DrawerMenu.EventMode.Social.ordinal();
-        }
-        return 0;
+    public static DrawerMenu.EventMode convertEventIdToEventModePos(int eventModePos) {
+        return DrawerMenu.getNavigationDrawerItems().get(eventModePos).getEventMode();
+//        switch (eventModePos) {
+//            case PROGRAMS_REQUEST_ID:
+//                return DrawerMenu.EventMode.Program.ordinal();
+//            case BOFS_REQUEST_ID:
+//                return DrawerMenu.EventMode.Bofs.ordinal();
+//            case SOCIALS_REQUEST_ID:
+//                return DrawerMenu.EventMode.Social.ordinal();
+//        }
+//        return 0;
     }
 
     public UpdatesManager(@NotNull DrupalClient client) {

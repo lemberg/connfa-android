@@ -55,10 +55,10 @@ public class EventFragment extends Fragment implements EventsAdapter.Listener {
                 }
             });
 
-    public static Fragment newInstance(int modePos, long day) {
+    public static Fragment newInstance(long day, DrawerMenu.EventMode mode) {
         Fragment fragment = new EventFragment();
         Bundle args = new Bundle();
-        args.putInt(EXTRAS_ARG_MODE, modePos);
+        args.putSerializable(EXTRAS_ARG_MODE, mode);
         args.putLong(EXTRAS_ARG_DAY, day);
         fragment.setArguments(args);
 
@@ -94,8 +94,7 @@ public class EventFragment extends Fragment implements EventsAdapter.Listener {
     private void initData() {
         Bundle bundle = getArguments();
         if (bundle != null) {
-            int eventPost = bundle.getInt(EXTRAS_ARG_MODE, DrawerMenu.EventMode.Program.ordinal());
-            mEventMode =  DrawerMenu.getNavigationDrawerItems().get(eventPost).getEventMode();
+            mEventMode =  (DrawerMenu.EventMode) bundle.getSerializable(EXTRAS_ARG_MODE);
 
             mDay = bundle.getLong(EXTRAS_ARG_DAY, 0);
             levelIds = PreferencesManager.getInstance().loadExpLevel();

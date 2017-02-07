@@ -67,10 +67,10 @@ public class EventHolderFragment extends Fragment {
         }
     });
 
-    public static EventHolderFragment newInstance(int modePos) {
+    public static EventHolderFragment newInstance(DrawerMenu.EventMode eventMode) {
         EventHolderFragment fragment = new EventHolderFragment();
         Bundle bundle = new Bundle();
-        bundle.putInt(EXTRAS_ARG_MODE, modePos);
+        bundle.putSerializable(EXTRAS_ARG_MODE, eventMode);
         fragment.setArguments(bundle);
 
         return fragment;
@@ -150,8 +150,7 @@ public class EventHolderFragment extends Fragment {
     private void initData() {
         Bundle bundle = getArguments();
         if (bundle != null) {
-            int eventPos = bundle.getInt(EXTRAS_ARG_MODE, DrawerMenu.EventMode.Program.ordinal());
-            mEventMode = DrawerMenu.getNavigationDrawerItems().get(eventPos).getEventMode();
+            mEventMode = (DrawerMenu.EventMode) bundle.getSerializable(EXTRAS_ARG_MODE);
         }
     }
 
@@ -309,9 +308,8 @@ public class EventHolderFragment extends Fragment {
 
     private void updateData(List<Integer> requestIds) {
         for (int id : requestIds) {
-            int eventModePos = UpdatesManager.convertEventIdToEventModePos(id);
-            if (eventModePos == mEventMode.ordinal() ||
-                    (mEventMode == DrawerMenu.EventMode.Favorites && isEventItem(id)) ) {
+            DrawerMenu.EventMode eventModePos = UpdatesManager.convertEventIdToEventModePos(id);
+            if (eventModePos == mEventMode || (mEventMode == DrawerMenu.EventMode.Favorites && isEventItem(id)) ) {
                 new LoadData().execute();
                 break;
             }
