@@ -28,7 +28,7 @@ android {
     }
 
     productFlavors {
-        сon {
+        drupalcon {
             applicationId "com.ls.drupalconapp"
             versionName "drupalconapp"
 
@@ -38,7 +38,7 @@ android {
             }
         }
 
-        camp {
+        drupalcamp {
             applicationId "com.ls.drupalcamp"
             versionName "drupalcamp"
 
