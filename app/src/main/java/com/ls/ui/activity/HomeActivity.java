@@ -18,6 +18,7 @@ import com.ls.ui.drawer.DrawerMenu;
 import com.ls.ui.drawer.DrawerMenuItem;
 import com.ls.utils.AnalyticsManager;
 import com.ls.utils.KeyboardUtils;
+import com.ls.utils.L;
 import com.ls.utils.ScheduleManager;
 
 import android.app.Activity;
@@ -248,6 +249,7 @@ public class HomeActivity extends StateActivity implements FilterDialog.OnFilter
 
         {
             if (mFrManager != null) {
+                L.e("changeFragment = " + mSelectedItem);
                 mFrManager.setFragment(DrawerMenu.getNavigationDrawerItems().get(mSelectedItem).getEventMode());
                 mPresentTitle = DrawerMenu.getNavigationDrawerItems().get(mSelectedItem).getName();
                 mToolbar.setTitle(mPresentTitle);

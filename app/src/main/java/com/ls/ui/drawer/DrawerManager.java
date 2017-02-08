@@ -28,9 +28,55 @@ public class DrawerManager {
 
 	public void setFragment(@NotNull DrawerMenu.EventMode mode) {
 		Fragment fragment;
+		String fragmentTag = null;
 
-		fragment = EventHolderFragment.newInstance(mode);
-		fragmentManager.beginTransaction().replace(fragmentHolderId, fragment).commit();
+		switch (mode) {
+			case Program:
+				fragment = EventHolderFragment.newInstance(mode);
+				fragmentTag = EventHolderFragment.TAG;
+				break;
+
+			case Bofs:
+				fragment = EventHolderFragment.newInstance(mode);
+				fragmentTag = EventHolderFragment.TAG;
+				break;
+
+			case Social:
+				fragment = EventHolderFragment.newInstance(mode);
+				fragmentTag = EventHolderFragment.TAG;
+				break;
+
+			case Favorites:
+				fragment = EventHolderFragment.newInstance(mode);
+				fragmentTag = EventHolderFragment.TAG;
+				break;
+
+			case Speakers:
+				fragment = new SpeakersListFragment();
+				fragmentTag = SpeakersListFragment.TAG;
+				break;
+
+			case FloorPlan:
+				fragment = new FloorPlanFragment();
+				fragmentTag = FloorPlanFragment.TAG;
+				break;
+
+			case Location:
+				fragment = new LocationFragment();
+				fragmentTag = LocationFragment.TAG;
+				break;
+			case SocialMedia:
+				fragment = new SocialMediaFragment();
+				fragmentTag = SocialMediaFragment.TAG;
+				break;
+			case About:
+				fragment = new AboutFragment();
+				fragmentTag = SocialMediaFragment.TAG;
+				break;
+			default:
+				fragment = EventHolderFragment.newInstance(mode);
+		}
+		fragmentManager.beginTransaction().replace(fragmentHolderId, fragment, fragmentTag).commit();
 	}
 
 	public void reloadPrograms(@NotNull DrawerMenu.EventMode mode) {
