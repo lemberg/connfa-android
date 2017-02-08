@@ -28,7 +28,7 @@ android {
     }
 
     productFlavors {
-        drupalcon {
+        drupalconapp {
             applicationId "com.ls.drupalconapp"
             versionName "drupalconapp"
 

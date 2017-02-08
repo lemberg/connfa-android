@@ -1,7 +1,9 @@
 {
   "project_info": {
     "project_number": "997125724112",
-    "project_id": "drupalcon-1040"
+    "firebase_url": "https://drupalcon-1040.firebaseio.com",
+    "project_id": "drupalcon-1040",
+    "storage_bucket": "drupalcon-1040.appspot.com"
   },
   "client": [
     {
@@ -11,7 +13,16 @@
           "package_name": "com.ls.drupalconapp"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "997125724112-j3vqma61do63diug6cnb1l08fm6p3no0.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "997125724112-2f8rfahb9ulmbv0hocpj1bnm6li55gtf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyAs6JAvLkXFrQ-fd4IvZMJXl9ZLyDYFxEA"
@@ -19,17 +30,14 @@
       ],
       "services": {
         "analytics_service": {
-          "status": 2,
-          "analytics_property": {
-            "tracking_id": "UA-267362-65"
-          }
+          "status": 1
         },
         "appinvite_service": {
           "status": 1,
           "other_platform_oauth_client": []
         },
         "ads_service": {
-          "status": 1
+          "status": 2
         }
       }
     }
