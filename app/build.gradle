@@ -22,12 +22,32 @@ android {
     buildToolsVersion project.BUILD_TOOLS_VERSION
 
     defaultConfig {
-        applicationId 'com.ls.drupalconapp'
         minSdkVersion Integer.parseInt(project.MIN_SDK_VERSION)
         targetSdkVersion Integer.parseInt(project.TARGET_SDK_VERSION)
-        versionCode Integer.parseInt(project.VERSION_CODE)
-        versionName project.VERSION_NAME
         multiDexEnabled true
+    }
+
+    productFlavors {
+        сon {
+            applicationId "com.ls.drupalconapp"
+            versionName "drupalconapp"
+
+            defaultConfig {
+                versionCode 19
+                versionName "3.0.0"
+            }
+        }
+
+        camp {
+            applicationId "com.ls.drupalcamp"
+            versionName "drupalcamp"
+
+            defaultConfig {
+                versionCode 19
+                versionName "1.1.1"
+            }
+        }
+
     }
     signingConfigs {
         config {
