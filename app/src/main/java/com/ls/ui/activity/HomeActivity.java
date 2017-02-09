@@ -9,6 +9,7 @@ import com.ls.drupalcon.model.UpdatesManager;
 import com.ls.drupalcon.model.data.Level;
 import com.ls.drupalcon.model.data.Track;
 import com.ls.drupalcon.model.managers.TracksManager;
+import com.ls.sponsors.GoldSponsors;
 import com.ls.ui.adapter.item.EventListItem;
 import com.ls.ui.dialog.FilterDialog;
 import com.ls.ui.dialog.IrrelevantTimezoneDialogFragment;
@@ -31,6 +32,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ListView;
 
 import java.util.Collections;
@@ -154,6 +156,26 @@ public class HomeActivity extends StateActivity implements FilterDialog.OnFilter
                 getLayoutInflater().inflate(R.layout.nav_drawer_header, listView, false),
                 null,
                 false);
+
+        listView.addFooterView(
+                getLayoutInflater().inflate(R.layout.nav_drawer_footer, null),
+                null,
+                false);
+
+//        if(getDrawable(R.drawable.bg_nav_drawer_footer) != null){
+//
+//        }
+
+//        int checkExistence = getResources().getIdentifier("bg_nav_drawer_footer", "drawable", getPackageName());
+
+//        if (GoldSponsors.getSponsorsList(this).size() > 1) {
+//            ImageView footerView = (ImageView)getLayoutInflater().inflate(R.layout.nav_drawer_footer, null);
+//            footerView.setBackgroundResource(R.drawable.bg_nav_drawer_footer);
+//
+//            listView.addFooterView(footerView, null, false);
+//        }
+
+
         listView.setAdapter(mAdapter);
     }
 
@@ -251,7 +273,7 @@ public class HomeActivity extends StateActivity implements FilterDialog.OnFilter
 
     private void initFragmentManager() {
         mFrManager = DrawerManager.getInstance(getSupportFragmentManager(), R.id.mainFragment);
-        AnalyticsManager.drawerFragmentTracker(this,  mPresentTitle = DrawerMenu.getNavigationDrawerItems().get(0).getName(), R.string.action_open);
+        AnalyticsManager.drawerFragmentTracker(this, mPresentTitle = DrawerMenu.getNavigationDrawerItems().get(0).getName(), R.string.action_open);
         mFrManager.setFragment(DrawerMenu.EventMode.Program);
     }
 

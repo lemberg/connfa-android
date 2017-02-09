@@ -42,7 +42,7 @@
     <string name="placeholder_schedule">Your schedule is empty. Please add some events</string>
     <string name="placeholder_floor_plan">Currently there are no floor plans</string>
     <string name="placeholder_location">The address is not specified</string>
-    <string name="placeholder_social_media">Currently there are no twits</string>
+    <string name="placeholder_social_media">Currently there are no tweets</string>
     <string name="placeholder_info">Currently there is no information</string>
     <string name="placeholder_no_details">No details</string>
     <string name="dont_miss_it">Don\'t miss it!</string>
