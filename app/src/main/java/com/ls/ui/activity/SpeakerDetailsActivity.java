@@ -87,18 +87,6 @@ public class SpeakerDetailsActivity extends StackKeeperActivity implements View.
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        GoogleAnalytics.getInstance(this).reportActivityStart(this);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        GoogleAnalytics.getInstance(this).reportActivityStop(this);
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
@@ -114,7 +102,7 @@ public class SpeakerDetailsActivity extends StackKeeperActivity implements View.
         if (mSpeaker != null) {
             mSpeakerName = String.format("%s %s", mSpeaker.getFirstName(), mSpeaker.getLastName());
         }
-        AnalyticsManager.sendEvent(this, R.string.speaker_category, R.string.action_open, mSpeakerId + " " + mSpeakerName);
+        AnalyticsManager.detailsScreenTracker(this, R.string.speaker_category, R.string.action_open, mSpeakerName);
     }
 
     private void initToolbar() {
@@ -293,7 +281,7 @@ public class SpeakerDetailsActivity extends StackKeeperActivity implements View.
         eventView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                EventDetailsActivity.startThisActivity(SpeakerDetailsActivity.this, event.getEventId(), event.getFrom());
+                EventDetailsActivity.startThisActivity(SpeakerDetailsActivity.this, event.getEventId(), event.getFrom(), true);
             }
         });
     }

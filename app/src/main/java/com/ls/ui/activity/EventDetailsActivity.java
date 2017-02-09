@@ -10,11 +10,15 @@ import com.ls.drupalcon.model.data.Speaker;
 import com.ls.drupalcon.model.managers.EventManager;
 import com.ls.drupalcon.model.managers.FavoriteManager;
 import com.ls.drupalcon.model.managers.SpeakerManager;
+import com.ls.sponsors.GoldSponsors;
+import com.ls.sponsors.SponsorItem;
+import com.ls.sponsors.SponsorManager;
 import com.ls.ui.receiver.ReceiverManager;
 import com.ls.ui.view.CircleImageView;
 import com.ls.ui.view.NotifyingScrollView;
 import com.ls.utils.AnalyticsManager;
 import com.ls.utils.DateUtils;
+import com.ls.utils.L;
 import com.ls.utils.ScheduleManager;
 import com.ls.utils.WebviewUtils;
 
@@ -53,6 +57,7 @@ public class EventDetailsActivity extends StackKeeperActivity {
 
     public static final String EXTRA_EVENT_ID = "EXTRA_EVENT_ID";
     public static final String EXTRA_DAY = "EXTRA_DAY";
+    public static final String EXTRA_HEADER = "EXTRA_HEADER";
 
     private TextView mToolbarTitle;
     private View mViewToolbar;
@@ -81,10 +86,11 @@ public class EventDetailsActivity extends StackKeeperActivity {
         }
     };
 
-    public static void startThisActivity(Activity activity, long eventId, long day) {
+    public static void startThisActivity(Activity activity, long eventId, long day, boolean changeHeader) {
         Intent intent = new Intent(activity, EventDetailsActivity.class);
         intent.putExtra(EXTRA_EVENT_ID, eventId);
         intent.putExtra(EXTRA_DAY, day);
+        intent.putExtra(EXTRA_HEADER, changeHeader);
         activity.startActivity(intent);
     }
 
@@ -99,6 +105,7 @@ public class EventDetailsActivity extends StackKeeperActivity {
         initData();
         initToolbar();
         initViews();
+        setHeaderView();
     }
 
     @Override
@@ -288,7 +295,7 @@ public class EventDetailsActivity extends StackKeeperActivity {
         if (TextUtils.isEmpty(event.getTrack()) &&
                 TextUtils.isEmpty(event.getLevel()) &&
                 TextUtils.isEmpty(event.getDescription()) &&
-                mSpeakerList.isEmpty()){
+                mSpeakerList.isEmpty()) {
             findViewById(R.id.imgEmptyView).setVisibility(View.VISIBLE);
         } else {
             findViewById(R.id.imgEmptyView).setVisibility(View.GONE);
@@ -302,11 +309,9 @@ public class EventDetailsActivity extends StackKeeperActivity {
         checkBoxFavorite.setChecked(mIsFavorite);
 
         RelativeLayout layoutFavorite = (RelativeLayout) findViewById(R.id.layoutFavorite);
-        layoutFavorite.setOnClickListener(new View.OnClickListener()
-        {
+        layoutFavorite.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
+            public void onClick(View v) {
                 checkBoxFavorite.setChecked(!checkBoxFavorite.isChecked());
                 mIsFavorite = checkBoxFavorite.isChecked();
                 setFavorite();
@@ -374,7 +379,7 @@ public class EventDetailsActivity extends StackKeeperActivity {
         if (mIsFavorite) {
             actionId = R.string.action_add_to_favorites;
         }
-        AnalyticsManager.sendEvent(this, R.string.event_category, actionId, mEventId + " " + mEvent.getEventName());
+        AnalyticsManager.detailsScreenTracker(this, R.string.event_category, actionId, mEvent.getEventName());
         ReceiverManager.updateFavorites(EventDetailsActivity.this, mEventId, mIsFavorite);
     }
 
@@ -413,6 +418,25 @@ public class EventDetailsActivity extends StackKeeperActivity {
     private void completeLoading() {
         findViewById(R.id.progressBar).setVisibility(View.GONE);
         mScrollView.setAlpha(1.0f);
+    }
+
+    private void setHeaderView() {
+        boolean bundleExtra = getIntent().getBooleanExtra(EXTRA_HEADER, false);
+        ImageView imageView = (ImageView) findViewById(R.id.imgHeader);
+        if (imageView != null) {
+            if (bundleExtra) {
+                List<SponsorItem> sponsorsList = GoldSponsors.getSponsorsList(getApplicationContext());
+
+                SponsorItem currentSponsor = sponsorsList.get(SponsorManager.getInstance().getSponsorId());
+                L.e("currentSponsor = " + currentSponsor);
+                imageView.setBackgroundResource(currentSponsor.getResourceId());
+                AnalyticsManager.sendEvent(this, currentSponsor.getName());
+
+            } else {
+                imageView.setBackgroundResource(R.drawable.speaker_details_header);
+            }
+        }
+
     }
 
     private NotifyingScrollView.OnScrollChangedListener scrollListener = new NotifyingScrollView.OnScrollChangedListener() {

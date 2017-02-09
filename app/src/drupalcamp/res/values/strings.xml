@@ -61,4 +61,12 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="social_media">Social Media</string>
     <string name="floor_plan">Floor Plans</string>
+
+    <string name="sponsor_banner">Sponsor banner</string>
+    <string name="sponsor_1">Capgemini</string>
+    <string name="sponsor_2">Inviqa</string>
+    <string name="sponsor_3">City University</string>
+    <string name="sponsor_4">Bright Lemon</string>
+    <string name="sponsor_5">Acquia</string>
+    <string name="sponsor_6">Cameron &amp; Wilding</string>
 </resources>

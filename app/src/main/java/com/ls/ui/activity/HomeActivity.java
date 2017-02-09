@@ -91,21 +91,8 @@ public class HomeActivity extends StateActivity implements FilterDialog.OnFilter
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        GoogleAnalytics.getInstance(this).reportActivityStart(this);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        GoogleAnalytics.getInstance(this).reportActivityStop(this);
-    }
-
-    @Override
     protected void onDestroy() {
         Model.instance().getUpdatesManager().unregisterUpdateListener(updateReceiver);
-        AnalyticsManager.sendEvent(this, "Application", R.string.action_close);
         super.onDestroy();
     }
 
@@ -257,14 +244,14 @@ public class HomeActivity extends StateActivity implements FilterDialog.OnFilter
                 mAdapter.setSelectedPos(mSelectedItem);
                 mAdapter.notifyDataSetChanged();
 
-                AnalyticsManager.sendEvent(this, mPresentTitle + " screen", R.string.action_open);
+                AnalyticsManager.drawerFragmentTracker(this, mPresentTitle, R.string.action_open);
             }
         }
     }
 
     private void initFragmentManager() {
         mFrManager = DrawerManager.getInstance(getSupportFragmentManager(), R.id.mainFragment);
-        AnalyticsManager.sendEvent(this, App.getContext().getString(R.string.Sessions) + " screen", R.string.action_open);
+        AnalyticsManager.drawerFragmentTracker(this,  mPresentTitle = DrawerMenu.getNavigationDrawerItems().get(0).getName(), R.string.action_open);
         mFrManager.setFragment(DrawerMenu.EventMode.Program);
     }
 

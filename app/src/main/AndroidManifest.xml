@@ -49,10 +49,6 @@
             android:name="com.ls.ui.activity.AboutDetailsActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.DrupalCon.About" />
-        <activity
-            android:name="com.ls.ui.activity.AboutActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.DrupalCon.About" />
 
         <activity
             android:name="com.ls.ui.activity.EventDetailsActivity"

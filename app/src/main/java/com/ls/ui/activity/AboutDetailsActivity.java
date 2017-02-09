@@ -45,19 +45,7 @@ public class AboutDetailsActivity extends StateActivity {
         initToolbar(aboutTitle);
         Model.instance().getUpdatesManager().registerUpdateListener(updateListener);
 
-        AnalyticsManager.sendEvent(this, R.string.about_category, R.string.action_open, id + " " + aboutTitle);
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        GoogleAnalytics.getInstance(this).reportActivityStart(this);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        GoogleAnalytics.getInstance(this).reportActivityStop(this);
+        AnalyticsManager.detailsScreenTracker(this, R.string.about, R.string.action_open, aboutTitle);
     }
 
     @Override
