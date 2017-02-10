@@ -31,7 +31,7 @@
             android:minLines="2"
             android:textColor="@color/grey_400"
             android:layout_marginBottom="4dp"
-            app:custom_font="@string/montserrat_regular"
+            app:custom_font="@string/montserrat_regular_font"
             android:textSize="@dimen/text_size_20" />
 
         <com.ls.ui.view.FontTextView
@@ -41,7 +41,7 @@
             android:minLines="2"
             android:paddingTop="3dp"
             android:textColor="@color/grey_200"
-            app:custom_font="@string/roboto_light"
+            app:custom_font="@string/light_font"
             android:textSize="@dimen/text_size_medium" />
     </LinearLayout>
 

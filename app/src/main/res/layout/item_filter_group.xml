@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/selector_light"
             android:gravity="center_vertical"
-            app:custom_font="@string/roboto_regular"
+            app:custom_font="@string/regular_font"
             android:paddingBottom="16dp"
             android:paddingLeft="24dp"
             android:paddingRight="24dp"

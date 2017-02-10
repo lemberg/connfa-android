@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         android:background="@android:color/white"
         android:paddingBottom="12dp"
-        app:custom_font="@string/roboto_medium"
+        app:custom_font="@string/medium_font"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
         android:paddingTop="12dp"

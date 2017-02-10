@@ -25,7 +25,7 @@
                 android:layout_marginTop="16dp"
                 android:layout_weight="1"
                 android:maxLines="2"
-                app:custom_font="@string/roboto_regular"
+                app:custom_font="@string/regular_font"
                 android:textColor="#949494"
                 android:textSize="@dimen/text_size_medium"
                 tools:text="Lorem Ipsum"/>

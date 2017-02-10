@@ -30,7 +30,7 @@
             android:name="com.ls.ui.activity.SplashActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.DrupalCon.Home">
+            android:theme="@style/Theme.DrupalCon.Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

@@ -29,4 +29,9 @@
         <item name="colorControlNormal">@color/white</item>
     </style>
 
+    <style name="Theme.DrupalCon.Splash" parent="Theme.DrupalCon">
+        <item name="colorPrimaryDark">@color/splash_primary</item>
+        <item name="colorPrimary">@color/splash_primary</item>
+    </style>
+
 </resources>
