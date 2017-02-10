@@ -5,10 +5,11 @@
   -->
 
 <resources>
-    <string name="bold_font">"Roboto-Bold.ttf"</string>
+    <string name="bold_font">"OpenSans-Bold.ttf"</string>
     <string name="light_font">"Roboto-Light.ttf"</string>
     <string name="medium_font">"Roboto-Medium.ttf"</string>
-    <string name="regular_font">"Roboto-Regular.ttf"</string>
+    <string name="regular_font">"OpenSans-Regular.ttf"</string>
     <string name="thin_font">"Roboto-Thin.ttf"</string>
-    <string name="montserrat_regular_font">"Montserrat-Regular.ttf"</string>
+
+    <string name="montserrat_regular_font">"OpenSans-CondBold.ttf"</string>
 </resources>
