@@ -10,6 +10,7 @@ import com.ls.http.base.BaseRequest;
 import com.ls.http.base.RequestConfig;
 import com.ls.http.base.ResponseData;
 import com.ls.ui.drawer.DrawerMenu;
+import com.ls.ui.drawer.EventMode;
 import com.ls.util.ObserverHolder;
 import org.jetbrains.annotations.NotNull;
 
@@ -40,7 +41,7 @@ public class UpdatesManager {
     public static final String IF_MODIFIED_SINCE_HEADER = "If-Modified-Since";
     public static final String LAST_MODIFIED_HEADER = "Last-Modified";
 
-    public static DrawerMenu.EventMode convertEventIdToEventModePos(int eventModePos) {
+    public static EventMode convertEventIdToEventModePos(int eventModePos) {
         return DrawerMenu.getNavigationDrawerItems().get(eventModePos).getEventMode();
 //        switch (eventModePos) {
 //            case PROGRAMS_REQUEST_ID:

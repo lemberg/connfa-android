@@ -13,6 +13,7 @@ import com.ls.drupalcon.model.managers.SocialManager;
 import com.ls.ui.activity.HomeActivity;
 import com.ls.ui.adapter.BaseEventDaysPagerAdapter;
 import com.ls.ui.drawer.DrawerMenu;
+import com.ls.ui.drawer.EventMode;
 import com.ls.ui.receiver.ReceiverManager;
 import com.ls.utils.DateUtils;
 
@@ -46,7 +47,7 @@ public class EventHolderFragment extends Fragment {
     private PagerSlidingTabStrip mPagerTabs;
     private BaseEventDaysPagerAdapter mAdapter;
 
-    private DrawerMenu.EventMode mEventMode;
+    private EventMode mEventMode;
 
     private View mLayoutPlaceholder;
     private ImageView mImageViewNoContent;
@@ -67,7 +68,7 @@ public class EventHolderFragment extends Fragment {
         }
     });
 
-    public static EventHolderFragment newInstance(DrawerMenu.EventMode eventMode) {
+    public static EventHolderFragment newInstance(EventMode eventMode) {
         EventHolderFragment fragment = new EventHolderFragment();
         Bundle bundle = new Bundle();
         bundle.putSerializable(EXTRAS_ARG_MODE, eventMode);
@@ -150,7 +151,7 @@ public class EventHolderFragment extends Fragment {
     private void initData() {
         Bundle bundle = getArguments();
         if (bundle != null) {
-            mEventMode = (DrawerMenu.EventMode) bundle.getSerializable(EXTRAS_ARG_MODE);
+            mEventMode = (EventMode) bundle.getSerializable(EXTRAS_ARG_MODE);
         }
     }
 
@@ -173,9 +174,9 @@ public class EventHolderFragment extends Fragment {
         mTextViewNoContent = (TextView) view.findViewById(R.id.text_view_placeholder);
         mImageViewNoContent = (ImageView) view.findViewById(R.id.image_view_placeholder);
 
-        if (mEventMode == DrawerMenu.EventMode.Program ||
-                mEventMode == DrawerMenu.EventMode.Bofs ||
-                mEventMode == DrawerMenu.EventMode.Social) {
+        if (mEventMode == EventMode.Program ||
+                mEventMode == EventMode.Bofs ||
+                mEventMode == EventMode.Social) {
             setHasOptionsMenu(true);
         } else {
             setHasOptionsMenu(false);
@@ -308,8 +309,8 @@ public class EventHolderFragment extends Fragment {
 
     private void updateData(List<Integer> requestIds) {
         for (int id : requestIds) {
-            DrawerMenu.EventMode eventModePos = UpdatesManager.convertEventIdToEventModePos(id);
-            if (eventModePos == mEventMode || (mEventMode == DrawerMenu.EventMode.Favorites && isEventItem(id)) ) {
+            EventMode eventModePos = UpdatesManager.convertEventIdToEventModePos(id);
+            if (eventModePos == mEventMode || (mEventMode == EventMode.Favorites && isEventItem(id)) ) {
                 new LoadData().execute();
                 break;
             }
@@ -324,7 +325,7 @@ public class EventHolderFragment extends Fragment {
 
     private void updateFavorites() {
         if (getView() != null) {
-            if (mEventMode == DrawerMenu.EventMode.Favorites) {
+            if (mEventMode == EventMode.Favorites) {
                 new LoadData().execute();
             }
         }

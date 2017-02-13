@@ -13,6 +13,7 @@ import com.ls.ui.adapter.item.EventListItem;
 import com.ls.ui.adapter.item.SimpleTimeRangeCreator;
 import com.ls.ui.adapter.item.TimeRangeItem;
 import com.ls.ui.drawer.DrawerMenu;
+import com.ls.ui.drawer.EventMode;
 import com.ls.ui.receiver.ReceiverManager;
 import com.ls.utils.AnalyticsManager;
 import com.ls.utils.DateUtils;
@@ -41,7 +42,7 @@ public class EventFragment extends Fragment implements EventsAdapter.Listener {
     private List<Long> trackIds;
     private long mDay;
 
-    private DrawerMenu.EventMode mEventMode;
+    private EventMode mEventMode;
     private EventsAdapter mAdapter;
 
     private ListView mListView;
@@ -53,13 +54,13 @@ public class EventFragment extends Fragment implements EventsAdapter.Listener {
             new ReceiverManager.FavoriteUpdatedListener() {
                 @Override
                 public void onFavoriteUpdated(long eventId, boolean isFavorite) {
-                    if (mEventMode != DrawerMenu.EventMode.Favorites) {
+                    if (mEventMode != EventMode.Favorites) {
                         new LoadData().execute();
                     }
                 }
             });
 
-    public static Fragment newInstance(long day, DrawerMenu.EventMode mode) {
+    public static Fragment newInstance(long day, EventMode mode) {
         Fragment fragment = new EventFragment();
         Bundle args = new Bundle();
         args.putSerializable(EXTRAS_ARG_MODE, mode);
@@ -98,7 +99,7 @@ public class EventFragment extends Fragment implements EventsAdapter.Listener {
     private void initData() {
         Bundle bundle = getArguments();
         if (bundle != null) {
-            mEventMode = (DrawerMenu.EventMode) bundle.getSerializable(EXTRAS_ARG_MODE);
+            mEventMode = (EventMode) bundle.getSerializable(EXTRAS_ARG_MODE);
 
             mDay = bundle.getLong(EXTRAS_ARG_DAY, 0);
             levelIds = PreferencesManager.getInstance().loadExpLevel();
@@ -170,7 +171,7 @@ public class EventFragment extends Fragment implements EventsAdapter.Listener {
         }
 
         mAdapter.setData(eventListItems, mEventMode);
-        if (DateUtils.getInstance().isToday(mDay) && mEventMode != DrawerMenu.EventMode.Favorites) {
+        if (DateUtils.getInstance().isToday(mDay) && mEventMode != EventMode.Favorites) {
             int index = getCurrentTimePosition(eventListItems);
             mListView.setSelection(index);
         }

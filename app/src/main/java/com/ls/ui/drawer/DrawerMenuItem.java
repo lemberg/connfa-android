@@ -6,9 +6,9 @@ public class DrawerMenuItem {
     private int iconRes;
     private int selIconRes;
     private boolean group;
-    private DrawerMenu.EventMode eventMode;
+    private EventMode eventMode;
 
-    public DrawerMenuItem(String name, int iconRes, int selIconRes, DrawerMenu.EventMode eventMode, boolean group) {
+    public DrawerMenuItem(String name, int iconRes, int selIconRes, EventMode eventMode, boolean group) {
         this.name = name;
         this.iconRes = iconRes;
         this.selIconRes = selIconRes;
@@ -36,7 +36,7 @@ public class DrawerMenuItem {
         return group;
     }
 
-    public DrawerMenu.EventMode getEventMode() {
+    public EventMode getEventMode() {
         return eventMode;
     }
 

@@ -17,6 +17,7 @@ import com.ls.ui.drawer.DrawerAdapter;
 import com.ls.ui.drawer.DrawerManager;
 import com.ls.ui.drawer.DrawerMenu;
 import com.ls.ui.drawer.DrawerMenuItem;
+import com.ls.ui.drawer.EventMode;
 import com.ls.utils.AnalyticsManager;
 import com.ls.utils.KeyboardUtils;
 import com.ls.utils.L;
@@ -274,7 +275,7 @@ public class HomeActivity extends StateActivity implements FilterDialog.OnFilter
     private void initFragmentManager() {
         mFrManager = DrawerManager.getInstance(getSupportFragmentManager(), R.id.mainFragment);
         AnalyticsManager.drawerFragmentTracker(this, mPresentTitle = DrawerMenu.getNavigationDrawerItems().get(0).getName(), R.string.action_open);
-        mFrManager.setFragment(DrawerMenu.EventMode.Program);
+        mFrManager.setFragment(DrawerMenu.getNavigationDrawerItems().get(0).getEventMode());
     }
 
     private void showIrrelevantTimezoneDialogIfNeeded() {

@@ -26,7 +26,7 @@ public class DrawerManager {
 		this.fragmentHolderId = theMainFragmentId;
 	}
 
-	public void setFragment(@NotNull DrawerMenu.EventMode mode) {
+	public void setFragment(@NotNull EventMode mode) {
 		Fragment fragment;
 		String fragmentTag = null;
 
@@ -79,7 +79,7 @@ public class DrawerManager {
 		fragmentManager.beginTransaction().replace(fragmentHolderId, fragment, fragmentTag).commit();
 	}
 
-	public void reloadPrograms(@NotNull DrawerMenu.EventMode mode) {
+	public void reloadPrograms(@NotNull EventMode mode) {
 		FragmentTransaction ft = fragmentManager.beginTransaction();
 		ft.replace(fragmentHolderId, EventHolderFragment.newInstance(mode), EventHolderFragment.TAG);
 		ft.commitAllowingStateLoss();
