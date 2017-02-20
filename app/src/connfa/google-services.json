@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "737088437666",
+    "firebase_url": "https://connfa-a7b6b.firebaseio.com",
+    "project_id": "connfa-a7b6b",
+    "storage_bucket": "connfa-a7b6b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:737088437666:android:c76462440debda2e",
+        "android_client_info": {
+          "package_name": "com.ls.connfa"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "737088437666-fr9335pp4sltui5ha32a1j57obuivqib.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ls.connfa",
+            "certificate_hash": "6CAA5EF75C54F22DF50A1F329A0E1A0E5AB5B963"
+          }
+        },
+        {
+          "client_id": "737088437666-5pvrpp019n75u3insu5tq0ouqtffemg3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBgGQXPElrS6OohzCkZ0jjIfju_RKGkA9k"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "737088437666-5pvrpp019n75u3insu5tq0ouqtffemg3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
