@@ -15,7 +15,7 @@ public class DrawerMenu {
         List<DrawerMenuItem> result = new ArrayList<>();
         result.add(new DrawerMenuItem(context.getString(R.string.Sessions), R.drawable.menu_icon_program, R.drawable.menu_icon_program_sel, EventMode.Program, false));
         result.add(new DrawerMenuItem(context.getString(R.string.bofs), R.drawable.menu_icon_bofs, R.drawable.menu_icon_bofs_sel, EventMode.Bofs, false));
-        result.add(new DrawerMenuItem(context.getString(R.string.social_events), R.drawable.menu_icon_social_events, R.drawable.menu_icon_social_sel, EventMode.Social, false));
+        result.add(new DrawerMenuItem(context.getString(R.string.social_events), R.drawable.menu_icon_social_events, R.drawable.menu_icon_social_events_sel, EventMode.Social, false));
         result.add(new DrawerMenuItem(context.getString(R.string.social_media), R.drawable.menu_icon_social_media, R.drawable.menu_icon_social_media_sel, EventMode.SocialMedia, true));
         result.add(new DrawerMenuItem(context.getString(R.string.my_schedule), R.drawable.menu_icon_my_schedule, R.drawable.menu_icon_my_schedule_sel, EventMode.Favorites, false));
         result.add(new DrawerMenuItem(context.getString(R.string.floor_plan), R.drawable.menu_icon_floor_plan, R.drawable.menu_icon_floor_plan_sel, EventMode.FloorPlan, false));

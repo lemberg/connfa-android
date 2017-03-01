@@ -26,8 +26,8 @@
     <color name="primary">#172a3c</color>
 
     <color name="event_primary">#172a3c</color>
-    <color name="event">#4077aa</color>
-    <color name="event_date">#0b73d4</color>
+    <color name="event">#3c5275</color>
+    <color name="event_date">#3c5275</color>
 
     <color name="speaker_primary">#06335b</color>
     <color name="speaker">#06335b</color>
