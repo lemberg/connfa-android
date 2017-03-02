@@ -7,7 +7,7 @@
     <bool name="ga_autoActivityTracking">true</bool>
 
     <!--  The property id associated with this analytics tracker -->
-    <string name="ga_trackingId">UA-83482202-1</string>
+    <string name="ga_trackingId">UA-267362-65</string>
 
     <string name="ga_sampleFrequency">100.0</string>
 
