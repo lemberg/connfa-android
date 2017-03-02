@@ -2,11 +2,11 @@ package com.ls.ui.fragment;
 
 import com.ls.drupalcon.R;
 import com.ls.drupalcon.model.Model;
+import com.ls.drupalcon.model.UpdateRequestID;
 import com.ls.drupalcon.model.UpdatesManager;
 import com.ls.drupalcon.model.data.FloorPlan;
 import com.ls.ui.adapter.FloorSelectorAdapter;
 import com.ls.ui.view.TouchImageView;
-import com.ls.utils.L;
 
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -43,7 +43,7 @@ public class FloorPlanFragment  extends Fragment
         @Override
         public void onDataUpdated(List<Integer> requestIds) {
 
-            if (requestIds.contains(UpdatesManager.FLOOR_PLANS_REQUEST_ID)){
+            if (requestIds.contains(UpdateRequestID.FLOOR_PLANS.getRequestId())){
                 new LoadPlansTask().execute();
             }
 

@@ -5,6 +5,7 @@ import com.ls.drupalcon.R;
 import com.ls.drupalcon.app.App;
 import com.ls.drupalcon.model.Model;
 import com.ls.drupalcon.model.PreferencesManager;
+import com.ls.drupalcon.model.UpdateRequestID;
 import com.ls.drupalcon.model.UpdatesManager;
 import com.ls.drupalcon.model.managers.BofsManager;
 import com.ls.drupalcon.model.managers.FavoriteManager;
@@ -12,7 +13,6 @@ import com.ls.drupalcon.model.managers.ProgramManager;
 import com.ls.drupalcon.model.managers.SocialManager;
 import com.ls.ui.activity.HomeActivity;
 import com.ls.ui.adapter.BaseEventDaysPagerAdapter;
-import com.ls.ui.drawer.DrawerMenu;
 import com.ls.ui.drawer.EventMode;
 import com.ls.ui.receiver.ReceiverManager;
 import com.ls.utils.DateUtils;
@@ -318,9 +318,9 @@ public class EventHolderFragment extends Fragment {
     }
 
     private boolean isEventItem(int id) {
-        return id == UpdatesManager.PROGRAMS_REQUEST_ID ||
-                id == UpdatesManager.BOFS_REQUEST_ID ||
-                id == UpdatesManager.SOCIALS_REQUEST_ID;
+        return id == UpdateRequestID.PROGRAMS.getRequestId() ||
+                id == UpdateRequestID.BOFS.getRequestId() ||
+                id == UpdateRequestID.SOCIALS.getRequestId();
     }
 
     private void updateFavorites() {

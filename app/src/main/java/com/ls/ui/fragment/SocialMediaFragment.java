@@ -4,6 +4,7 @@ package com.ls.ui.fragment;
 import com.ls.drupalcon.R;
 import com.ls.drupalcon.model.Model;
 import com.ls.drupalcon.model.PreferencesManager;
+import com.ls.drupalcon.model.UpdateRequestID;
 import com.ls.drupalcon.model.UpdatesManager;
 import com.ls.utils.NetworkUtils;
 import com.twitter.sdk.android.tweetui.TweetTimelineListAdapter;
@@ -12,7 +13,6 @@ import com.twitter.sdk.android.tweetui.SearchTimeline;
 import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,7 +53,7 @@ public class SocialMediaFragment extends Fragment
     }
     private void updateData(List<Integer> requestIds) {
         for (int id : requestIds) {
-            if (UpdatesManager.SETTINGS_REQUEST_ID == id) {
+            if (UpdateRequestID.SETTINGS.getRequestId() == id) {
                 fillView();
                 break;
             }
