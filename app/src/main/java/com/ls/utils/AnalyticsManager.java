@@ -11,10 +11,10 @@ import android.app.Activity;
 public class AnalyticsManager {
 
 
-    public static void drawerFragmentTracker(Activity activity, String category, int actionId) {
+    public static void drawerFragmentTracker(Activity activity, int screeenNameId, int actionId) {
         Tracker t = ((App) activity.getApplication()).getTracker();
         // Build and send an Event.
-        t.setScreenName(category);
+        t.setScreenName(activity.getString(screeenNameId));
         t.send(new HitBuilders.ScreenViewBuilder().build());
     }
 

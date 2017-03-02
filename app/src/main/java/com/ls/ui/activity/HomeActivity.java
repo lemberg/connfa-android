@@ -18,6 +18,7 @@ import com.ls.ui.drawer.DrawerManager;
 import com.ls.ui.drawer.DrawerMenu;
 import com.ls.ui.drawer.DrawerMenuItem;
 import com.ls.ui.drawer.EventMode;
+import com.ls.ui.fragment.SpeakersListFragment;
 import com.ls.utils.AnalyticsManager;
 import com.ls.utils.KeyboardUtils;
 import com.ls.utils.L;
@@ -33,6 +34,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 
@@ -44,7 +46,7 @@ public class HomeActivity extends StateActivity implements FilterDialog.OnFilter
 
     private DrawerManager mFrManager;
     private DrawerAdapter mAdapter;
-    private String mPresentTitle;
+    private int mPresentTitle;
     private int mSelectedItem = 0;
     private boolean isIntentHandled = false;
 
@@ -145,23 +147,19 @@ public class HomeActivity extends StateActivity implements FilterDialog.OnFilter
     private void initNavigationDrawerList() {
         List<DrawerMenuItem> menu = DrawerMenu.getNavigationDrawerItems();
         mAdapter = new DrawerAdapter(this, menu);
-        mAdapter.setDrawerItemClickListener(new DrawerAdapter.OnDrawerItemClickListener() {
-            @Override
-            public void onDrawerItemClicked(int position) {
-                onItemClick(position);
-            }
-        });
 
-        ListView listView = (ListView) findViewById(R.id.leftDrawer);
-        listView.addHeaderView(
-                getLayoutInflater().inflate(R.layout.nav_drawer_header, listView, false),
-                null,
-                false);
+        final ListView listView = (ListView) findViewById(R.id.leftDrawer);
+        if (listView != null) {
+            listView.addHeaderView(
+                    getLayoutInflater().inflate(R.layout.nav_drawer_header, listView, false),
+                    null,
+                    false);
+            listView.addFooterView(
+                    getLayoutInflater().inflate(R.layout.nav_drawer_footer, listView, false),
+                    null,
+                    false);
+        }
 
-        listView.addFooterView(
-                getLayoutInflater().inflate(R.layout.nav_drawer_footer, null),
-                null,
-                false);
 
 //        if(getDrawable(R.drawable.bg_nav_drawer_footer) != null){
 //
@@ -178,6 +176,12 @@ public class HomeActivity extends StateActivity implements FilterDialog.OnFilter
 
 
         listView.setAdapter(mAdapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                onDrawerItemClick(position - listView.getHeaderViewsCount());
+            }
+        });
     }
 
     public void initFilterDialog() {
@@ -244,7 +248,7 @@ public class HomeActivity extends StateActivity implements FilterDialog.OnFilter
         startActivity(intent);
     }
 
-    private void onItemClick(int position) {
+    private void onDrawerItemClick(int position) {
         mDrawerLayout.closeDrawers();
         if (mSelectedItem == position) {
             return;

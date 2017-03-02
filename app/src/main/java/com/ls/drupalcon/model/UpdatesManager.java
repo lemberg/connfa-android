@@ -21,6 +21,20 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class UpdatesManager {
+    enum UpdateRequesrs{
+        SETTINGS,
+        TYPES,
+        LEVELS,
+        TRACKS,
+        SPEAKERS,
+        LOCATIONS,
+        FLOOR_PLANS,
+        PROGRAMS,
+        BOFS,
+        SOCIALS,
+        POIS,
+        INFO
+    }
 
     public static final int SETTINGS_REQUEST_ID = 0;
     public static final int TYPES_REQUEST_ID = 1;

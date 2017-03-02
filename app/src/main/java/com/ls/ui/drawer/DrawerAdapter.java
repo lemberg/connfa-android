@@ -31,7 +31,7 @@ public class DrawerAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return menu.size(); //+ 1 because header was added to list
+        return menu.size();
     }
 
     @Override
@@ -46,61 +46,45 @@ public class DrawerAdapter extends BaseAdapter {
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-        View result;
 
-        DrawerMenuItem item = menu.get(position);
-        result = inflater.inflate(R.layout.item_drawer, parent, false);
+        DrawerMenuItem item = getItem(position);
+        ViewHolder holder;
 
-        LinearLayout layoutDrawerItem = (LinearLayout) result.findViewById(R.id.layoutDrawerItem);
-        TextView txtName = (TextView) result.findViewById(R.id.txtName);
-        txtName.setText(item.getName());
+        if (convertView == null) {
+            convertView = inflater.inflate(R.layout.item_drawer, parent, false);
+            holder = new ViewHolder();
+            holder.txtName = (TextView) convertView.findViewById(R.id.txtName);
+            holder.image = (ImageView) convertView.findViewById(R.id.image);
+            holder.divider =  convertView.findViewById(R.id.divider);
+            convertView.setTag(holder);
+        }
+        else {
+            holder = (ViewHolder) convertView.getTag();
+        }
 
-        ImageView image = (ImageView) result.findViewById(R.id.image);
 
+        holder.txtName.setText(item.getName());
         if (position == selectedPos) {
-            image.setImageResource(item.getSelIconRes());
-            txtName.setTextColor(App.getContext().getResources().getColor(R.color.item_selection));
+            holder.image.setImageResource(item.getSelIconRes());
+            holder.txtName.setTextColor(App.getContext().getResources().getColor(R.color.item_selection));
         } else {
-            image.setImageResource(item.getIconRes());
+            holder.image.setImageResource(item.getIconRes());
+            holder.txtName.setTextColor(App.getContext().getResources().getColor(R.color.grey_200));
         }
 
 
         if (item.isGroup()) {
-            result.findViewById(R.id.divider).setVisibility(View.VISIBLE);
+            holder.divider.setVisibility(View.VISIBLE);
         } else {
-            result.findViewById(R.id.divider).setVisibility(View.GONE);
+            holder.divider.setVisibility(View.GONE);
         }
 
-        layoutDrawerItem.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mListener.onDrawerItemClicked(position);
-            }
-        });
-
-        return result;
-    }
-//
-//    @Override
-//    public boolean isEnabled(int position) {
-//        DrawerMenuItem item = menu.get(position);
-//
-//        if (item.isGroup()) {
-//            return false;
-//        } else {
-//            return true;
-//        }
-//    }
-
-    private OnDrawerItemClickListener mListener;
-
-    public interface OnDrawerItemClickListener {
-        public void onDrawerItemClicked(int position);
+        return convertView;
     }
 
-    public void setDrawerItemClickListener(OnDrawerItemClickListener listener) {
-        if (listener != null) {
-            mListener = listener;
-        }
+    static class ViewHolder {
+        private TextView txtName;
+        private ImageView image;
+        private  View divider;
     }
 }

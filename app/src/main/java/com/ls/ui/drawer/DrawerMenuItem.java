@@ -2,13 +2,13 @@ package com.ls.ui.drawer;
 
 
 public class DrawerMenuItem {
-    private String name;
-    private int iconRes;
-    private int selIconRes;
-    private boolean group;
-    private EventMode eventMode;
+    private final int name;
+    private final int iconRes;
+    private final int selIconRes;
+    private final boolean group;
+    private final EventMode eventMode;
 
-    public DrawerMenuItem(String name, int iconRes, int selIconRes, EventMode eventMode, boolean group) {
+    public DrawerMenuItem(int name, int iconRes, int selIconRes, EventMode eventMode, boolean group) {
         this.name = name;
         this.iconRes = iconRes;
         this.selIconRes = selIconRes;
@@ -27,7 +27,7 @@ public class DrawerMenuItem {
     }
 
 
-    public String getName() {
+    public int getName() {
         return name;
     }
 
