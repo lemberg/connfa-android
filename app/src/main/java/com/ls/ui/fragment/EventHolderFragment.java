@@ -13,7 +13,12 @@ import com.ls.drupalcon.model.managers.ProgramManager;
 import com.ls.drupalcon.model.managers.SocialManager;
 import com.ls.ui.activity.HomeActivity;
 import com.ls.ui.adapter.BaseEventDaysPagerAdapter;
+import com.ls.ui.drawer.BaseFragmentStrategy;
+import com.ls.ui.drawer.BofsStrategy;
 import com.ls.ui.drawer.EventMode;
+import com.ls.ui.drawer.FavoritesStrategy;
+import com.ls.ui.drawer.ProgramStrategy;
+import com.ls.ui.drawer.SocialStrategy;
 import com.ls.ui.receiver.ReceiverManager;
 import com.ls.utils.DateUtils;
 
@@ -54,6 +59,7 @@ public class EventHolderFragment extends Fragment {
     private TextView mTextViewNoContent;
 
     private boolean mIsFilterUsed;
+    private BaseFragmentStrategy strategy;
 
     private UpdatesManager.DataUpdatedListener updateReceiver = new UpdatesManager.DataUpdatedListener() {
         @Override
@@ -129,8 +135,7 @@ public class EventHolderFragment extends Fragment {
 
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState)
-    {
+    public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         Model.instance().getUpdatesManager().registerUpdateListener(updateReceiver);
         favoriteReceiver.register(getActivity());
@@ -141,8 +146,7 @@ public class EventHolderFragment extends Fragment {
     }
 
     @Override
-    public void onDestroyView()
-    {
+    public void onDestroyView() {
         Model.instance().getUpdatesManager().unregisterUpdateListener(updateReceiver);
         favoriteReceiver.unregister(getActivity());
         super.onDestroyView();
@@ -152,6 +156,20 @@ public class EventHolderFragment extends Fragment {
         Bundle bundle = getArguments();
         if (bundle != null) {
             mEventMode = (EventMode) bundle.getSerializable(EXTRAS_ARG_MODE);
+            switch (mEventMode) {
+                case Program:
+                    strategy = new ProgramStrategy(R.drawable.ic_no_session, R.string.placeholder_sessions);
+                    break;
+                case Bofs:
+                    strategy = new BofsStrategy(R.drawable.ic_no_session, R.string.placeholder_sessions);
+                    break;
+                case Social:
+                    strategy = new SocialStrategy(R.drawable.ic_no_social_events, R.string.placeholder_social_events);
+                    break;
+                case Favorites:
+                    strategy = new FavoritesStrategy(R.drawable.ic_no_my_schedule, R.string.placeholder_schedule);
+                    break;
+            }
         }
     }
 
@@ -197,26 +215,27 @@ public class EventHolderFragment extends Fragment {
     }
 
     private List<Long> getDayList() {
-        List<Long> dayList = new ArrayList<>();
-        switch (mEventMode) {
-            case Bofs:
-                BofsManager bofsManager = Model.instance().getBofsManager();
-                dayList.addAll(bofsManager.getBofsDays());
-                break;
-            case Social:
-                SocialManager socialManager = Model.instance().getSocialManager();
-                dayList.addAll(socialManager.getSocialsDays());
-                break;
-            case Favorites:
-                FavoriteManager favoriteManager = Model.instance().getFavoriteManager();
-                dayList.addAll(favoriteManager.getFavoriteEventDays());
-                break;
-            default:
-                ProgramManager programManager = Model.instance().getProgramManager();
-                dayList.addAll(programManager.getProgramDays());
-                break;
-        }
-        return dayList;
+//        List<Long> dayList = new ArrayList<>();
+//        switch (mEventMode) {
+//            case Bofs:
+//                BofsManager bofsManager = Model.instance().getBofsManager();
+//                dayList.addAll(bofsManager.getBofsDays());
+//                break;
+//            case Social:
+//                SocialManager socialManager = Model.instance().getSocialManager();
+//                dayList.addAll(socialManager.getSocialsDays());
+//                break;
+//            case Favorites:
+//                FavoriteManager favoriteManager = Model.instance().getFavoriteManager();
+//                dayList.addAll(favoriteManager.getFavoriteEventDays());
+//                break;
+//            default:
+//                ProgramManager programManager = Model.instance().getProgramManager();
+//                dayList.addAll(programManager.getProgramDays());
+//                break;
+//        }
+//        return dayList;
+        return strategy.getDayList();
     }
 
 
@@ -236,29 +255,29 @@ public class EventHolderFragment extends Fragment {
             } else {
                 mImageViewNoContent.setVisibility(View.VISIBLE);
 
-                int imageResId = 0, textResId = 0;
+//                int imageResId = 0, textResId = 0;
 
-                switch (mEventMode) {
-                    case Program:
-                        imageResId = R.drawable.ic_no_session;
-                        textResId = R.string.placeholder_sessions;
-                        break;
-                    case Bofs:
-                        imageResId = R.drawable.ic_no_bofs;
-                        textResId = R.string.placeholder_bofs;
-                        break;
-                    case Social:
-                        imageResId = R.drawable.ic_no_social_events;
-                        textResId = R.string.placeholder_social_events;
-                        break;
-                    case Favorites:
-                        imageResId = R.drawable.ic_no_my_schedule;
-                        textResId = R.string.placeholder_schedule;
-                        break;
-                }
+//                switch (mEventMode) {
+//                    case Program:
+//                        imageResId = R.drawable.ic_no_session;
+//                        textResId = R.string.placeholder_sessions;
+//                        break;
+//                    case Bofs:
+//                        imageResId = R.drawable.ic_no_bofs;
+//                        textResId = R.string.placeholder_bofs;
+//                        break;
+//                    case Social:
+//                        imageResId = R.drawable.ic_no_social_events;
+//                        textResId = R.string.placeholder_social_events;
+//                        break;
+//                    case Favorites:
+//                        imageResId = R.drawable.ic_no_my_schedule;
+//                        textResId = R.string.placeholder_schedule;
+//                        break;
+//                }
 
-                mImageViewNoContent.setImageResource(imageResId);
-                mTextViewNoContent.setText(App.getContext().getText(textResId));
+                mImageViewNoContent.setImageResource(strategy.getImageResId());
+                mTextViewNoContent.setText(App.getContext().getText(strategy.getTextResId()));
             }
         } else {
             mLayoutPlaceholder.setVisibility(View.GONE);
@@ -310,7 +329,7 @@ public class EventHolderFragment extends Fragment {
     private void updateData(List<Integer> requestIds) {
         for (int id : requestIds) {
             EventMode eventModePos = UpdatesManager.convertEventIdToEventModePos(id);
-            if (eventModePos == mEventMode || (mEventMode == EventMode.Favorites && isEventItem(id)) ) {
+            if (eventModePos == mEventMode || (mEventMode == EventMode.Favorites && isEventItem(id))) {
                 new LoadData().execute();
                 break;
             }
