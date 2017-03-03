@@ -23,30 +23,14 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class UpdatesManager {
-    List<UpdateRequestID> updateList = new ArrayList<>();
+    List<UpdateRequest> updateList = new ArrayList<>();
 
-//    public static final int SETTINGS_REQUEST_ID = 0;
-//    public static final int TYPES_REQUEST_ID = 1;
-//    public static final int LEVELS_REQUEST_ID = 2;
-//    public static final int TRACKS_REQUEST_ID = 3;
-//    public static final int SPEAKERS_REQUEST_ID = 4;
-//    public static final int LOCATIONS_REQUEST_ID = 5;
-//    public static final int FLOOR_PLANS_REQUEST_ID = 6;
-//    public static final int PROGRAMS_REQUEST_ID = 7;
-//    public static final int BOFS_REQUEST_ID = 8;
-//    public static final int SOCIALS_REQUEST_ID = 9;
-//    public static final int POIS_REQUEST_ID = 10;
-//    public static final int INFO_REQUEST_ID = 11;
 
     private DrupalClient mClient;
     private ObserverHolder<DataUpdatedListener> mUpdateListeners;
 
     public static final String IF_MODIFIED_SINCE_HEADER = "If-Modified-Since";
     public static final String LAST_MODIFIED_HEADER = "Last-Modified";
-
-    public static EventMode convertEventIdToEventModePos(int eventModePos) {
-        return DrawerMenu.getNavigationDrawerItems().get(eventModePos).getEventMode();
-    }
 
     public UpdatesManager(@NotNull DrupalClient client) {
         mUpdateListeners = new ObserverHolder<>();
@@ -137,40 +121,40 @@ public class UpdatesManager {
         for (int i : updateIds) {
             switch (i) {
                 case 0:
-                    updateList.add(UpdateRequestID.SETTINGS);
+                    updateList.add(UpdateRequest.SETTINGS);
                     break;
                 case 1:
-                    updateList.add(UpdateRequestID.TYPES);
+                    updateList.add(UpdateRequest.TYPES);
                     break;
                 case 2:
-                    updateList.add(UpdateRequestID.LEVELS);
+                    updateList.add(UpdateRequest.LEVELS);
                     break;
                 case 3:
-                    updateList.add(UpdateRequestID.TRACKS);
+                    updateList.add(UpdateRequest.TRACKS);
                     break;
                 case 4:
-                    updateList.add(UpdateRequestID.SPEAKERS);
+                    updateList.add(UpdateRequest.SPEAKERS);
                     break;
                 case 5:
-                    updateList.add(UpdateRequestID.LOCATIONS);
+                    updateList.add(UpdateRequest.LOCATIONS);
                     break;
                 case 6:
-                    updateList.add(UpdateRequestID.FLOOR_PLANS);
+                    updateList.add(UpdateRequest.FLOOR_PLANS);
                     break;
                 case 7:
-                    updateList.add(UpdateRequestID.PROGRAMS);
+                    updateList.add(UpdateRequest.PROGRAMS);
                     break;
                 case 8:
-                    updateList.add(UpdateRequestID.BOFS);
+                    updateList.add(UpdateRequest.BOFS);
                     break;
                 case 9:
-                    updateList.add(UpdateRequestID.SOCIALS);
+                    updateList.add(UpdateRequest.SOCIALS);
                     break;
                 case 10:
-                    updateList.add(UpdateRequestID.POIS);
+                    updateList.add(UpdateRequest.POIS);
                     break;
                 case 11:
-                    updateList.add(UpdateRequestID.INFO);
+                    updateList.add(UpdateRequest.INFO);
                     break;
 
             }
@@ -191,7 +175,7 @@ public class UpdatesManager {
 //                }
 //            }
 
-            for (UpdateRequestID update : updateList) {
+            for (UpdateRequest update : updateList) {
                 success = sendRequestById(update);
                 if (!success) {
                     break;
@@ -212,7 +196,7 @@ public class UpdatesManager {
 
     }
 
-    private boolean sendRequestById(UpdateRequestID update) {
+    private boolean sendRequestById(UpdateRequest update) {
 
         SynchronousItemManager manager;
         switch (update) {

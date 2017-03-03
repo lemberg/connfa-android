@@ -1,6 +1,6 @@
 package com.ls.drupalcon.model;
 
-public enum UpdateRequestID {
+public enum UpdateRequest {
     SETTINGS(0),
     TYPES(1),
     LEVELS(2),
@@ -16,7 +16,7 @@ public enum UpdateRequestID {
 
     private int requestId;
 
-    UpdateRequestID(int id) {
+    UpdateRequest(int id) {
         this.requestId = id;
     }
 
@@ -24,7 +24,13 @@ public enum UpdateRequestID {
         return requestId;
     }
 
-    public void setRequestId(int requestId) {
-        this.requestId = requestId;
+    public static UpdateRequest fromId(int value) {
+        for (UpdateRequest request : values()) {
+            if (request.requestId == value) {
+                return request;
+            }
+        }
+        return null;
     }
+
 }

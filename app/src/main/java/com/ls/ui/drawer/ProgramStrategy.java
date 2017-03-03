@@ -1,18 +1,15 @@
 package com.ls.ui.drawer;
 
+import com.ls.drupalcon.R;
 import com.ls.drupalcon.model.Model;
+import com.ls.drupalcon.model.UpdateRequest;
 import com.ls.drupalcon.model.managers.ProgramManager;
 import com.ls.utils.L;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProgramStrategy extends BaseFragmentStrategy {
-
-    public ProgramStrategy(int imageResId, int textResId) {
-        this.imageResId = imageResId;
-        this.textResId = textResId;
-    }
+public class ProgramStrategy implements DrawerFragmentStrategy {
 
     @Override
     public List<Long> getDayList() {
@@ -21,5 +18,30 @@ public class ProgramStrategy extends BaseFragmentStrategy {
         dayList.addAll(programManager.getProgramDays());
         L.e("dayList = " + dayList);
         return dayList;
+    }
+
+    @Override
+    public int getTextResId() {
+        return R.string.placeholder_sessions;
+    }
+
+    @Override
+    public int getImageResId() {
+        return R.drawable.ic_no_session;
+    }
+
+    @Override
+    public boolean enableOptionMenu() {
+        return true;
+    }
+
+    @Override
+    public boolean updateFavorites() {
+        return false;
+    }
+
+    @Override
+    public boolean update(List<UpdateRequest> requests) {
+        return requests.contains(UpdateRequest.PROGRAMS);
     }
 }
