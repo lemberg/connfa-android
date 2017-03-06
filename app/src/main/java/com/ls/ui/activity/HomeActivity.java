@@ -1,15 +1,12 @@
 package com.ls.ui.activity;
 
-import com.google.android.gms.analytics.GoogleAnalytics;
 
 import com.ls.drupalcon.R;
-import com.ls.drupalcon.app.App;
 import com.ls.drupalcon.model.Model;
 import com.ls.drupalcon.model.UpdatesManager;
 import com.ls.drupalcon.model.data.Level;
 import com.ls.drupalcon.model.data.Track;
 import com.ls.drupalcon.model.managers.TracksManager;
-import com.ls.sponsors.GoldSponsors;
 import com.ls.ui.adapter.item.EventListItem;
 import com.ls.ui.dialog.FilterDialog;
 import com.ls.ui.dialog.IrrelevantTimezoneDialogFragment;
@@ -17,8 +14,6 @@ import com.ls.ui.drawer.DrawerAdapter;
 import com.ls.ui.drawer.DrawerManager;
 import com.ls.ui.drawer.DrawerMenu;
 import com.ls.ui.drawer.DrawerMenuItem;
-import com.ls.ui.drawer.EventMode;
-import com.ls.ui.fragment.SpeakersListFragment;
 import com.ls.utils.AnalyticsManager;
 import com.ls.utils.KeyboardUtils;
 import com.ls.utils.L;
@@ -35,7 +30,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ImageView;
 import android.widget.ListView;
 
 import java.util.Collections;

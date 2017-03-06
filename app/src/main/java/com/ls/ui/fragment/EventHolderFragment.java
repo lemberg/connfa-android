@@ -49,8 +49,6 @@ public class EventHolderFragment extends Fragment {
     private PagerSlidingTabStrip mPagerTabs;
     private BaseEventDaysPagerAdapter mAdapter;
 
-    private EventMode mEventMode;
-
     private View mLayoutPlaceholder;
     private ImageView mImageViewNoContent;
     private TextView mTextViewNoContent;
@@ -142,9 +140,9 @@ public class EventHolderFragment extends Fragment {
     private void initData() {
         Bundle bundle = getArguments();
         if (bundle != null) {
-            mEventMode = (EventMode) bundle.getSerializable(EXTRAS_ARG_MODE);
-            if (mEventMode != null) {
-                switch (mEventMode) {
+            EventMode eventMode = (EventMode) bundle.getSerializable(EXTRAS_ARG_MODE);
+            if (eventMode != null) {
+                switch (eventMode) {
                     case Program:
                         strategy = new ProgramStrategy();
                         break;
@@ -218,7 +216,7 @@ public class EventHolderFragment extends Fragment {
             mPagerTabs.setVisibility(View.VISIBLE);
         }
 
-        mAdapter.setData(dayList, mEventMode);
+        mAdapter.setData(dayList, strategy);
         switchToCurrentDay(dayList);
     }
 
@@ -261,22 +259,9 @@ public class EventHolderFragment extends Fragment {
     }
 
     private void updateData(List<UpdateRequest> requests) {
-        L.e("updateData updateData updateData");
         strategy.update(requests);
-//        for (int id : requestIds) {
-//            EventMode eventModePos = UpdatesManager.convertEventIdToEventModePos(id);
-//            if (eventModePos == mEventMode || (mEventMode == EventMode.Favorites && isEventItem(id))) {
-//                new LoadData().execute();
-//                break;
-//            }
-//        }
     }
 
-    private boolean isEventItem(int id) {
-        return id == UpdateRequest.PROGRAMS.getRequestId() ||
-                id == UpdateRequest.BOFS.getRequestId() ||
-                id == UpdateRequest.SOCIALS.getRequestId();
-    }
 
     private void updateFavorites() {
         if (getView() != null) {

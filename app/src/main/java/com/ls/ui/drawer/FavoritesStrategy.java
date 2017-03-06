@@ -46,4 +46,9 @@ public class FavoritesStrategy implements DrawerFragmentStrategy {
     public boolean update(List<UpdateRequest> requests) {
         return true;
     }
+
+    @Override
+    public EventMode getEventMode() {
+        return EventMode.Favorites;
+    }
 }

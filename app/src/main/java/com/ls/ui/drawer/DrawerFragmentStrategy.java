@@ -17,4 +17,6 @@ public interface DrawerFragmentStrategy {
     boolean updateFavorites();
 
     boolean update(List<UpdateRequest> requests);
+
+    EventMode getEventMode();
 }

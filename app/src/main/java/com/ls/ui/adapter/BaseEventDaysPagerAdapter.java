@@ -1,6 +1,7 @@
 package com.ls.ui.adapter;
 
 
+import com.ls.ui.drawer.DrawerFragmentStrategy;
 import com.ls.ui.drawer.DrawerMenu;
 import com.ls.ui.drawer.EventMode;
 import com.ls.ui.fragment.EventFragment;
@@ -15,7 +16,7 @@ import java.util.List;
 
 public class BaseEventDaysPagerAdapter extends FragmentStatePagerAdapter {
 
-    private EventMode mEventMode;
+    private DrawerFragmentStrategy strategy;
 
     private List<Long> mDays;
 
@@ -27,14 +28,14 @@ public class BaseEventDaysPagerAdapter extends FragmentStatePagerAdapter {
     @Override
     public Fragment getItem(int position) {
         Long date = getDate(position);
-        Fragment fragment = EventFragment.newInstance(date, mEventMode);
+        Fragment fragment = EventFragment.newInstance(date, strategy.getEventMode());
         return fragment;
     }
 
-    public void setData(List<Long> eventDays, EventMode eventMode) {
+    public void setData(List<Long> eventDays, DrawerFragmentStrategy strategy) {
         mDays.clear();
         mDays.addAll(eventDays);
-        mEventMode = eventMode;
+        this.strategy = strategy;
         notifyDataSetChanged();
     }
 

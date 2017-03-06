@@ -1,26 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:orientation="vertical">
-
-    <FrameLayout
-        android:id="@+id/fragmentHolder"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/layoutInfo"
-        android:background="@android:color/white" />
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
 
     <LinearLayout
         android:id="@+id/layoutInfo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/white"
-        android:layout_alignParentBottom="true"
+        android:background="@color/primary"
         android:orientation="vertical"
-        android:paddingTop="20dp"
-        android:paddingBottom="20dp"
+        android:paddingBottom="24dp"
         android:paddingLeft="24dp"
         android:paddingRight="24dp">
 
@@ -28,11 +19,10 @@
             android:id="@+id/txtPlace"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:minLines="2"
-            android:textColor="@color/grey_400"
+            android:textColor="@color/white"
             android:layout_marginBottom="4dp"
             app:custom_font="@string/montserrat_regular_font"
-            android:textSize="@dimen/text_size_20" />
+            android:textSize="@dimen/text_size_24" />
 
         <com.ls.ui.view.FontTextView
             android:id="@+id/txtAddress"
@@ -40,17 +30,23 @@
             android:layout_height="wrap_content"
             android:minLines="2"
             android:paddingTop="3dp"
-            android:textColor="@color/grey_200"
-            app:custom_font="@string/light_font"
+            android:textColor="@color/white"
+            app:custom_font="@string/regular_font"
             android:textSize="@dimen/text_size_medium" />
     </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/fragmentHolder"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/layoutInfo"
+        android:background="@android:color/white" />
 
     <ProgressBar
         android:id="@+id/progressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_alignParentBottom="true"
         android:layout_margin="42dp" />
 
 </RelativeLayout>

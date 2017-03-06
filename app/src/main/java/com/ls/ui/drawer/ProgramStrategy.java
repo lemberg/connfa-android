@@ -44,4 +44,9 @@ public class ProgramStrategy implements DrawerFragmentStrategy {
     public boolean update(List<UpdateRequest> requests) {
         return requests.contains(UpdateRequest.PROGRAMS);
     }
+
+    @Override
+    public EventMode getEventMode() {
+        return EventMode.Program;
+    }
 }
