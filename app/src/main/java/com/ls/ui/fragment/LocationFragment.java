@@ -120,8 +120,8 @@ public class LocationFragment extends Fragment implements CustomMapFragment.OnAc
         txtAmsterdam.setText(locationName);
 
         String address = location.getAddress();
-        address = address.replace(", ", "\n");
-//        address = address.replace(",", "\n");
+//        address = address.replace(", ", "\n");
+        address = address.replace(",", "\n");
         txtAddress.setText(address.trim());
     }
 
