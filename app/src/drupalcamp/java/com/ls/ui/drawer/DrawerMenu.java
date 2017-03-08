@@ -10,15 +10,13 @@ import java.util.List;
 
 public class DrawerMenu {
     public static List<DrawerMenuItem> getNavigationDrawerItems() {
-        Context context = App.getContext();
-
         List<DrawerMenuItem> result = new ArrayList<>();
-        result.add(new DrawerMenuItem(context.getString(R.string.Sessions), R.drawable.menu_icon_program, R.drawable.menu_icon_program_sel, EventMode.Program, false));
-        result.add(new DrawerMenuItem(context.getString(R.string.speakers), R.drawable.menu_icon_speakers, R.drawable.menu_icon_speakers_sel,EventMode.Speakers, false));
-        result.add(new DrawerMenuItem(context.getString(R.string.my_schedule), R.drawable.menu_icon_my_schedule, R.drawable.menu_icon_my_schedule_sel, EventMode.Favorites, false));
-        result.add(new DrawerMenuItem(context.getString(R.string.social_media), R.drawable.menu_icon_social_media, R.drawable.menu_icon_social_media_sel, EventMode.SocialMedia, true));
-        result.add(new DrawerMenuItem(context.getString(R.string.location), R.drawable.menu_icon_location, R.drawable.menu_icon_location_sel, EventMode.Location, false));
-        result.add(new DrawerMenuItem(context.getString(R.string.about), R.drawable.menu_icon_about, R.drawable.menu_icon_about_sel, EventMode.About, false));
+        result.add(new DrawerMenuItem(R.string.Sessions, R.drawable.menu_icon_program, R.drawable.menu_icon_program_sel, EventMode.Program, false));
+        result.add(new DrawerMenuItem(R.string.speakers, R.drawable.menu_icon_speakers, R.drawable.menu_icon_speakers_sel,EventMode.Speakers, false));
+        result.add(new DrawerMenuItem(R.string.my_schedule, R.drawable.menu_icon_my_schedule, R.drawable.menu_icon_my_schedule_sel, EventMode.Favorites, false));
+        result.add(new DrawerMenuItem(R.string.social_media, R.drawable.menu_icon_social_media, R.drawable.menu_icon_social_media_sel, EventMode.SocialMedia, true));
+        result.add(new DrawerMenuItem(R.string.location, R.drawable.menu_icon_location, R.drawable.menu_icon_location_sel, EventMode.Location, false));
+        result.add(new DrawerMenuItem(R.string.about, R.drawable.menu_icon_about, R.drawable.menu_icon_about_sel, EventMode.About, false));
 
         return result;
     }
