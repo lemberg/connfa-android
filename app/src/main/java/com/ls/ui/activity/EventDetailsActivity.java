@@ -428,7 +428,6 @@ public class EventDetailsActivity extends StackKeeperActivity {
                 List<SponsorItem> sponsorsList = GoldSponsors.getSponsorsList(getApplicationContext());
 
                 SponsorItem currentSponsor = sponsorsList.get(SponsorManager.getInstance().getSponsorId());
-                L.e("currentSponsor = " + currentSponsor);
                 imageView.setBackgroundResource(currentSponsor.getResourceId());
                 AnalyticsManager.sendEvent(this, currentSponsor.getName());
 

@@ -17,7 +17,6 @@ public class BofsStrategy implements DrawerFragmentStrategy {
         List<Long> dayList = new ArrayList<>();
         BofsManager manager = Model.instance().getBofsManager();
         dayList.addAll(manager.getBofsDays());
-        L.e("dayList = " + dayList);
         return dayList;
     }
 

@@ -154,21 +154,6 @@ public class HomeActivity extends StateActivity implements FilterDialog.OnFilter
                     false);
         }
 
-
-//        if(getDrawable(R.drawable.bg_nav_drawer_footer) != null){
-//
-//        }
-
-//        int checkExistence = getResources().getIdentifier("bg_nav_drawer_footer", "drawable", getPackageName());
-
-//        if (GoldSponsors.getSponsorsList(this).size() > 1) {
-//            ImageView footerView = (ImageView)getLayoutInflater().inflate(R.layout.nav_drawer_footer, null);
-//            footerView.setBackgroundResource(R.drawable.bg_nav_drawer_footer);
-//
-//            listView.addFooterView(footerView, null, false);
-//        }
-
-
         listView.setAdapter(mAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -257,7 +242,6 @@ public class HomeActivity extends StateActivity implements FilterDialog.OnFilter
 
         {
             if (mFrManager != null) {
-                L.e("changeFragment = " + mSelectedItem);
                 mFrManager.setFragment(DrawerMenu.getNavigationDrawerItems().get(mSelectedItem).getEventMode());
                 mPresentTitle = DrawerMenu.getNavigationDrawerItems().get(mSelectedItem).getName();
                 mToolbar.setTitle(mPresentTitle);

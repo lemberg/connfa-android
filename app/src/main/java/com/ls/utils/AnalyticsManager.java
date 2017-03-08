@@ -21,7 +21,6 @@ public class AnalyticsManager {
     public static void detailsScreenTracker(Activity activity, int categoryId, int actionId, String title) {
         Tracker t = ((App) activity.getApplication()).getTracker();
         // Build and send an Event.
-        L.e("Screen" + activity.getString(categoryId) + " Details" + ": " + title);
         t.setScreenName(activity.getString(categoryId) + " Details" + ": " + title);
         t.send(new HitBuilders.ScreenViewBuilder().build());
     }

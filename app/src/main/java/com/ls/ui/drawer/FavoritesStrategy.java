@@ -18,7 +18,6 @@ public class FavoritesStrategy implements DrawerFragmentStrategy {
         List<Long> dayList = new ArrayList<>();
         FavoriteManager manager = Model.instance().getFavoriteManager();
         dayList.addAll(manager.getFavoriteEventDays());
-        L.e("dayList = " + dayList);
         return dayList;
     }
 

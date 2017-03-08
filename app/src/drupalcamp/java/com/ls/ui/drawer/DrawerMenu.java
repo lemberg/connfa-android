@@ -1,10 +1,5 @@
 package com.ls.ui.drawer;
-
-import android.content.Context;
-
 import com.ls.drupalcon.R;
-import com.ls.drupalcon.app.App;
-
 import java.util.ArrayList;
 import java.util.List;
 

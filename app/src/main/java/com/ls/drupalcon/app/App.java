@@ -27,11 +27,9 @@ public class App extends MultiDexApplication {
     @Override
     public void onCreate() {
         super.onCreate();
-//        if (!BuildConfig.DEBUG) {
             TwitterAuthConfig authConfig = new TwitterAuthConfig(
                     getString(R.string.api_value_twitter_api_key),
                     getString(R.string.api_value_twitter_secret));
-//        }
 
         mContext = getApplicationContext();
 

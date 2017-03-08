@@ -194,51 +194,6 @@ public class EventFragment extends Fragment implements EventsAdapter.Listener {
         }
     }
 
-//    private int getCurrentTimePosition(List<EventListItem> eventListItems) {
-//        Calendar calendar = Calendar.getInstance();
-//        calendar.setTimeZone(DateUtils.getInstance().getTimeZone());
-//        int deviceHours =  calendar.get(Calendar.HOUR_OF_DAY);
-//        int deviceMinutes =  calendar.get(Calendar.MINUTE);
-//        int nearestHour = 0;
-//        int nearestMinute = 0;
-//        int pos = 0;
-//
-//        for (EventListItem item : eventListItems){
-//
-//            if (item instanceof TimeRangeItem) {
-//
-//                Event event = item.getEvent();
-//                calendar.setTimeInMillis(event.getFromMillis());
-//                int eventHours = calendar.get(Calendar.HOUR_OF_DAY);
-//                int eventMinutes = calendar.get(Calendar.MINUTE);
-//
-//                if (deviceHours >= eventHours && deviceMinutes >= eventMinutes) {
-//                    nearestHour = eventHours;
-//                    nearestMinute = eventMinutes;
-//                }
-//            }
-//        }
-//
-//        for (EventListItem item : eventListItems){
-//
-//            if (item instanceof TimeRangeItem) {
-//
-//                Event event = item.getEvent();
-//                calendar.setTimeInMillis(event.getFromMillis());
-//                int eventHours = calendar.get(Calendar.HOUR_OF_DAY);
-//                int eventMinutes = calendar.get(Calendar.MINUTE);
-//
-//                if (nearestHour == eventHours && nearestMinute == eventMinutes) {
-//                    pos = eventListItems.indexOf(item);
-//                    break;
-//                }
-//            }
-//        }
-//
-//
-//        return pos;
-//    }
-
     private int getCurrentTimePosition(List<EventListItem> eventListItems) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeZone(DateUtils.getInstance().getTimeZone());

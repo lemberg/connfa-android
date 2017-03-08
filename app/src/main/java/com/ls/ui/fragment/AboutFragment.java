@@ -30,8 +30,6 @@ import java.util.List;
  */
 public class AboutFragment  extends Fragment
 {
-    public static final String TAG = "AboutFragment";
-
     private ListView mListMenu;
     private View mLayoutPlaceholder;
 

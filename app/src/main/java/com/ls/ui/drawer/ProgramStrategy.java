@@ -16,7 +16,6 @@ public class ProgramStrategy implements DrawerFragmentStrategy {
         List<Long> dayList = new ArrayList<>();
         ProgramManager programManager = Model.instance().getProgramManager();
         dayList.addAll(programManager.getProgramDays());
-        L.e("dayList = " + dayList);
         return dayList;
     }
 

@@ -92,22 +92,6 @@ public class FloorPlanFragment  extends Fragment
         return result;
     }
 
-//    void resolveTitleVisibility(){
-//        AppCompatActivity activity = (AppCompatActivity)this.getActivity();
-//        if(activity != null && activity.getSupportActionBar() != null) {
-//            ActionBar actionBar = activity.getSupportActionBar();
-//            if(this.isResumed()) {
-//                if (plans != null && !plans.isEmpty()) {
-//                    actionBar.setTitle("");
-//                    actionBar.setCustomView(actionbarLayout);
-//                } else {
-//                    actionBar.setTitle(R.string.floor_plan);
-//                    actionBar.setCustomView(null);
-//                }
-//            }
-//        }
-//    }
-
     private class LoadPlansTask extends AsyncTask<Void,Void,List<FloorPlan>>{
 
         @Override

@@ -17,7 +17,6 @@ public class SocialStrategy implements DrawerFragmentStrategy {
         List<Long> dayList = new ArrayList<>();
         SocialManager manager = Model.instance().getSocialManager();
         dayList.addAll(manager.getSocialsDays());
-        L.e("dayList = " + dayList);
         return dayList;
     }
 

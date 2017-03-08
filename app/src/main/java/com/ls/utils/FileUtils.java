@@ -172,7 +172,6 @@ public class FileUtils
 
     public static Bitmap readBitmapFromStoredFile(String name, int reqWidth,int reqHeight, Context theContext)
     {
-        L.e("Reading bitmap:"+name);
         FileInputStream fin = null;
         try {
             File fl = getFileWithName(name, theContext);
@@ -190,10 +189,8 @@ public class FileUtils
             fin = new FileInputStream(fl);
 
             return BitmapFactory.decodeStream(fin,null,options);
-        } catch (IOException e) {
+        } catch (IOException | Error e) {
             e.printStackTrace();
-        }  catch (Error error) {
-            error.printStackTrace();
         } finally {
             if(fin != null) {
                 try {
@@ -230,18 +227,6 @@ public class FileUtils
 
     private static File getFileWithName(String theName, Context theContext) throws IOException
     {
-//
-//        String state = Environment.getExternalStorageState();
-//
-//        File storageDir;
-//        if (Environment.MEDIA_MOUNTED.equals(state)) {
-//            storageDir = theContext.getExternalCacheDir();
-//        } else {
-//            storageDir = theContext.getCacheDir();
-//        }
-//        return new File(storageDir,cleanFileName(theName));
-
-        //We have to store fiels in permanent directory
         File storageDir = getDataFilesDirectory(theContext);
         return new File(storageDir, cleanFileName(theName));
     }
@@ -270,7 +255,6 @@ public class FileUtils
 
             inSampleSize = heightRatio > widthRatio ? heightRatio : widthRatio;
         }
-        L.e("Sample size:"+inSampleSize);
         return inSampleSize;
     }
 }

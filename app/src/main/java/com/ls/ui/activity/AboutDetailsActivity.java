@@ -2,8 +2,6 @@ package com.ls.ui.activity;
 
 import android.view.View;
 import android.webkit.WebViewClient;
-import com.google.android.gms.analytics.GoogleAnalytics;
-
 import com.ls.drupalcon.R;
 import com.ls.drupalcon.model.Model;
 import com.ls.drupalcon.model.UpdatesManager;
