@@ -102,7 +102,7 @@ public class SpeakerDetailsActivity extends StackKeeperActivity implements View.
         if (mSpeaker != null) {
             mSpeakerName = String.format("%s %s", mSpeaker.getFirstName(), mSpeaker.getLastName());
         }
-        AnalyticsManager.detailsScreenTracker(this, R.string.speaker_category, R.string.action_open, mSpeakerName);
+        AnalyticsManager.detailsScreenTracker(this, R.string.speaker_category, mSpeakerName);
     }
 
     private void initToolbar() {

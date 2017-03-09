@@ -249,14 +249,14 @@ public class HomeActivity extends StateActivity implements FilterDialog.OnFilter
                 mAdapter.setSelectedPos(mSelectedItem);
                 mAdapter.notifyDataSetChanged();
 
-                AnalyticsManager.drawerFragmentTracker(this, mPresentTitle, R.string.action_open);
+                AnalyticsManager.drawerFragmentTracker(this, mPresentTitle);
             }
         }
     }
 
     private void initFragmentManager() {
         mFrManager = DrawerManager.getInstance(getSupportFragmentManager(), R.id.mainFragment);
-        AnalyticsManager.drawerFragmentTracker(this, mPresentTitle = DrawerMenu.getNavigationDrawerItems().get(0).getName(), R.string.action_open);
+        AnalyticsManager.drawerFragmentTracker(this, mPresentTitle = DrawerMenu.getNavigationDrawerItems().get(0).getName());
         mFrManager.setFragment(DrawerMenu.getNavigationDrawerItems().get(0).getEventMode());
     }
 

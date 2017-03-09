@@ -11,14 +11,14 @@ import android.app.Activity;
 public class AnalyticsManager {
 
 
-    public static void drawerFragmentTracker(Activity activity, int screeenNameId, int actionId) {
+    public static void drawerFragmentTracker(Activity activity, int screeenNameId) {
         Tracker t = ((App) activity.getApplication()).getTracker();
         // Build and send an Event.
         t.setScreenName(activity.getString(screeenNameId));
         t.send(new HitBuilders.ScreenViewBuilder().build());
     }
 
-    public static void detailsScreenTracker(Activity activity, int categoryId, int actionId, String title) {
+    public static void detailsScreenTracker(Activity activity, int categoryId, String title) {
         Tracker t = ((App) activity.getApplication()).getTracker();
         // Build and send an Event.
         t.setScreenName(activity.getString(categoryId) + " Details" + ": " + title);

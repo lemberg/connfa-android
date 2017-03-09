@@ -43,7 +43,7 @@ public class AboutDetailsActivity extends StateActivity {
         initToolbar(aboutTitle);
         Model.instance().getUpdatesManager().registerUpdateListener(updateListener);
 
-        AnalyticsManager.detailsScreenTracker(this, R.string.about, R.string.action_open, aboutTitle);
+        AnalyticsManager.detailsScreenTracker(this, R.string.about, aboutTitle);
     }
 
     @Override

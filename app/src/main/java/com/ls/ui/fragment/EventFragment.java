@@ -183,7 +183,7 @@ public class EventFragment extends Fragment implements EventsAdapter.Listener {
         Event event = item.getEvent();
         if (item.getEvent() != null && item.getEvent().getId() != 0) {
             String eventName = item.getEvent().getName();
-            AnalyticsManager.detailsScreenTracker(getActivity(), R.string.event_category, R.string.action_open, eventName);
+            AnalyticsManager.detailsScreenTracker(getActivity(), R.string.event_category, eventName);
 
             if (event.getEventClass() == Event.PROGRAM_CLASS) {
                 getSponsor();

@@ -379,7 +379,7 @@ public class EventDetailsActivity extends StackKeeperActivity {
         if (mIsFavorite) {
             actionId = R.string.action_add_to_favorites;
         }
-        AnalyticsManager.detailsScreenTracker(this, R.string.event_category, actionId, mEvent.getEventName());
+        AnalyticsManager.detailsScreenTracker(this, R.string.event_category, mEvent.getEventName());
         ReceiverManager.updateFavorites(EventDetailsActivity.this, mEventId, mIsFavorite);
     }
 
