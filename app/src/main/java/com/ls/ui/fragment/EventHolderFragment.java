@@ -10,7 +10,7 @@ import com.ls.drupalcon.model.UpdatesManager;
 import com.ls.ui.activity.HomeActivity;
 import com.ls.ui.adapter.BaseEventDaysPagerAdapter;
 import com.ls.ui.drawer.BofsStrategy;
-import com.ls.ui.drawer.DrawerFragmentStrategy;
+import com.ls.ui.drawer.EventHolderFragmentStrategy;
 import com.ls.ui.drawer.EventMode;
 import com.ls.ui.drawer.FavoritesStrategy;
 import com.ls.ui.drawer.ProgramStrategy;
@@ -54,7 +54,7 @@ public class EventHolderFragment extends Fragment {
     private TextView mTextViewNoContent;
 
     private boolean mIsFilterUsed;
-    private DrawerFragmentStrategy strategy;
+    private EventHolderFragmentStrategy strategy;
     private List<UpdateRequest> requests = new ArrayList<>();
 
 
@@ -67,7 +67,7 @@ public class EventHolderFragment extends Fragment {
                     requests.add(request);
                 }
             }
-
+            L.e("requests = " + requests.size());
             updateData(requests);
         }
     };
@@ -259,7 +259,9 @@ public class EventHolderFragment extends Fragment {
     }
 
     private void updateData(List<UpdateRequest> requests) {
-        strategy.update(requests);
+        if (strategy.update(requests)) {
+            new LoadData().execute();
+        }
     }
 
 

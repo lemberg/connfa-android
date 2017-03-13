@@ -3,14 +3,14 @@ package com.ls.ui.drawer;
 import com.ls.drupalcon.R;
 import com.ls.drupalcon.model.Model;
 import com.ls.drupalcon.model.UpdateRequest;
-import com.ls.drupalcon.model.managers.FavoriteManager;
 import com.ls.drupalcon.model.managers.SocialManager;
-import com.ls.utils.L;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class SocialStrategy implements DrawerFragmentStrategy {
+public class SocialStrategy implements EventHolderFragmentStrategy {
+
+    private static UpdateRequest request = UpdateRequest.SOCIALS;
 
     @Override
     public List<Long> getDayList() {
@@ -42,7 +42,7 @@ public class SocialStrategy implements DrawerFragmentStrategy {
 
     @Override
     public boolean update(List<UpdateRequest> requests) {
-        return true;
+        return requests.contains(request);
     }
 
     @Override

@@ -4,13 +4,13 @@ import com.ls.drupalcon.R;
 import com.ls.drupalcon.model.Model;
 import com.ls.drupalcon.model.UpdateRequest;
 import com.ls.drupalcon.model.managers.BofsManager;
-import com.ls.drupalcon.model.managers.ProgramManager;
-import com.ls.utils.L;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class BofsStrategy implements DrawerFragmentStrategy {
+public class BofsStrategy implements EventHolderFragmentStrategy {
+
+    private static UpdateRequest request = UpdateRequest.BOFS;
 
      @Override
     public List<Long> getDayList() {
@@ -42,7 +42,7 @@ public class BofsStrategy implements DrawerFragmentStrategy {
 
     @Override
     public boolean update(List<UpdateRequest> requests) {
-        return true;
+        return requests.contains(request);
     }
 
     @Override

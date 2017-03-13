@@ -4,12 +4,13 @@ import com.ls.drupalcon.R;
 import com.ls.drupalcon.model.Model;
 import com.ls.drupalcon.model.UpdateRequest;
 import com.ls.drupalcon.model.managers.ProgramManager;
-import com.ls.utils.L;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProgramStrategy implements DrawerFragmentStrategy {
+public class ProgramStrategy implements EventHolderFragmentStrategy {
+
+    private static UpdateRequest request = UpdateRequest.PROGRAMS;
 
     @Override
     public List<Long> getDayList() {
@@ -41,7 +42,7 @@ public class ProgramStrategy implements DrawerFragmentStrategy {
 
     @Override
     public boolean update(List<UpdateRequest> requests) {
-        return requests.contains(UpdateRequest.PROGRAMS);
+        return requests.contains(request);
     }
 
     @Override

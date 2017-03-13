@@ -5,7 +5,7 @@ import com.ls.drupalcon.model.UpdateRequest;
 
 import java.util.List;
 
-public interface DrawerFragmentStrategy {
+public interface EventHolderFragmentStrategy {
     List<Long> getDayList();
 
     int getTextResId();
