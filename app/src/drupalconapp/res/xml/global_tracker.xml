@@ -4,7 +4,7 @@
     <integer name="ga_sessionTimeout">300</integer>
 
     <!-- Enable automatic Activity measurement -->
-    <bool name="ga_autoActivityTracking">true</bool>
+    <bool name="ga_autoActivityTracking">false</bool>
 
     <!--  The property id associated with this analytics tracker -->
     <string name="ga_trackingId">UA-267362-65</string>

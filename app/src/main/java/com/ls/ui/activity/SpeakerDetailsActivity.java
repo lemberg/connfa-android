@@ -1,7 +1,4 @@
 package com.ls.ui.activity;
-
-import com.google.android.gms.analytics.GoogleAnalytics;
-
 import com.ls.drupalcon.R;
 import com.ls.drupalcon.app.App;
 import com.ls.drupalcon.model.Model;
@@ -34,8 +31,6 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import java.util.ArrayList;
 import java.util.List;
 
 public class SpeakerDetailsActivity extends StackKeeperActivity implements View.OnClickListener {
