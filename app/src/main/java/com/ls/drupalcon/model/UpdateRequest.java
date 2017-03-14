@@ -20,17 +20,4 @@ public enum UpdateRequest {
         this.requestId = id;
     }
 
-    public int getRequestId() {
-        return requestId;
-    }
-
-    public static UpdateRequest fromId(int value) {
-        for (UpdateRequest request : values()) {
-            if (request.requestId == value) {
-                return request;
-            }
-        }
-        return null;
-    }
-
 }

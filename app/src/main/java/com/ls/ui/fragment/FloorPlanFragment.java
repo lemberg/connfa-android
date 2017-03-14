@@ -41,9 +41,9 @@ public class FloorPlanFragment  extends Fragment
 
     private UpdatesManager.DataUpdatedListener updateListener = new UpdatesManager.DataUpdatedListener() {
         @Override
-        public void onDataUpdated(List<Integer> requestIds) {
+        public void onDataUpdated( List<UpdateRequest> requests) {
 
-            if (requestIds.contains(UpdateRequest.FLOOR_PLANS.getRequestId())){
+            if (requests.contains(UpdateRequest.FLOOR_PLANS)){
                 new LoadPlansTask().execute();
             }
 

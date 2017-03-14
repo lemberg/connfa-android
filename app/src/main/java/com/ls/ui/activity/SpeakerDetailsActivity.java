@@ -2,6 +2,7 @@ package com.ls.ui.activity;
 import com.ls.drupalcon.R;
 import com.ls.drupalcon.app.App;
 import com.ls.drupalcon.model.Model;
+import com.ls.drupalcon.model.UpdateRequest;
 import com.ls.drupalcon.model.UpdatesManager;
 import com.ls.drupalcon.model.dao.EventDao;
 import com.ls.drupalcon.model.data.Level;
@@ -56,7 +57,7 @@ public class SpeakerDetailsActivity extends StackKeeperActivity implements View.
 
     private UpdatesManager.DataUpdatedListener updateListener = new UpdatesManager.DataUpdatedListener() {
         @Override
-        public void onDataUpdated(List<Integer> requestIds) {
+        public void onDataUpdated( List<UpdateRequest> requests) {
             loadSpeakerFromDb();
         }
     };

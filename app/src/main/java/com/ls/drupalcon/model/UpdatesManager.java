@@ -23,14 +23,12 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class UpdatesManager {
-    List<UpdateRequest> updateList = new ArrayList<>();
-
 
     private DrupalClient mClient;
     private ObserverHolder<DataUpdatedListener> mUpdateListeners;
 
     public static final String IF_MODIFIED_SINCE_HEADER = "If-Modified-Since";
-    public static final String LAST_MODIFIED_HEADER = "Last-Modified";
+    private static final String LAST_MODIFIED_HEADER = "Last-Modified";
 
     public UpdatesManager(@NotNull DrupalClient client) {
         mUpdateListeners = new ObserverHolder<>();
@@ -38,15 +36,15 @@ public class UpdatesManager {
     }
 
     public void startLoading(@NotNull final UpdateCallback callback) {
-        new AsyncTask<Void, Void, List<Integer>>() {
+        new AsyncTask<Void, Void, List<UpdateRequest>>() {
 
             @Override
-            protected List<Integer> doInBackground(Void... params) {
+            protected  List<UpdateRequest> doInBackground(Void... params) {
                 return doPerformLoading();
             }
 
             @Override
-            protected void onPostExecute(final List<Integer> result) {
+            protected void onPostExecute(final List<UpdateRequest> result) {
                 if (result != null) {
                     mUpdateListeners.notifyAllObservers(new ObserverHolder.ObserverNotifier<DataUpdatedListener>() {
                         @Override
@@ -87,13 +85,15 @@ public class UpdatesManager {
      * @return return updated request id's list in case of success or null in case of failure
      */
 
-    private List<Integer> doPerformLoading() {
+    private  List<UpdateRequest> doPerformLoading() {
         RequestConfig config = new RequestConfig();
         config.setResponseFormat(BaseRequest.ResponseFormat.JSON);
         config.setRequestFormat(BaseRequest.RequestFormat.JSON);
         config.setResponseClassSpecifier(UpdateDate.class);
+
         String baseURL = App.getContext().getString(R.string.api_value_base_url);
         BaseRequest checkForUpdatesRequest = new BaseRequest(BaseRequest.RequestMethod.GET, baseURL + "checkUpdates", config);
+
         String lastDate = PreferencesManager.getInstance().getLastUpdateDate();
         checkForUpdatesRequest.addRequestHeader(IF_MODIFIED_SINCE_HEADER, lastDate);
         ResponseData updatesData = mClient.performRequest(checkForUpdatesRequest, true);
@@ -112,69 +112,14 @@ public class UpdatesManager {
         }
     }
 
-    private List<Integer> loadData(UpdateDate updateDate) {
-
-        List<Integer> updateIds = updateDate.getIdsForUpdate();
-        if (updateIds == null || updateIds.isEmpty()) {
-            return new LinkedList<>();
-        }
-        for (int i : updateIds) {
-            switch (i) {
-                case 0:
-                    updateList.add(UpdateRequest.SETTINGS);
-                    break;
-                case 1:
-                    updateList.add(UpdateRequest.TYPES);
-                    break;
-                case 2:
-                    updateList.add(UpdateRequest.LEVELS);
-                    break;
-                case 3:
-                    updateList.add(UpdateRequest.TRACKS);
-                    break;
-                case 4:
-                    updateList.add(UpdateRequest.SPEAKERS);
-                    break;
-                case 5:
-                    updateList.add(UpdateRequest.LOCATIONS);
-                    break;
-                case 6:
-                    updateList.add(UpdateRequest.FLOOR_PLANS);
-                    break;
-                case 7:
-                    updateList.add(UpdateRequest.PROGRAMS);
-                    break;
-                case 8:
-                    updateList.add(UpdateRequest.BOFS);
-                    break;
-                case 9:
-                    updateList.add(UpdateRequest.SOCIALS);
-                    break;
-                case 10:
-                    updateList.add(UpdateRequest.POIS);
-                    break;
-                case 11:
-                    updateList.add(UpdateRequest.INFO);
-                    break;
-
-            }
-
-
-        }
-//        updateRequests.setRequestId();
+    private List<UpdateRequest> loadData(UpdateDate updateDate) {
 
         ILAPIDBFacade facade = Model.instance().getFacade();
         try {
             facade.open();
             facade.beginTransactions();
             boolean success = true;
-//            for (Integer i : updateIds) {
-//                success = sendRequestById(i);
-//                if (!success) {
-//                    break;
-//                }
-//            }
-
+            List<UpdateRequest> updateList = updateDate.getUpdateList();
             for (UpdateRequest update : updateList) {
                 success = sendRequestById(update);
                 if (!success) {
@@ -187,7 +132,7 @@ public class UpdatesManager {
                     PreferencesManager.getInstance().saveLastUpdateDate(updateDate.getTime());
                 }
             }
-            return success ? updateIds : null;
+            return success ? updateList : null;
         } finally {
             facade.endTransactions();
             facade.close();
@@ -261,7 +206,7 @@ public class UpdatesManager {
 
     public interface DataUpdatedListener {
 
-        void onDataUpdated(List<Integer> requestIds);
+        void onDataUpdated(List<UpdateRequest> requests);
     }
 
     public void checkForDatabaseUpdate() {

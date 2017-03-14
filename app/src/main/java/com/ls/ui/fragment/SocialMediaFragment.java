@@ -32,8 +32,8 @@ public class SocialMediaFragment extends Fragment
 
     private UpdatesManager.DataUpdatedListener updateReceiver = new UpdatesManager.DataUpdatedListener() {
         @Override
-        public void onDataUpdated(List<Integer> requestIds) {
-            updateData(requestIds);
+        public void onDataUpdated(List<UpdateRequest> requests) {
+            updateData(requests);
         }
     };
 
@@ -51,9 +51,9 @@ public class SocialMediaFragment extends Fragment
         mLayoutPlaceholder = rootView.findViewById(R.id.layout_placeholder);
         return rootView;
     }
-    private void updateData(List<Integer> requestIds) {
-        for (int id : requestIds) {
-            if (UpdateRequest.SETTINGS.getRequestId() == id) {
+    private void updateData(List<UpdateRequest> requestIds) {
+        for (UpdateRequest id : requestIds) {
+            if (UpdateRequest.SETTINGS == id) {
                 fillView();
                 break;
             }

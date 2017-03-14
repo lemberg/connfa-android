@@ -60,14 +60,14 @@ public class EventHolderFragment extends Fragment {
 
     private UpdatesManager.DataUpdatedListener updateReceiver = new UpdatesManager.DataUpdatedListener() {
         @Override
-        public void onDataUpdated(List<Integer> requestIds) {
-            for (Integer i : requestIds) {
-                UpdateRequest request = UpdateRequest.fromId(i);
-                if (request != null) {
-                    requests.add(request);
-                }
-            }
-            L.e("requests = " + requests.size());
+        public void onDataUpdated( List<UpdateRequest> requests) {
+//            for (Integer i : requestIds) {
+//                UpdateRequest request = UpdateRequest.fromId(i);
+//                if (request != null) {
+//                    requests.add(request);
+//                }
+//            }
+            L.e("requests = " + EventHolderFragment.this.requests.size());
             updateData(requests);
         }
     };
