@@ -11,4 +11,5 @@
     <string name="regular_font">"Roboto-Regular.ttf"</string>
     <string name="thin_font">"Roboto-Thin.ttf"</string>
     <string name="montserrat_regular_font">"Montserrat-Regular.ttf"</string>
+    <string name="custom_regular_font">"Merriweather-Regular.ttf"</string>
 </resources>

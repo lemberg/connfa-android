@@ -376,10 +376,6 @@ public class EventDetailsActivity extends StackKeeperActivity {
         }).start();
         setToNotificationQueue();
 
-        int actionId = R.string.action_remove_from_favorites;
-        if (mIsFavorite) {
-            actionId = R.string.action_add_to_favorites;
-        }
         AnalyticsManager.detailsScreenTracker(this, R.string.event_category, mEvent.getEventName());
         ReceiverManager.updateFavorites(EventDetailsActivity.this, mEventId, mIsFavorite);
     }
@@ -433,7 +429,7 @@ public class EventDetailsActivity extends StackKeeperActivity {
                 AnalyticsManager.sendEvent(this, currentSponsor.getName());
 
             } else {
-                imageView.setBackgroundResource(R.drawable.speaker_details_header);
+                imageView.setBackgroundResource(R.drawable.event_details_header);
             }
         }
 

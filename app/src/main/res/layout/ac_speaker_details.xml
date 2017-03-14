@@ -42,7 +42,7 @@
                     android:layout_marginRight="16dp"
                     android:layout_marginTop="56dp"
                     android:gravity="center_vertical"
-                    app:custom_font="@string/montserrat_regular_font"
+                    app:custom_font="@string/custom_regular_font"
                     android:textColor="@color/black_100"
                     android:textSize="@dimen/text_size_20"
                     tools:text="Lorem Ipsum" />
