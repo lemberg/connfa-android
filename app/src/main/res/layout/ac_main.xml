@@ -2,6 +2,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
+    <!--status bar view-->
+    <View
+        android:id="@+id/viewStatusBarTrans"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/status_bar_height"
+        android:background="@color/black_90_trans"
+        android:visibility="gone"/>
+
     <android.support.v4.widget.DrawerLayout
         android:id="@+id/drawerLayout"
         android:layout_width="match_parent"
@@ -38,13 +46,5 @@
             android:splitMotionEvents="false"/>
 
     </android.support.v4.widget.DrawerLayout>
-
-    <!--status bar view-->
-    <View
-        android:id="@+id/viewStatusBarTrans"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/status_bar_height"
-        android:background="@color/black_90_trans"
-        android:visibility="gone"/>
 
 </FrameLayout>

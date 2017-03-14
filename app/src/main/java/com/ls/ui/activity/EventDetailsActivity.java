@@ -429,7 +429,7 @@ public class EventDetailsActivity extends StackKeeperActivity {
                 AnalyticsManager.sendEvent(this, currentSponsor.getName());
 
             } else {
-                imageView.setBackgroundResource(R.drawable.event_details_header);
+//                imageView.setBackgroundResource(R.drawable.event_details_header);
             }
         }
 
