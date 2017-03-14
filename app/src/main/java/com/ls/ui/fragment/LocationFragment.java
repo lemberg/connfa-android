@@ -129,7 +129,7 @@ public class LocationFragment extends Fragment implements CustomMapFragment.OnAc
     private void replaceMapFragment() {
         CustomMapFragment mapFragment = CustomMapFragment.newInstance(LocationFragment.this);
         LocationFragment
-                .this.getFragmentManager()
+                .this.getChildFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragmentHolder, mapFragment)
                 .commitAllowingStateLoss();
