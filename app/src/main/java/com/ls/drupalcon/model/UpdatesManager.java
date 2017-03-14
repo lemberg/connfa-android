@@ -119,7 +119,7 @@ public class UpdatesManager {
             facade.open();
             facade.beginTransactions();
             boolean success = true;
-            List<UpdateRequest> updateList = updateDate.getUpdateList();
+            List<UpdateRequest> updateList = updateDate.getIdsForUpdate();
             for (UpdateRequest update : updateList) {
                 success = sendRequestById(update);
                 if (!success) {
