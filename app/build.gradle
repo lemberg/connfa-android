@@ -28,25 +28,6 @@ android {
     }
 
     productFlavors {
-        drupalconapp {
-            applicationId "com.ls.drupalconapp"
-            versionName "drupalconapp"
-
-            defaultConfig {
-                versionCode 19
-                versionName "3.0.0"
-            }
-        }
-
-        drupalcamp {
-            applicationId "com.ls.drupalcamp"
-            versionName "drupalcamp"
-
-            defaultConfig {
-                versionCode 19
-                versionName "1.1.1"
-            }
-        }
 
         connfa {
             applicationId "com.ls.connfa"
