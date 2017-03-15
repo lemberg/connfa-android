@@ -2,9 +2,9 @@ package com.connfa.ui.fragment;
 
 import android.app.Activity;
 import android.graphics.Typeface;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -20,46 +20,38 @@ import com.connfa.R;
 import com.connfa.model.Model;
 import com.connfa.model.PreferencesManager;
 import com.connfa.model.UpdatesManager;
-import com.connfa.model.managers.BofsManager;
-import com.connfa.model.managers.FavoriteManager;
-import com.connfa.model.managers.ProgramManager;
-import com.connfa.model.managers.SocialManager;
 import com.connfa.ui.activity.HomeActivity;
 import com.connfa.ui.adapter.BaseEventDaysPagerAdapter;
 import com.connfa.ui.drawer.DrawerManager;
 import com.connfa.ui.receiver.ReceiverManager;
 import com.connfa.utils.DateUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import org.jetbrains.annotations.NotNull;
+import timber.log.Timber;
 
 public class EventHolderFragment extends Fragment {
 
     public static final String TAG = "ProjectsFragment";
+
     private static final String EXTRAS_ARG_MODE = "EXTRAS_ARG_MODE";
+
+    private LoadDataTask loadDataTask;
 
     private PreferencesManager preferencesManager;
 
-    private ViewPager mViewPager;
-    private PagerSlidingTabStrip mPagerTabs;
-    private BaseEventDaysPagerAdapter mAdapter;
+    private ViewPager viewPager;
+    private PagerSlidingTabStrip tabStrip;
+    private BaseEventDaysPagerAdapter adapter;
 
-    private DrawerManager.EventMode mEventMode;
+    private DrawerManager.EventMode eventMode;
 
-    private View mLayoutPlaceholder;
-    private ImageView mImageViewNoContent;
-    private TextView mTextViewNoContent;
+    private View layoutPlaceholder;
+    private ImageView emptyImageView;
+    private TextView emptyLabel;
 
-    private boolean mIsFilterUsed;
+    private boolean isFilterUsed;
 
-    private UpdatesManager.DataUpdatedListener updateReceiver = new UpdatesManager.DataUpdatedListener() {
-        @Override
-        public void onDataUpdated(List<Integer> requestIds) {
-            updateData(requestIds);
-        }
-    };
     private ReceiverManager favoriteReceiver = new ReceiverManager(new ReceiverManager.FavoriteUpdatedListener() {
         @Override
         public void onFavoriteUpdated(long eventId, boolean isFavorite) {
@@ -108,25 +100,6 @@ public class EventHolderFragment extends Fragment {
         return true;
     }
 
-//    @Override
-//    public void onActivityCreated(Bundle savedInstanceState) {
-//        super.onActivityCreated(savedInstanceState);
-//        Model.createInstance().getUpdatesManager().registerUpdateListener(updateReceiver);
-//        favoriteReceiver.register(getActivity());
-//
-//        initData();
-//        initView();
-//        new LoadData().execute();
-//    }
-//
-//
-//    @Override
-//    public void onDestroy() {
-//        super.onDestroy();
-//        Model.createInstance().getUpdatesManager().unregisterUpdateListener(updateReceiver);
-//        favoriteReceiver.unregister(getActivity());
-//    }
-
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -135,7 +108,7 @@ public class EventHolderFragment extends Fragment {
 
         initData();
         initView();
-        new LoadData().execute();
+        refreshData();
     }
 
     @Override
@@ -145,11 +118,18 @@ public class EventHolderFragment extends Fragment {
         super.onDestroyView();
     }
 
+    private UpdatesManager.DataUpdatedListener updateReceiver = new UpdatesManager.DataUpdatedListener() {
+        @Override
+        public void onDataUpdated(List<Integer> requestIds) {
+            updateData(requestIds);
+        }
+    };
+
     private void initData() {
         Bundle bundle = getArguments();
         if (bundle != null) {
-            int eventPos = bundle.getInt(EXTRAS_ARG_MODE, DrawerManager.EventMode.Program.ordinal());
-            mEventMode = DrawerManager.EventMode.values()[eventPos];
+            int eventPos = bundle.getInt(EXTRAS_ARG_MODE, DrawerManager.EventMode.PROGRAM.ordinal());
+            eventMode = DrawerManager.EventMode.values()[eventPos];
         }
     }
 
@@ -159,121 +139,25 @@ public class EventHolderFragment extends Fragment {
             return;
         }
 
-        mAdapter = new BaseEventDaysPagerAdapter(getActivity(), getChildFragmentManager());
-        mViewPager = (ViewPager) view.findViewById(R.id.viewPager);
-        mViewPager.setAdapter(mAdapter);
+        adapter = new BaseEventDaysPagerAdapter(getActivity(), getChildFragmentManager());
+        viewPager = (ViewPager) view.findViewById(R.id.viewPager);
+        viewPager.setAdapter(adapter);
 
         Typeface typeface = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Roboto-Regular.ttf");
-        mPagerTabs = (PagerSlidingTabStrip) getView().findViewById(R.id.pager_tab_strip);
-        mPagerTabs.setTypeface(typeface, 0);
-        mPagerTabs.setViewPager(mViewPager);
+        tabStrip = (PagerSlidingTabStrip) getView().findViewById(R.id.pager_tab_strip);
+        tabStrip.setTypeface(typeface, 0);
+        tabStrip.setViewPager(viewPager);
 
-        mLayoutPlaceholder = view.findViewById(R.id.layout_placeholder);
-        mTextViewNoContent = (TextView) view.findViewById(R.id.text_view_placeholder);
-        mImageViewNoContent = (ImageView) view.findViewById(R.id.image_view_placeholder);
+        layoutPlaceholder = view.findViewById(R.id.layout_placeholder);
+        emptyLabel = (TextView) view.findViewById(R.id.text_view_placeholder);
+        emptyImageView = (ImageView) view.findViewById(R.id.image_view_placeholder);
 
-        if (mEventMode == DrawerManager.EventMode.Program ||
-                mEventMode == DrawerManager.EventMode.Bofs ||
-                mEventMode == DrawerManager.EventMode.Social) {
+        if (eventMode == DrawerManager.EventMode.PROGRAM ||
+                eventMode == DrawerManager.EventMode.BOFS ||
+                eventMode == DrawerManager.EventMode.SOCIAL) {
             setHasOptionsMenu(true);
         } else {
             setHasOptionsMenu(false);
-        }
-    }
-
-    class LoadData extends AsyncTask<Void, Void, List<Long>> {
-
-        @Override
-        protected List<Long> doInBackground(Void... params) {
-            return getDayList();
-        }
-
-        @Override
-        protected void onPostExecute(List<Long> result) {
-            updateViews(result);
-        }
-    }
-
-    private List<Long> getDayList() {
-        List<Long> dayList = new ArrayList<>();
-        switch (mEventMode) {
-            case Bofs:
-                BofsManager bofsManager = Model.getInstance().getBofsManager();
-                dayList.addAll(bofsManager.getBofsDays());
-                break;
-            case Social:
-                SocialManager socialManager = Model.getInstance().getSocialManager();
-                dayList.addAll(socialManager.getSocialsDays());
-                break;
-            case Favorites:
-                FavoriteManager favoriteManager = Model.getInstance().getFavoriteManager();
-                dayList.addAll(favoriteManager.getFavoriteEventDays());
-                break;
-            default:
-                ProgramManager programManager = Model.getInstance().getProgramManager();
-                dayList.addAll(programManager.getProgramDays());
-                break;
-        }
-        return dayList;
-    }
-
-    private void updateViews(List<Long> dayList) {
-
-//        if(!isResumed()){
-//            return;
-//        }
-
-        if (dayList.isEmpty()) {
-            mPagerTabs.setVisibility(View.GONE);
-            mLayoutPlaceholder.setVisibility(View.VISIBLE);
-
-            if (mIsFilterUsed) {
-                mImageViewNoContent.setVisibility(View.GONE);
-                mTextViewNoContent.setText(getString(R.string.placeholder_no_matching_events));
-            } else {
-                mImageViewNoContent.setVisibility(View.VISIBLE);
-
-                int imageResId = 0, textResId = 0;
-
-                switch (mEventMode) {
-                    case Program:
-                        imageResId = R.drawable.ic_no_session;
-                        textResId = R.string.placeholder_sessions;
-                        break;
-                    case Bofs:
-                        imageResId = R.drawable.ic_no_bofs;
-                        textResId = R.string.placeholder_bofs;
-                        break;
-                    case Social:
-                        imageResId = R.drawable.ic_no_social_events;
-                        textResId = R.string.placeholder_social_events;
-                        break;
-                    case Favorites:
-                        imageResId = R.drawable.ic_no_my_schedule;
-                        textResId = R.string.placeholder_schedule;
-                        break;
-                }
-
-                mImageViewNoContent.setImageResource(imageResId);
-                mTextViewNoContent.setText(getString(textResId));
-            }
-        } else {
-            mLayoutPlaceholder.setVisibility(View.GONE);
-            mPagerTabs.setVisibility(View.VISIBLE);
-        }
-
-        mAdapter.setData(dayList, mEventMode);
-        switchToCurrentDay(dayList);
-    }
-
-    private void switchToCurrentDay(List<Long> days) {
-        int item = 0;
-        for (Long millis : days) {
-            if (DateUtils.isToday(getActivity(), millis) || DateUtils.isAfterCurrentFate(millis)) {
-                mViewPager.setCurrentItem(item);
-                return;
-            }
-            item++;
         }
     }
 
@@ -287,16 +171,16 @@ public class EventHolderFragment extends Fragment {
         }
     }
 
-    private void updateFilterState(@NotNull MenuItem filter) {
-        mIsFilterUsed = false;
+    private void updateFilterState(MenuItem filter) {
+        isFilterUsed = false;
         List<Long> levelIds = preferencesManager.getExpLevels();
         List<Long> trackIds = preferencesManager.getTracks();
 
         if (!levelIds.isEmpty() || !trackIds.isEmpty()) {
-            mIsFilterUsed = true;
+            isFilterUsed = true;
         }
 
-        if (mIsFilterUsed) {
+        if (isFilterUsed) {
             filter.setIcon(getResources().getDrawable(R.drawable.ic_filter));
         } else {
             filter.setIcon(getResources().getDrawable(R.drawable.ic_filter_empty));
@@ -306,9 +190,9 @@ public class EventHolderFragment extends Fragment {
     private void updateData(List<Integer> requestIds) {
         for (int id : requestIds) {
             int eventModePos = UpdatesManager.convertEventIdToEventModePos(id);
-            if (eventModePos == mEventMode.ordinal() ||
-                    (mEventMode == DrawerManager.EventMode.Favorites && isEventItem(id))) {
-                new LoadData().execute();
+            if (eventModePos == eventMode.ordinal() ||
+                    (eventMode == DrawerManager.EventMode.FAVORITES && isEventItem(id))) {
+                refreshData();
                 break;
             }
         }
@@ -322,9 +206,88 @@ public class EventHolderFragment extends Fragment {
 
     private void updateFavorites() {
         if (getView() != null) {
-            if (mEventMode == DrawerManager.EventMode.Favorites) {
-                new LoadData().execute();
+            if (eventMode == DrawerManager.EventMode.FAVORITES) {
+                refreshData();
             }
         }
     }
+
+    private void refreshData() {
+        if (loadDataTask != null) {
+            loadDataTask.cancel(true);
+        }
+        loadDataTask = new LoadDataTask(eventMode, loadDataCallback);
+        loadDataTask.execute();
+    }
+
+    private final LoadDataTask.LoadDataTaskCallback loadDataCallback = new LoadDataTask.LoadDataTaskCallback() {
+        @Override
+        public void onDataLoaded(List<Long> result) {
+            if (isResumed()) {
+                updateViews(result);
+            }
+        }
+    };
+
+    private void updateViews(List<Long> dayList) {
+        if (dayList.isEmpty()) {
+            tabStrip.setVisibility(View.GONE);
+            layoutPlaceholder.setVisibility(View.VISIBLE);
+
+            if (isFilterUsed) {
+                emptyImageView.setVisibility(View.GONE);
+                emptyLabel.setText(getString(R.string.placeholder_no_matching_events));
+            } else {
+                emptyImageView.setVisibility(View.VISIBLE);
+
+                int imageResId = 0, textResId = 0;
+
+                switch (eventMode) {
+                    case PROGRAM:
+                        imageResId = R.drawable.ic_no_session;
+                        textResId = R.string.placeholder_sessions;
+                        break;
+                    case BOFS:
+                        imageResId = R.drawable.ic_no_bofs;
+                        textResId = R.string.placeholder_bofs;
+                        break;
+                    case SOCIAL:
+                        imageResId = R.drawable.ic_no_social_events;
+                        textResId = R.string.placeholder_social_events;
+                        break;
+                    case FAVORITES:
+                        imageResId = R.drawable.ic_no_my_schedule;
+                        textResId = R.string.placeholder_schedule;
+                        break;
+                }
+
+                emptyImageView.setImageResource(imageResId);
+                emptyLabel.setText(getString(textResId));
+            }
+        } else {
+            layoutPlaceholder.setVisibility(View.GONE);
+            tabStrip.setVisibility(View.VISIBLE);
+        }
+
+        adapter.setData(dayList, eventMode);
+        switchToCurrentDay(dayList);
+    }
+
+    private void switchToCurrentDay(List<Long> days) {
+        FragmentActivity activity = getActivity();
+        if (activity == null) {
+            Timber.e("Trying to switch day while not attached to an activity");
+            return;
+        }
+
+        int item = 0;
+        for (Long millis : days) {
+            if (DateUtils.isToday(activity, millis) || DateUtils.isAfterCurrentDate(millis)) {
+                viewPager.setCurrentItem(item);
+                return;
+            }
+            item++;
+        }
+    }
+
 }
