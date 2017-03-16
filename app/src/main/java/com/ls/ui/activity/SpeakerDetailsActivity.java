@@ -1,4 +1,5 @@
 package com.ls.ui.activity;
+
 import com.ls.drupalcon.R;
 import com.ls.drupalcon.app.App;
 import com.ls.drupalcon.model.Model;
@@ -13,9 +14,11 @@ import com.ls.ui.view.CircleImageView;
 import com.ls.ui.view.NotifyingScrollView;
 import com.ls.utils.AnalyticsManager;
 import com.ls.utils.DateUtils;
+import com.ls.utils.L;
 import com.ls.utils.WebviewUtils;
 
 import android.content.Intent;
+import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -32,6 +35,7 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import java.util.List;
 
 public class SpeakerDetailsActivity extends StackKeeperActivity implements View.OnClickListener {
@@ -57,7 +61,7 @@ public class SpeakerDetailsActivity extends StackKeeperActivity implements View.
 
     private UpdatesManager.DataUpdatedListener updateListener = new UpdatesManager.DataUpdatedListener() {
         @Override
-        public void onDataUpdated( List<UpdateRequest> requests) {
+        public void onDataUpdated(List<UpdateRequest> requests) {
             loadSpeakerFromDb();
         }
     };
@@ -173,7 +177,7 @@ public class SpeakerDetailsActivity extends StackKeeperActivity implements View.
         TextView jobTxt = (TextView) findViewById(R.id.txtSpeakerPosition);
         String jobValue = mSpeaker.getJobTitle() + " at " + mSpeaker.getOrganization();
 
-        if ( TextUtils.isEmpty(mSpeaker.getJobTitle()) || TextUtils.isEmpty(mSpeaker.getOrganization()) ){
+        if (TextUtils.isEmpty(mSpeaker.getJobTitle()) || TextUtils.isEmpty(mSpeaker.getOrganization())) {
             jobValue = jobValue.replace(" at ", "");
         }
 
@@ -305,14 +309,17 @@ public class SpeakerDetailsActivity extends StackKeeperActivity implements View.
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btnTwitter:
-                try {
-                    String url = TWITTER_APP_URL + mSpeaker.getTwitterName();
-                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                    startActivity(intent);
-                } catch (Exception e) {
-                    String url = TWITTER_URL + mSpeaker.getTwitterName();
-                    openBrowser(url);
-                }
+//                try {
+//                    String url = TWITTER_APP_URL + mSpeaker.getTwitterName();
+//                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+//                    startActivity(intent);
+//                } catch (Exception e) {
+//                    String url = TWITTER_URL + mSpeaker.getTwitterName();
+//                    openBrowser(url);
+//                }
+
+                String twitterUrl = TWITTER_URL + mSpeaker.getTwitterName();
+                openBrowser(twitterUrl);
                 break;
             case R.id.btnWebsite:
                 String url = mSpeaker.getWebSite();
@@ -339,9 +346,21 @@ public class SpeakerDetailsActivity extends StackKeeperActivity implements View.
 
     private void openBrowser(String url) {
         try {
-            Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.setData(Uri.parse(url));
-            startActivity(intent);
+            Intent getBrowser = new Intent(Intent.ACTION_VIEW);
+            getBrowser.setData(Uri.parse("https://stackoverflow.com"));
+
+            List<ResolveInfo> resolveInfoList = getPackageManager().queryIntentActivities(getBrowser, 0);
+
+            if (resolveInfoList.size() > 0) {
+                ResolveInfo info = resolveInfoList.get(0);
+                String browserPackageName = info.activityInfo.packageName;
+                L.e("packageName = " + browserPackageName);
+
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse(url));
+                intent.setPackage(browserPackageName);
+                startActivity(intent);
+            }
         } catch (Exception e) {
             Toast.makeText(this, getString(R.string.no_apps_can_perform_this_action), Toast.LENGTH_SHORT).show();
         }
@@ -358,7 +377,7 @@ public class SpeakerDetailsActivity extends StackKeeperActivity implements View.
         if (TextUtils.isEmpty(mSpeaker.getTwitterName()) &&
                 TextUtils.isEmpty(mSpeaker.getWebSite()) &&
                 TextUtils.isEmpty(mSpeaker.getCharact()) &&
-                events.isEmpty()){
+                events.isEmpty()) {
             mLayoutPlaceholder.setVisibility(View.VISIBLE);
         } else {
             mLayoutPlaceholder.setVisibility(View.GONE);

@@ -82,7 +82,7 @@ public class EventDetailsActivity extends StackKeeperActivity {
 
     private UpdatesManager.DataUpdatedListener updateListener = new UpdatesManager.DataUpdatedListener() {
         @Override
-        public void onDataUpdated( List<UpdateRequest> requests) {
+        public void onDataUpdated(List<UpdateRequest> requests) {
             loadEvent();
         }
     };
@@ -423,10 +423,11 @@ public class EventDetailsActivity extends StackKeeperActivity {
         if (imageView != null) {
             if (bundleExtra) {
                 List<SponsorItem> sponsorsList = GoldSponsors.getSponsorsList(getApplicationContext());
-
-                SponsorItem currentSponsor = sponsorsList.get(SponsorManager.getInstance().getSponsorId());
-                imageView.setBackgroundResource(currentSponsor.getResourceId());
-                AnalyticsManager.sendEvent(this, currentSponsor.getName());
+                if (sponsorsList.size() > 1) {
+                    SponsorItem currentSponsor = sponsorsList.get(SponsorManager.getInstance().getSponsorId());
+                    imageView.setBackgroundResource(currentSponsor.getResourceId());
+                    AnalyticsManager.sendEvent(this, currentSponsor.getName());
+                }
 
             } else {
                 imageView.setBackgroundResource(R.drawable.event_details_header);
