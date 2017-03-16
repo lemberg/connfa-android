@@ -1,6 +1,5 @@
 package com.ls.ui.fragment;
 
-
 import com.ls.drupalcon.R;
 import com.ls.drupalcon.model.Model;
 import com.ls.drupalcon.model.PreferencesManager;
@@ -17,14 +16,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class SocialMediaFragment extends Fragment
-{
+public class SocialMediaFragment extends Fragment {
 
     public static final String TAG = "SocialMediaFragment";
     private View rootView;
@@ -37,20 +36,14 @@ public class SocialMediaFragment extends Fragment
         }
     };
 
-    public SocialMediaFragment()
-    {
-        // Required empty public constructor
-    }
-
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState)
-    {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_social_media, container, false);
         mLayoutPlaceholder = rootView.findViewById(R.id.layout_placeholder);
         return rootView;
     }
+
     private void updateData(List<UpdateRequest> requestIds) {
         for (UpdateRequest id : requestIds) {
             if (UpdateRequest.SETTINGS == id) {
@@ -61,8 +54,7 @@ public class SocialMediaFragment extends Fragment
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState)
-    {
+    public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         rootView = view;
 
@@ -73,11 +65,12 @@ public class SocialMediaFragment extends Fragment
 
     private void fillView() {
 
-        if(!NetworkUtils.isOn(getActivity()) ){
-            rootView.findViewById(R.id.txtNoConnection).setVisibility(View.VISIBLE);
+        if (!NetworkUtils.isOn(getActivity())) {
             rootView.findViewById(R.id.list_view).setVisibility(View.GONE);
             rootView.findViewById(R.id.progressBar).setVisibility(View.GONE);
             mLayoutPlaceholder.setVisibility(View.GONE);
+            TextView emptyView = (TextView) rootView.findViewById(R.id.EmptyView);
+            emptyView.setText(R.string.NoConnectionMessage);
         }
 
         String searchQuery = PreferencesManager.getInstance().getTwitterSearchQuery();
@@ -97,7 +90,7 @@ public class SocialMediaFragment extends Fragment
             }
         });
 
-        ListView list = (ListView)rootView.findViewById(R.id.list_view);
+        ListView list = (ListView) rootView.findViewById(R.id.list_view);
 
         list.setEmptyView(mLayoutPlaceholder);
         list.setAdapter(adapter);
