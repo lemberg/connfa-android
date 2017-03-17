@@ -25,7 +25,7 @@
     <string name="action_remove_from_favorites">Remove from favorites</string>
     <string name="no_apps_can_perform_this_action">No Apps can perform this action.</string>
     <string name="share">Share</string>
-    <string name="no_search_result">No Search Result</string>
+    <string name="no_search_result">No search result</string>
     <string name="APPLY">APPLY</string>
     <string name="CLEAR">CLEAR</string>
     <string name="access">ACCESS</string>
