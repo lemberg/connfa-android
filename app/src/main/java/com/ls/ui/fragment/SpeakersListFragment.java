@@ -2,6 +2,7 @@ package com.ls.ui.fragment;
 
 import com.ls.drupalcon.R;
 import com.ls.drupalcon.model.Model;
+import com.ls.drupalcon.model.UpdateRequest;
 import com.ls.drupalcon.model.UpdatesManager;
 import com.ls.drupalcon.model.data.Speaker;
 import com.ls.drupalcon.model.managers.SpeakerManager;
@@ -43,7 +44,7 @@ public class SpeakersListFragment extends Fragment
 
     private UpdatesManager.DataUpdatedListener updateListener = new UpdatesManager.DataUpdatedListener() {
         @Override
-        public void onDataUpdated(List<Integer> requestIds) {
+        public void onDataUpdated( List<UpdateRequest> requests) {
             initView();
         }
     };

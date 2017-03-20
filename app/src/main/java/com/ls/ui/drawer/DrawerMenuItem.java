@@ -1,50 +1,53 @@
 package com.ls.ui.drawer;
 
+
 public class DrawerMenuItem {
-    private long id;
-    private String name;
-    private int iconRes;
-    private int selIconRes;
+    private final int name;
+    private final int iconRes;
+    private final int selIconRes;
+    private final boolean group;
+    private final EventMode eventMode;
+
+    public DrawerMenuItem(int name, int iconRes, int selIconRes, EventMode eventMode, boolean group) {
+        this.name = name;
+        this.iconRes = iconRes;
+        this.selIconRes = selIconRes;
+        this.eventMode = eventMode;
+        this.group = group;
+    }
+
 
     public int getIconRes() {
         return iconRes;
     }
 
-    public void setIconRes(int iconRes) {
-        this.iconRes = iconRes;
-    }
-
-    public void setSelIconRes(int selIconRes) {
-        this.selIconRes = selIconRes;
-    }
 
     public int getSelIconRes() {
         return selIconRes;
     }
 
-    private boolean group;
 
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public String getName() {
+    public int getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
 
     public boolean isGroup() {
         return group;
     }
 
-    public void setGroup(boolean group) {
-        this.group = group;
+    public EventMode getEventMode() {
+        return eventMode;
+    }
+
+    @Override
+    public String toString() {
+        return "DrawerMenuItem{" +
+                "name='" + name + '\'' +
+                ", iconRes=" + iconRes +
+                ", selIconRes=" + selIconRes +
+                ", eventMode=" + eventMode +
+                ", group=" + group +
+                '}';
     }
 }

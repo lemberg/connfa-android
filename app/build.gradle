@@ -22,12 +22,23 @@ android {
     buildToolsVersion project.BUILD_TOOLS_VERSION
 
     defaultConfig {
-        applicationId 'com.ls.drupalconapp'
         minSdkVersion Integer.parseInt(project.MIN_SDK_VERSION)
         targetSdkVersion Integer.parseInt(project.TARGET_SDK_VERSION)
-        versionCode Integer.parseInt(project.VERSION_CODE)
-        versionName project.VERSION_NAME
         multiDexEnabled true
+    }
+
+    productFlavors {
+
+        connfa {
+            applicationId "com.ls.connfa"
+            versionName "connfa"
+
+            defaultConfig {
+                versionCode 1
+                versionName "1.0.0"
+            }
+        }
+
     }
     signingConfigs {
         config {
@@ -59,14 +70,14 @@ dependencies {
         transitive = true;
     }
     compile 'com.github.dmytrodanylyk.shadow-layout:library:1.0.2'
-    compile 'com.android.support:support-v13:23.2.1'
-    compile 'com.android.support:appcompat-v7:23.2.1'
+    compile "com.android.support:appcompat-v7:$project.ANDROID_SUPPORT_LIBRARY_VERSION"
+    compile "com.android.support:appcompat-v7:$project.ANDROID_SUPPORT_LIBRARY_VERSION"
+    compile "com.android.support:support-v4:$project.ANDROID_SUPPORT_LIBRARY_VERSION"
     compile 'com.google.android.gms:play-services-analytics:9.0.0'
     compile 'com.google.android.gms:play-services-maps:9.0.0'
     compile 'com.google.code.gson:gson:2.2.4'
     compile 'org.jetbrains:annotations:13.0'
     compile 'com.jpardogo.materialtabstrip:library:1.0.8'
-    compile 'com.android.support:support-v4:23.2.1'
     compile('com.twitter.sdk.android:twitter:1.13.1@aar') {
         transitive = true;
     }

@@ -2,10 +2,9 @@ package com.ls.ui.activity;
 
 import android.view.View;
 import android.webkit.WebViewClient;
-import com.google.android.gms.analytics.GoogleAnalytics;
-
 import com.ls.drupalcon.R;
 import com.ls.drupalcon.model.Model;
+import com.ls.drupalcon.model.UpdateRequest;
 import com.ls.drupalcon.model.UpdatesManager;
 import com.ls.utils.AnalyticsManager;
 
@@ -28,7 +27,7 @@ public class AboutDetailsActivity extends StateActivity {
 
     private UpdatesManager.DataUpdatedListener updateListener = new UpdatesManager.DataUpdatedListener() {
         @Override
-        public void onDataUpdated(List<Integer> requestIds) {
+        public void onDataUpdated( List<UpdateRequest> requests) {
             Log.d("UPDATED", "AboutDetailsActivity");
         }
     };
@@ -45,19 +44,7 @@ public class AboutDetailsActivity extends StateActivity {
         initToolbar(aboutTitle);
         Model.instance().getUpdatesManager().registerUpdateListener(updateListener);
 
-        AnalyticsManager.sendEvent(this, R.string.about_category, R.string.action_open, id + " " + aboutTitle);
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        GoogleAnalytics.getInstance(this).reportActivityStart(this);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        GoogleAnalytics.getInstance(this).reportActivityStop(this);
+        AnalyticsManager.detailsScreenTracker(this, R.string.about, aboutTitle);
     }
 
     @Override

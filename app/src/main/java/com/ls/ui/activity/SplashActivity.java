@@ -26,7 +26,6 @@ public class SplashActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ac_splash);
-        AnalyticsManager.sendEvent(this, "Application", R.string.action_open);
 
         mHandler = new Handler();
         mHandler.postDelayed(new Runnable() {

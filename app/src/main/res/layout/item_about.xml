@@ -15,7 +15,7 @@
         android:maxLines="1"
         android:ellipsize="end"
         tools:text="ALALAL"
-        app:custom_font="@string/roboto_medium"
+        app:custom_font="@string/medium_font"
         android:gravity="center_vertical"
         android:padding="16dp"
         android:layout_gravity="center_vertical"/>

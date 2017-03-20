@@ -11,7 +11,8 @@ import com.ls.ui.adapter.item.HeaderItem;
 import com.ls.ui.adapter.item.ProgramItem;
 import com.ls.ui.adapter.item.SocialItem;
 import com.ls.ui.adapter.item.TimeRangeItem;
-import com.ls.ui.drawer.DrawerManager;
+import com.ls.ui.drawer.DrawerMenu;
+import com.ls.ui.drawer.EventMode;
 import com.ls.utils.DateUtils;
 
 import android.content.Context;
@@ -40,7 +41,7 @@ public class EventsAdapter extends BaseAdapter {
     private List<EventListItem> mData;
     private LayoutInflater mInflater;
 
-    private DrawerManager.EventMode mEventMode;
+    private EventMode mEventMode;
     private Listener mListener;
 
     public interface Listener {
@@ -78,7 +79,7 @@ public class EventsAdapter extends BaseAdapter {
         return position;
     }
 
-    public void setData(List<EventListItem> data, DrawerManager.EventMode mode) {
+    public void setData(List<EventListItem> data, EventMode mode) {
         mData.clear();
         mData.addAll(data);
         mEventMode = mode;
@@ -101,11 +102,6 @@ public class EventsAdapter extends BaseAdapter {
         } else {
             resultView = new View(mInflater.getContext());
         }
-//        if (itemViewType == EventListItem.TYPE_SECTION_NAME) {
-//            resultView = initSectionNameView(position, convertView, parent);
-//        } else {
-//            resultView = initTimeRangeView(position, convertView, parent);
-//        }
 
         return resultView;
     }
@@ -315,7 +311,7 @@ public class EventsAdapter extends BaseAdapter {
     }
 
     private void fillFavorite(EventHolder holder) {
-        if (mEventMode == DrawerManager.EventMode.Favorites) {
+        if (mEventMode == EventMode.Favorites) {
             holder.layoutTime.setBackgroundColor(Color.TRANSPARENT);
         } else {
             holder.layoutTime.setBackgroundColor(mContext.getResources().getColor(R.color.grey_400_trans));
@@ -325,12 +321,10 @@ public class EventsAdapter extends BaseAdapter {
     private void fillEventClickAbility(View layoutRoot, TextView txtPlace, Event event, final int position) {
         Context context = layoutRoot.getContext();
         layoutRoot.setBackgroundResource(R.drawable.selector_light);
-//        txtPlace.setMaxLines(SINGLE_LINE_COUNT);
 
         long eventType = event.getType();
         if (eventType == Type.FREE_SLOT || eventType == Type.COFFEBREAK || eventType == Type.LUNCH || eventType == Type.REGISTRATION) {
             layoutRoot.setBackgroundColor(context.getResources().getColor(R.color.black_20_trans));
-//            txtPlace.setMaxLines(MULTI_LINE_COUNT);
             layoutRoot.setClickable(false);
         } else {
             layoutRoot.setOnClickListener(new View.OnClickListener() {

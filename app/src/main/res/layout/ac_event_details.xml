@@ -21,7 +21,6 @@
                 android:id="@+id/imgHeader"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:src="@drawable/event_details_header"
                 android:scaleType="centerCrop" />
 
             <LinearLayout
@@ -40,7 +39,7 @@
                     android:textColor="@color/white"
                     android:textSize="@dimen/text_size_16"
                     android:textStyle="bold"
-                    app:custom_font="@string/montserrat_regular"
+                    app:custom_font="@string/montserrat_regular_font"
                     tools:text="@string/lorem_ipsum" />
 
                 <com.ls.ui.view.FontTextView
@@ -50,7 +49,7 @@
                     android:layout_marginTop="8dp"
                     android:textColor="@color/white_100"
                     android:textSize="@dimen/text_size_small"
-                    app:custom_font="@string/roboto_regular"
+                    app:custom_font="@string/regular_font"
                     tools:text="@string/lorem_ipsum" />
             </LinearLayout>
 
@@ -76,7 +75,7 @@
                         android:layout_marginBottom="4dp"
                         android:textColor="@color/grey_500"
                         android:textSize="@dimen/text_size_15"
-                        app:custom_font="@string/roboto_regular"
+                        app:custom_font="@string/custom_regular_font"
                         tools:text="@string/lorem_ipsum" />
 
                     <LinearLayout
@@ -91,7 +90,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="bottom"
                             android:layout_marginRight="8dp"
-                            app:custom_font="@string/roboto_regular"
+                            app:custom_font="@string/regular_font"
                             android:textColor="@color/grey_500"
                             android:textSize="@dimen/text_size_15"
                             tools:text="@string/lorem_ipsum" />
@@ -139,7 +138,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5dp"
-                        app:custom_font="@string/roboto_regular"
+                        app:custom_font="@string/regular_font"
                         android:clickable="false"
                         android:textColor="#bbbbbb"
                         android:textSize="@dimen/text_size_medium"

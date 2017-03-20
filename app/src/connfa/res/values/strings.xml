@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">DrupalCon</string>
+
+    <string name="sponsor_banner">Sponsor banner</string>
+    <string name="sponsor_1">Sponsor 1</string>
+    <string name="sponsor_2">Sponsor 2</string>
+    <string name="sponsor_3">Sponsor 3</string>
+    <string name="sponsor_4">Sponsor 4</string>
+    <string name="sponsor_5">Sponsor 5</string>
+    <string name="sponsor_6">Sponsor 6</string>
+</resources>

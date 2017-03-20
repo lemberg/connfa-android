@@ -95,11 +95,6 @@ public class EventGenerator {
         return getEventItems(eventItemCreator, eventListItems, ranges);
     }
 
-//    public List<EventListItem> generateForFavorites(long day) {
-//        List<Event> events = mEventManager.getEventsByIdsAndDaySafe(day);
-//        return sortFavorites(fetchEventItems(events));
-//    }
-
     public List<EventListItem> generateForFavorites(long day, @NotNull EventItemCreator eventItemCreator) {
 
         FavoriteManager favoriteManager = new FavoriteManager();
@@ -221,72 +216,6 @@ public class EventGenerator {
         }
         return result;
     }
-
-//    private List<EventListItem> generateEventItems(List<EventListItem> eventListItems,
-//                                                   EventItemCreator eventItemCreator) {
-//        TracksManager tracksManager = Model.instance().getTracksManager();
-//        List<EventListItem> result = new ArrayList<EventListItem>();
-//
-//        if (eventListItems.size() > 0) {
-//            EventListItem item = eventListItems.get(0);
-//            Event event = item.getEvent();
-//            if (event == null) {
-//                return result;
-//            }
-//
-//            long typeId = event.getType();
-//
-//            TimeRangeItem timeRangeItem = (TimeRangeItem) eventItemCreator.getItem(event);
-//            if (event.getTimeRange().getFromTime() != null) {
-//                Calendar eventFromTime = event.getTimeRange().getFromTime();
-//                long eventDate = event.getTimeRange().getDate();
-//                Date date = parseEventDate(eventFromTime, eventDate);
-//                timeRangeItem.setDate(date);
-//            }
-//            timeRangeItem.setSpeakers(item.getSpeakers());
-//
-//            Track track = tracksManager.getTrack(event.getTrack());
-//            timeRangeItem.setTrack(track != null ? track.getName() : null);
-//            L.e("Adding items:" + eventListItems);
-//            switch ((int) typeId) {
-//
-//                case Type.NONE:
-//                case Type.SPEACH:
-//                case Type.SPEACH_OF_DAY:
-//
-//                    if (eventListItems.get(0) instanceof ProgramItem) {
-//                        ProgramItem firstItem = (ProgramItem) eventListItems.get(0);
-////                        timeRangeItem.setSpeakers(firstItem.getSpeakers());
-//                        timeRangeItem.setTrack(firstItem.getTrack());
-//                    }
-//
-//                    if (eventListItems.size() > 1) {
-//                        timeRangeItem.setFirst(true);
-//                        eventListItems.remove(0);
-//                        eventListItems.get(eventListItems.size() - 1).setLast(true);
-//                        result.add(timeRangeItem);
-//                        result.addAll(eventListItems);
-//                    } else {
-//                        result.add(timeRangeItem);
-//                    }
-//                    break;
-//
-//                case Type.GROUP:
-//                case Type.WALKING:
-//                case Type.COFFEBREAK:
-//                case Type.LUNCH:
-//                case Type.REGISTRATION:
-//                case Type.ALL_DAY:
-//                    default:
-//                    result.add(timeRangeItem);
-//                    break;
-//            }
-//
-//        }
-//        L.e("Result items:" + result);
-//
-//        return result;
-//    }
 
     private List<EventListItem> generateEventItems(List<EventListItem> eventListItems,
             EventItemCreator eventItemCreator) {

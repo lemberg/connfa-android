@@ -2,11 +2,11 @@ package com.ls.ui.fragment;
 
 import com.ls.drupalcon.R;
 import com.ls.drupalcon.model.Model;
+import com.ls.drupalcon.model.UpdateRequest;
 import com.ls.drupalcon.model.UpdatesManager;
 import com.ls.drupalcon.model.data.FloorPlan;
 import com.ls.ui.adapter.FloorSelectorAdapter;
 import com.ls.ui.view.TouchImageView;
-import com.ls.utils.L;
 
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -41,9 +41,9 @@ public class FloorPlanFragment  extends Fragment
 
     private UpdatesManager.DataUpdatedListener updateListener = new UpdatesManager.DataUpdatedListener() {
         @Override
-        public void onDataUpdated(List<Integer> requestIds) {
+        public void onDataUpdated( List<UpdateRequest> requests) {
 
-            if (requestIds.contains(UpdatesManager.FLOOR_PLANS_REQUEST_ID)){
+            if (requests.contains(UpdateRequest.FLOOR_PLANS)){
                 new LoadPlansTask().execute();
             }
 
@@ -91,22 +91,6 @@ public class FloorPlanFragment  extends Fragment
 
         return result;
     }
-
-//    void resolveTitleVisibility(){
-//        AppCompatActivity activity = (AppCompatActivity)this.getActivity();
-//        if(activity != null && activity.getSupportActionBar() != null) {
-//            ActionBar actionBar = activity.getSupportActionBar();
-//            if(this.isResumed()) {
-//                if (plans != null && !plans.isEmpty()) {
-//                    actionBar.setTitle("");
-//                    actionBar.setCustomView(actionbarLayout);
-//                } else {
-//                    actionBar.setTitle(R.string.floor_plan);
-//                    actionBar.setCustomView(null);
-//                }
-//            }
-//        }
-//    }
 
     private class LoadPlansTask extends AsyncTask<Void,Void,List<FloorPlan>>{
 

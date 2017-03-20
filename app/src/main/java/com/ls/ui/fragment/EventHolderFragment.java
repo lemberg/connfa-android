@@ -5,16 +5,19 @@ import com.ls.drupalcon.R;
 import com.ls.drupalcon.app.App;
 import com.ls.drupalcon.model.Model;
 import com.ls.drupalcon.model.PreferencesManager;
+import com.ls.drupalcon.model.UpdateRequest;
 import com.ls.drupalcon.model.UpdatesManager;
-import com.ls.drupalcon.model.managers.BofsManager;
-import com.ls.drupalcon.model.managers.FavoriteManager;
-import com.ls.drupalcon.model.managers.ProgramManager;
-import com.ls.drupalcon.model.managers.SocialManager;
 import com.ls.ui.activity.HomeActivity;
 import com.ls.ui.adapter.BaseEventDaysPagerAdapter;
-import com.ls.ui.drawer.DrawerManager;
+import com.ls.ui.drawer.BofsStrategy;
+import com.ls.ui.drawer.EventHolderFragmentStrategy;
+import com.ls.ui.drawer.EventMode;
+import com.ls.ui.drawer.FavoritesStrategy;
+import com.ls.ui.drawer.ProgramStrategy;
+import com.ls.ui.drawer.SocialStrategy;
 import com.ls.ui.receiver.ReceiverManager;
 import com.ls.utils.DateUtils;
+import com.ls.utils.L;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -46,18 +49,26 @@ public class EventHolderFragment extends Fragment {
     private PagerSlidingTabStrip mPagerTabs;
     private BaseEventDaysPagerAdapter mAdapter;
 
-    private DrawerManager.EventMode mEventMode;
-
     private View mLayoutPlaceholder;
     private ImageView mImageViewNoContent;
     private TextView mTextViewNoContent;
 
     private boolean mIsFilterUsed;
+    private EventHolderFragmentStrategy strategy;
+    private List<UpdateRequest> requests = new ArrayList<>();
+
 
     private UpdatesManager.DataUpdatedListener updateReceiver = new UpdatesManager.DataUpdatedListener() {
         @Override
-        public void onDataUpdated(List<Integer> requestIds) {
-            updateData(requestIds);
+        public void onDataUpdated( List<UpdateRequest> requests) {
+//            for (Integer i : requestIds) {
+//                UpdateRequest request = UpdateRequest.fromId(i);
+//                if (request != null) {
+//                    requests.add(request);
+//                }
+//            }
+            L.e("requests = " + EventHolderFragment.this.requests.size());
+            updateData(requests);
         }
     };
     private ReceiverManager favoriteReceiver = new ReceiverManager(new ReceiverManager.FavoriteUpdatedListener() {
@@ -67,10 +78,10 @@ public class EventHolderFragment extends Fragment {
         }
     });
 
-    public static EventHolderFragment newInstance(int modePos) {
+    public static EventHolderFragment newInstance(EventMode eventMode) {
         EventHolderFragment fragment = new EventHolderFragment();
         Bundle bundle = new Bundle();
-        bundle.putInt(EXTRAS_ARG_MODE, modePos);
+        bundle.putSerializable(EXTRAS_ARG_MODE, eventMode);
         fragment.setArguments(bundle);
 
         return fragment;
@@ -107,29 +118,9 @@ public class EventHolderFragment extends Fragment {
         return true;
     }
 
-//    @Override
-//    public void onActivityCreated(Bundle savedInstanceState) {
-//        super.onActivityCreated(savedInstanceState);
-//        Model.instance().getUpdatesManager().registerUpdateListener(updateReceiver);
-//        favoriteReceiver.register(getActivity());
-//
-//        initData();
-//        initView();
-//        new LoadData().execute();
-//    }
-//
-//
-//    @Override
-//    public void onDestroy() {
-//        super.onDestroy();
-//        Model.instance().getUpdatesManager().unregisterUpdateListener(updateReceiver);
-//        favoriteReceiver.unregister(getActivity());
-//    }
-
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState)
-    {
+    public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         Model.instance().getUpdatesManager().registerUpdateListener(updateReceiver);
         favoriteReceiver.register(getActivity());
@@ -140,8 +131,7 @@ public class EventHolderFragment extends Fragment {
     }
 
     @Override
-    public void onDestroyView()
-    {
+    public void onDestroyView() {
         Model.instance().getUpdatesManager().unregisterUpdateListener(updateReceiver);
         favoriteReceiver.unregister(getActivity());
         super.onDestroyView();
@@ -150,8 +140,23 @@ public class EventHolderFragment extends Fragment {
     private void initData() {
         Bundle bundle = getArguments();
         if (bundle != null) {
-            int eventPos = bundle.getInt(EXTRAS_ARG_MODE, DrawerManager.EventMode.Program.ordinal());
-            mEventMode = DrawerManager.EventMode.values()[eventPos];
+            EventMode eventMode = (EventMode) bundle.getSerializable(EXTRAS_ARG_MODE);
+            if (eventMode != null) {
+                switch (eventMode) {
+                    case Program:
+                        strategy = new ProgramStrategy();
+                        break;
+                    case Bofs:
+                        strategy = new BofsStrategy();
+                        break;
+                    case Social:
+                        strategy = new SocialStrategy();
+                        break;
+                    case Favorites:
+                        strategy = new FavoritesStrategy();
+                        break;
+                }
+            }
         }
     }
 
@@ -174,20 +179,15 @@ public class EventHolderFragment extends Fragment {
         mTextViewNoContent = (TextView) view.findViewById(R.id.text_view_placeholder);
         mImageViewNoContent = (ImageView) view.findViewById(R.id.image_view_placeholder);
 
-        if (mEventMode == DrawerManager.EventMode.Program ||
-                mEventMode == DrawerManager.EventMode.Bofs ||
-                mEventMode == DrawerManager.EventMode.Social) {
-            setHasOptionsMenu(true);
-        } else {
-            setHasOptionsMenu(false);
-        }
+        setHasOptionsMenu(strategy.enableOptionMenu());
+
     }
 
     class LoadData extends AsyncTask<Void, Void, List<Long>> {
 
         @Override
         protected List<Long> doInBackground(Void... params) {
-            return getDayList();
+            return strategy.getDayList();
         }
 
         @Override
@@ -196,35 +196,8 @@ public class EventHolderFragment extends Fragment {
         }
     }
 
-    private List<Long> getDayList() {
-        List<Long> dayList = new ArrayList<>();
-        switch (mEventMode) {
-            case Bofs:
-                BofsManager bofsManager = Model.instance().getBofsManager();
-                dayList.addAll(bofsManager.getBofsDays());
-                break;
-            case Social:
-                SocialManager socialManager = Model.instance().getSocialManager();
-                dayList.addAll(socialManager.getSocialsDays());
-                break;
-            case Favorites:
-                FavoriteManager favoriteManager = Model.instance().getFavoriteManager();
-                dayList.addAll(favoriteManager.getFavoriteEventDays());
-                break;
-            default:
-                ProgramManager programManager = Model.instance().getProgramManager();
-                dayList.addAll(programManager.getProgramDays());
-                break;
-        }
-        return dayList;
-    }
-
 
     private void updateViews(List<Long> dayList) {
-
-//        if(!isResumed()){
-//            return;
-//        }
 
         if (dayList.isEmpty()) {
             mPagerTabs.setVisibility(View.GONE);
@@ -235,37 +208,15 @@ public class EventHolderFragment extends Fragment {
                 mTextViewNoContent.setText(getString(R.string.placeholder_no_matching_events));
             } else {
                 mImageViewNoContent.setVisibility(View.VISIBLE);
-
-                int imageResId = 0, textResId = 0;
-
-                switch (mEventMode) {
-                    case Program:
-                        imageResId = R.drawable.ic_no_session;
-                        textResId = R.string.placeholder_sessions;
-                        break;
-                    case Bofs:
-                        imageResId = R.drawable.ic_no_bofs;
-                        textResId = R.string.placeholder_bofs;
-                        break;
-                    case Social:
-                        imageResId = R.drawable.ic_no_social_events;
-                        textResId = R.string.placeholder_social_events;
-                        break;
-                    case Favorites:
-                        imageResId = R.drawable.ic_no_my_schedule;
-                        textResId = R.string.placeholder_schedule;
-                        break;
-                }
-
-                mImageViewNoContent.setImageResource(imageResId);
-                mTextViewNoContent.setText(App.getContext().getText(textResId));
+                mImageViewNoContent.setImageResource(strategy.getImageResId());
+                mTextViewNoContent.setText(App.getContext().getText(strategy.getTextResId()));
             }
         } else {
             mLayoutPlaceholder.setVisibility(View.GONE);
             mPagerTabs.setVisibility(View.VISIBLE);
         }
 
-        mAdapter.setData(dayList, mEventMode);
+        mAdapter.setData(dayList, strategy);
         switchToCurrentDay(dayList);
     }
 
@@ -307,26 +258,16 @@ public class EventHolderFragment extends Fragment {
         }
     }
 
-    private void updateData(List<Integer> requestIds) {
-        for (int id : requestIds) {
-            int eventModePos = UpdatesManager.convertEventIdToEventModePos(id);
-            if (eventModePos == mEventMode.ordinal() ||
-                    (mEventMode == DrawerManager.EventMode.Favorites && isEventItem(id)) ) {
-                new LoadData().execute();
-                break;
-            }
+    private void updateData(List<UpdateRequest> requests) {
+        if (strategy.update(requests)) {
+            new LoadData().execute();
         }
     }
 
-    private boolean isEventItem(int id) {
-        return id == UpdatesManager.PROGRAMS_REQUEST_ID ||
-                id == UpdatesManager.BOFS_REQUEST_ID ||
-                id == UpdatesManager.SOCIALS_REQUEST_ID;
-    }
 
     private void updateFavorites() {
         if (getView() != null) {
-            if (mEventMode == DrawerManager.EventMode.Favorites) {
+            if (strategy.updateFavorites()) {
                 new LoadData().execute();
             }
         }

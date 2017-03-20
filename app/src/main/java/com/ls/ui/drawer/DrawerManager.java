@@ -14,11 +14,8 @@ import org.jetbrains.annotations.NotNull;
 
 public class DrawerManager {
 
-	public enum EventMode {Program, Bofs, Social, Speakers, Favorites, Location, About}
-
 	private FragmentManager fragmentManager;
 	private int fragmentHolderId;
-	private EventMode currentEventMode;
 
 	public static DrawerManager getInstance(FragmentManager theFragmentManager, int theMainFragmentId) {
 		return new DrawerManager(theFragmentManager, theMainFragmentId);
@@ -29,28 +26,28 @@ public class DrawerManager {
 		this.fragmentHolderId = theMainFragmentId;
 	}
 
-	public void setFragment(@NotNull DrawerMenu.DrawerItem mode) {
+	public void setFragment(@NotNull EventMode mode) {
 		Fragment fragment;
 		String fragmentTag = null;
 
 		switch (mode) {
 			case Program:
-				fragment = EventHolderFragment.newInstance(EventMode.Program.ordinal());
+				fragment = EventHolderFragment.newInstance(mode);
 				fragmentTag = EventHolderFragment.TAG;
 				break;
 
 			case Bofs:
-				fragment = EventHolderFragment.newInstance(EventMode.Bofs.ordinal());
+				fragment = EventHolderFragment.newInstance(mode);
 				fragmentTag = EventHolderFragment.TAG;
 				break;
 
 			case Social:
-				fragment = EventHolderFragment.newInstance(EventMode.Social.ordinal());
+				fragment = EventHolderFragment.newInstance(mode);
 				fragmentTag = EventHolderFragment.TAG;
 				break;
 
 			case Favorites:
-				fragment = EventHolderFragment.newInstance(EventMode.Favorites.ordinal());
+				fragment = EventHolderFragment.newInstance(mode);
 				fragmentTag = EventHolderFragment.TAG;
 				break;
 
@@ -77,30 +74,14 @@ public class DrawerManager {
 				fragmentTag = SocialMediaFragment.TAG;
 				break;
 			default:
-				fragment = EventHolderFragment.newInstance(EventMode.Program.ordinal());
+				fragment = EventHolderFragment.newInstance(mode);
 		}
 		fragmentManager.beginTransaction().replace(fragmentHolderId, fragment, fragmentTag).commit();
 	}
 
-	public void reloadPrograms(@NotNull DrawerMenu.DrawerItem mode) {
-		Fragment fragment;
-		switch (mode) {
-			case Program:
-				fragment = EventHolderFragment.newInstance(DrawerMenu.DrawerItem.Program.ordinal());
-				break;
-
-			case Bofs:
-				fragment = EventHolderFragment.newInstance(DrawerMenu.DrawerItem.Bofs.ordinal());
-				break;
-
-			case Social:
-				fragment = EventHolderFragment.newInstance(DrawerMenu.DrawerItem.Social.ordinal());
-				break;
-			default:
-				fragment = EventHolderFragment.newInstance(EventMode.Program.ordinal());
-		}
+	public void reloadPrograms(@NotNull EventMode mode) {
 		FragmentTransaction ft = fragmentManager.beginTransaction();
-		ft.replace(fragmentHolderId, fragment, EventHolderFragment.TAG);
+		ft.replace(fragmentHolderId, EventHolderFragment.newInstance(mode), EventHolderFragment.TAG);
 		ft.commitAllowingStateLoss();
 	}
 }

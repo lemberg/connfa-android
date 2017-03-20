@@ -2,6 +2,7 @@ package com.ls.ui.fragment;
 
 import com.ls.drupalcon.R;
 import com.ls.drupalcon.model.Model;
+import com.ls.drupalcon.model.UpdateRequest;
 import com.ls.drupalcon.model.UpdatesManager;
 import com.ls.drupalcon.model.data.InfoItem;
 import com.ls.drupalcon.model.managers.InfoManager;
@@ -30,8 +31,6 @@ import java.util.List;
  */
 public class AboutFragment  extends Fragment
 {
-    public static final String TAG = "AboutFragment";
-
     private ListView mListMenu;
     private View mLayoutPlaceholder;
 
@@ -40,7 +39,7 @@ public class AboutFragment  extends Fragment
 
     private UpdatesManager.DataUpdatedListener updateListener = new UpdatesManager.DataUpdatedListener() {
         @Override
-        public void onDataUpdated(List<Integer> requestIds) {
+        public void onDataUpdated( List<UpdateRequest> requests) {
             L.d("AboutFragment");
             reloadData();
         }

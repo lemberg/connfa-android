@@ -6,9 +6,9 @@ import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-
 import com.ls.drupalcon.R;
 import com.ls.drupalcon.model.Model;
+import com.ls.drupalcon.model.UpdateRequest;
 import com.ls.drupalcon.model.UpdatesManager;
 import com.ls.drupalcon.model.data.Location;
 import com.ls.drupalcon.model.managers.LocationManager;
@@ -21,7 +21,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class LocationFragment extends Fragment implements CustomMapFragment.OnActivityCreatedListener {
@@ -35,7 +34,7 @@ public class LocationFragment extends Fragment implements CustomMapFragment.OnAc
 
     private UpdatesManager.DataUpdatedListener updateListener = new UpdatesManager.DataUpdatedListener() {
         @Override
-        public void onDataUpdated(List<Integer> requestIds) {
+        public void onDataUpdated(List<UpdateRequest> requests) {
             replaceMapFragment();
         }
     };
@@ -111,19 +110,26 @@ public class LocationFragment extends Fragment implements CustomMapFragment.OnAc
     }
 
     private void fillTextViews(Location location) {
-        if (getView() == null) return;
+        if (getView() == null) {
+            return;
+        }
 
         TextView txtAmsterdam = (TextView) getView().findViewById(R.id.txtPlace);
         TextView txtAddress = (TextView) getView().findViewById(R.id.txtAddress);
 
-        txtAmsterdam.setText(location.getName());
-        txtAddress.setText(location.getAddress());
+        String locationName = location.getName();
+        txtAmsterdam.setText(locationName);
+
+        String address = location.getAddress();
+//        address = address.replace(", ", "\n");
+        address = address.replace(",", "\n");
+        txtAddress.setText(address.trim());
     }
 
     private void replaceMapFragment() {
         CustomMapFragment mapFragment = CustomMapFragment.newInstance(LocationFragment.this);
         LocationFragment
-                .this.getFragmentManager()
+                .this.getChildFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragmentHolder, mapFragment)
                 .commitAllowingStateLoss();

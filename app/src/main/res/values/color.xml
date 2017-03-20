@@ -19,7 +19,7 @@
     <color name="grey_400_trans">#1a9b9b9b</color>
     <color name="grey_500">#373737</color>
 
-    <color name="item_selection">#4f3b9a</color>
+    <color name="item_selection">#1f3e98</color>
 
     <color name="primary_dark">#06335b</color>
     <color name="primary">#06335b</color>
@@ -31,8 +31,8 @@
     <color name="speaker_primary">#06335b</color>
     <color name="speaker">#06335b</color>
 
-    <color name="favorite">#4f3b9a</color>
-    <color name="link">#4f3b9a</color>
+    <color name="favorite">#1f3e98</color>
+    <color name="link">#1f3e98</color>
     <color name="navigation">#1f3e98</color>
 
     <color name="placeholder_text">#a3a3a3</color>
