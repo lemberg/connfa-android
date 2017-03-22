@@ -22,11 +22,11 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         final String nbspSpacing = "\u202F\u202F"; // none-breaking spaces
-        String badgeText = nbspSpacing + "    Test UI   Session" + nbspSpacing;
+        String badgeText = nbspSpacing + "    TestTestTestTestTestTestTestTest UI   Session" + nbspSpacing;
         SpannableStringBuilder stringBuilder = new SpannableStringBuilder();
         stringBuilder.append(badgeText);
         stringBuilder.setSpan(
-                new TagBadgeSpannable(2, Color.parseColor("#ffffff"), Color.parseColor("#3d4760")),
+                new TagBadgeSpannable( Color.parseColor("#ffffff"), Color.parseColor("#3d4760")),
                 badgeText.length() -11,
                 badgeText.length(),
                 Spanned.SPAN_EXCLUSIVE_EXCLUSIVE

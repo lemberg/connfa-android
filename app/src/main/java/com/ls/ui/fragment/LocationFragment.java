@@ -70,7 +70,7 @@ public class LocationFragment extends Fragment implements CustomMapFragment.OnAc
         SpannableStringBuilder stringBuilder = new SpannableStringBuilder();
         stringBuilder.append(badgeText);
         stringBuilder.setSpan(
-                new TagBadgeSpannable(2, Color.parseColor("#ffffff"), Color.parseColor("#1f3e98")),
+                new TagBadgeSpannable(Color.parseColor("#ffffff"), Color.parseColor("#1f3e98")),
                 badgeText.length() -3,
                 badgeText.length(),
                 Spanned.SPAN_EXCLUSIVE_EXCLUSIVE

@@ -11,12 +11,18 @@ import com.ls.ui.adapter.item.ProgramItem;
 import com.ls.ui.adapter.item.SocialItem;
 import com.ls.ui.adapter.item.TimeRangeItem;
 import com.ls.ui.drawer.EventMode;
+import com.ls.ui.view.TagBadgeSpannable;
 import com.ls.utils.DateUtils;
+import com.ls.utils.L;
 
 import android.content.Context;
 import android.graphics.Color;
 import android.support.annotation.Nullable;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.style.RelativeSizeSpan;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -257,7 +263,7 @@ public class EventsAdapter extends BaseAdapter {
     }
 
     private void fillEventInfo(EventHolder holder, Event event, @Nullable String track, @Nullable List<String> speakerNameList) {
-        holder.txtTitle.setText(event.getName());
+        holder.txtTitle.setText(setRoundedBackgroundSpan(event.getName()));
         if (event.isFavorite()) {
             holder.txtTitle.setTextColor(mContext.getResources().getColor(R.color.link));
         } else {
@@ -334,6 +340,27 @@ public class EventsAdapter extends BaseAdapter {
                 }
             });
         }
+    }
+
+    private SpannableStringBuilder setRoundedBackgroundSpan(String eventName){
+        String marker = "  Session  ";
+        String span = eventName + marker;
+//        StringBuilder stringBuilder =  new StringBuilder(eventName);
+//        builder.append(marker);
+
+        SpannableStringBuilder stringBuilder = new SpannableStringBuilder(span);
+        L.e("Span = " + span);
+        stringBuilder.setSpan(
+                new TagBadgeSpannable(Color.parseColor("#ffffff"), Color.parseColor("#3d4760")),
+                span.length() - marker.length(),
+                span.length(),
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+        );
+//        stringBuilder.setSpan(new RelativeSizeSpan(1.4f), 0, span.length() - marker.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        stringBuilder.append("  ");
+
+        return stringBuilder;
     }
 
     private static class HeaderHolder {
