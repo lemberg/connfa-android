@@ -7,11 +7,9 @@ import com.ls.drupalcon.model.data.Level;
 import com.ls.drupalcon.model.data.Type;
 import com.ls.ui.adapter.item.BofsItem;
 import com.ls.ui.adapter.item.EventListItem;
-import com.ls.ui.adapter.item.HeaderItem;
 import com.ls.ui.adapter.item.ProgramItem;
 import com.ls.ui.adapter.item.SocialItem;
 import com.ls.ui.adapter.item.TimeRangeItem;
-import com.ls.ui.drawer.DrawerMenu;
 import com.ls.ui.drawer.EventMode;
 import com.ls.utils.DateUtils;
 
@@ -97,9 +95,11 @@ public class EventsAdapter extends BaseAdapter {
             resultView = initProgramView(position, convertView, parent);
         } else if (itemViewType == EventListItem.TYPE_SOCIAL) {
             resultView = initSocialView(position, convertView, parent);
-        } else if (itemViewType == EventListItem.TYPE_SECTION_NAME) {
-            resultView = initSectionNameView(position, convertView, parent);
-        } else {
+        }
+//        else if (itemViewType == EventListItem.TYPE_SECTION_NAME) {
+//            resultView = initSectionNameView(position, convertView, parent);
+//        }
+        else {
             resultView = new View(mInflater.getContext());
         }
 
@@ -208,27 +208,27 @@ public class EventsAdapter extends BaseAdapter {
         return resultView;
     }
 
-    public View initSectionNameView(int position, View convertView, ViewGroup parent) {
-        View resultView = convertView;
-        HeaderHolder holder;
-
-        if (resultView == null) {
-            resultView = mInflater.inflate(R.layout.item_header, parent, false);
-
-            holder = new HeaderHolder();
-            holder.txtTitle = (TextView) resultView.findViewById(R.id.txtTitle);
-
-            resultView.setTag(holder);
-        } else {
-            holder = (HeaderHolder) resultView.getTag();
-        }
-
-        HeaderItem item = (HeaderItem) getItem(position);
-        holder.txtTitle.setText(item.getTitle());
-        holder.txtTitle.setVisibility(View.VISIBLE);
-
-        return resultView;
-    }
+//    public View initSectionNameView(int position, View convertView, ViewGroup parent) {
+//        View resultView = convertView;
+//        HeaderHolder holder;
+//
+//        if (resultView == null) {
+//            resultView = mInflater.inflate(R.layout.item_header, parent, false);
+//
+//            holder = new HeaderHolder();
+//            holder.txtTitle = (TextView) resultView.findViewById(R.id.txtTitle);
+//
+//            resultView.setTag(holder);
+//        } else {
+//            holder = (HeaderHolder) resultView.getTag();
+//        }
+//
+//        HeaderItem item = (HeaderItem) getItem(position);
+//        holder.txtTitle.setText(item.getTitle());
+//        holder.txtTitle.setVisibility(View.VISIBLE);
+//
+//        return resultView;
+//    }
 
     private void fillDate(EventHolder holder, Event event) {
         String fromTime = DateUtils.getInstance().getTime(mContext, event.getFromMillis());

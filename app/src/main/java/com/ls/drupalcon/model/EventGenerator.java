@@ -6,7 +6,6 @@ import com.ls.drupalcon.model.data.Event;
 import com.ls.drupalcon.model.data.Speaker;
 import com.ls.drupalcon.model.data.TimeRange;
 import com.ls.drupalcon.model.data.Track;
-import com.ls.drupalcon.model.data.Type;
 import com.ls.drupalcon.model.managers.BofsManager;
 import com.ls.drupalcon.model.managers.EventManager;
 import com.ls.drupalcon.model.managers.FavoriteManager;
@@ -16,10 +15,8 @@ import com.ls.drupalcon.model.managers.SpeakerManager;
 import com.ls.drupalcon.model.managers.TracksManager;
 import com.ls.ui.adapter.item.EventItemCreator;
 import com.ls.ui.adapter.item.EventListItem;
-import com.ls.ui.adapter.item.HeaderItem;
 import com.ls.ui.adapter.item.ProgramItem;
 import com.ls.ui.adapter.item.TimeRangeItem;
-import com.ls.util.L;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -116,9 +113,9 @@ public class EventGenerator {
             return result;
         }
 
-        List<EventListItem> schedules = new ArrayList<EventListItem>();
-        List<EventListItem> bofs = new ArrayList<EventListItem>();
-        List<EventListItem> socials = new ArrayList<EventListItem>();
+        List<EventListItem> schedules = new ArrayList<>();
+        List<EventListItem> bofs = new ArrayList<>();
+        List<EventListItem> socials = new ArrayList<>();
 
         for (EventListItem eventListItem : eventListItems) {
             Event event = eventListItem.getEvent();
@@ -135,7 +132,7 @@ public class EventGenerator {
 
             List<TimeRange> ranges = mEventManager.getDistrictFavoriteTimeRangeSafe(Event.PROGRAM_CLASS, favoriteEventIds, day);
             schedules = getEventItems(eventItemCreator, schedules, ranges);
-            schedules.add(0, new HeaderItem(App.getContext().getString(R.string.Sessions)));
+//            schedules.add(0, new HeaderItem(App.getContext().getString(R.string.Sessions)));
 
         }
 
@@ -143,7 +140,7 @@ public class EventGenerator {
 
             List<TimeRange> ranges = mEventManager.getDistrictFavoriteTimeRangeSafe(Event.BOFS_CLASS, favoriteEventIds, day);
             bofs = getEventItems(eventItemCreator, bofs, ranges);
-            bofs.add(0, new HeaderItem(App.getContext().getString(R.string.bofs)));
+//            bofs.add(0, new HeaderItem(App.getContext().getString(R.string.bofs)));
 
         }
 
@@ -151,7 +148,7 @@ public class EventGenerator {
 
             List<TimeRange> ranges = mEventManager.getDistrictFavoriteTimeRangeSafe(Event.SOCIALS_CLASS, favoriteEventIds, day);
             socials = getEventItems(eventItemCreator, socials, ranges);
-            socials.add(0, new HeaderItem(App.getContext().getString(R.string.social_events)));
+//            socials.add(0, new HeaderItem(App.getContext().getString(R.string.social_events)));
 
         }
 
@@ -163,14 +160,14 @@ public class EventGenerator {
     }
 
     private List<EventListItem> getEventItems(EventItemCreator eventItemCreator, List<EventListItem> events, List<TimeRange> ranges) {
-        List<EventListItem> result = new ArrayList<EventListItem>();
+        List<EventListItem> result = new ArrayList<>();
 
         for (TimeRange timeRange : ranges) {
             if (mShouldBreak) {
                 return result;
             }
 
-            List<EventListItem> timeRangeEvents = new ArrayList<EventListItem>();
+            List<EventListItem> timeRangeEvents = new ArrayList<>();
             for (EventListItem eventListItem : events) {
                 Event event = eventListItem.getEvent();
                 if (event == null) {
@@ -220,7 +217,7 @@ public class EventGenerator {
     private List<EventListItem> generateEventItems(List<EventListItem> eventListItems,
             EventItemCreator eventItemCreator) {
         TracksManager tracksManager = Model.instance().getTracksManager();
-        List<EventListItem> result = new ArrayList<EventListItem>();
+        List<EventListItem> result = new ArrayList<>();
 
         if (eventListItems.size() > 0) {
             EventListItem item = eventListItems.get(0);

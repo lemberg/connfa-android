@@ -25,5 +25,6 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="text_size_placeholder">16sp</dimen>
     <dimen name="margin_top_placeholder_text">20dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
 
 </resources>
