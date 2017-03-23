@@ -1,5 +1,10 @@
 package com.ls.drupalcon.model;
 
+import android.graphics.Color;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.style.RelativeSizeSpan;
+
 import com.ls.drupalcon.R;
 import com.ls.drupalcon.app.App;
 import com.ls.drupalcon.model.data.Event;
@@ -17,6 +22,8 @@ import com.ls.ui.adapter.item.EventItemCreator;
 import com.ls.ui.adapter.item.EventListItem;
 import com.ls.ui.adapter.item.ProgramItem;
 import com.ls.ui.adapter.item.TimeRangeItem;
+import com.ls.ui.view.TagBadgeSpannable;
+import com.ls.utils.L;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -105,9 +112,8 @@ public class EventGenerator {
         return sortFavorites(favoriteEventIds, eventListItems, day, eventItemCreator);
     }
 
-    private List<EventListItem> sortFavorites(List<Long> favoriteEventIds, List<EventListItem> eventListItems, long day,
-                                              @NotNull EventItemCreator eventItemCreator) {
-        List<EventListItem> result = new ArrayList<EventListItem>();
+    private List<EventListItem> sortFavorites(List<Long> favoriteEventIds, List<EventListItem> eventListItems, long day, @NotNull EventItemCreator eventItemCreator) {
+        List<EventListItem> result = new ArrayList<>();
 
         if (eventListItems.isEmpty()) {
             return result;
@@ -119,9 +125,11 @@ public class EventGenerator {
 
         for (EventListItem eventListItem : eventListItems) {
             Event event = eventListItem.getEvent();
+            String name = event.getName();
             if (Event.PROGRAM_CLASS == event.getEventClass()) {
                 schedules.add(eventListItem);
             } else if (Event.BOFS_CLASS == event.getEventClass()) {
+//                event.setName(setRoundedBackgroundSpan(name).toString());
                 bofs.add(eventListItem);
             } else if (Event.SOCIALS_CLASS == event.getEventClass()) {
                 socials.add(eventListItem);
@@ -155,7 +163,21 @@ public class EventGenerator {
         result.addAll(schedules);
         result.addAll(bofs);
         result.addAll(socials);
+        Collections.sort(result, new Comparator<EventListItem>() {
+            @Override
+            public int compare(EventListItem lhs, EventListItem rhs) {
+                if (lhs.getEvent().getFromMillis() > rhs.getEvent().getFromMillis()) {
+                    return 1;
+                }
+                else if (lhs.getEvent().getFromMillis() <  rhs.getEvent().getFromMillis()) {
+                    return -1;
+                }
+                else {
+                    return 0;
+                }
 
+            }
+        });
         return result;
     }
 
@@ -173,6 +195,7 @@ public class EventGenerator {
                 if (event == null) {
                     continue;
                 }
+//                eventListItem.getEvent().isFavorite()
 
                 if (timeRange.equals(event.getTimeRange())) {
                     timeRangeEvents.add(eventListItem);
@@ -274,5 +297,26 @@ public class EventGenerator {
     public void setShouldBreak(boolean shouldBreak) {
         mShouldBreak = shouldBreak;
         mProgramManager.getEventDao().setShouldBreak(shouldBreak);
+    }
+
+    private SpannableStringBuilder setRoundedBackgroundSpan(String eventName){
+        String marker = "  Session  ";
+        String span = eventName + marker;
+//        StringBuilder stringBuilder =  new StringBuilder(eventName);
+//        builder.append(marker);
+
+        SpannableStringBuilder stringBuilder = new SpannableStringBuilder(span);
+        L.e("Span = " + span);
+        stringBuilder.setSpan(
+                new TagBadgeSpannable(Color.parseColor("#ffffff"), Color.parseColor("#3d4760")),
+                span.length() - marker.length(),
+                span.length(),
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+        );
+        stringBuilder.setSpan(new RelativeSizeSpan(0.8f), span.length() - marker.length(),span.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        stringBuilder.append("  ");
+
+        return stringBuilder;
     }
 }

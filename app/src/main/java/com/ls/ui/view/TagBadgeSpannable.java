@@ -30,7 +30,7 @@ public class TagBadgeSpannable extends ReplacementSpan {
 
         paint.setColor(textColor);
 //        canvas.drawText(text, start, end, x, (bottom + top)/2, paint);
-        canvas.drawText(text, start, end, x, y, paint);
+        canvas.drawText(text, start, end, x, y-2, paint);
         L.e("Y = " + y);
         L.e("(bottom + top)/2 = " + (bottom + top) / 2);
     }

@@ -60,4 +60,5 @@ public class TimeRangeItem extends EventListItem {
     public String getTrack() {
         return mTrack;
     }
+
 }

@@ -263,7 +263,8 @@ public class EventsAdapter extends BaseAdapter {
     }
 
     private void fillEventInfo(EventHolder holder, Event event, @Nullable String track, @Nullable List<String> speakerNameList) {
-        holder.txtTitle.setText(setRoundedBackgroundSpan(event.getName()));
+//        holder.txtTitle.setText(event.getName());
+        setRoundedBackgroundSpan(event, holder);
         if (event.isFavorite()) {
             holder.txtTitle.setTextColor(mContext.getResources().getColor(R.color.link));
         } else {
@@ -342,26 +343,38 @@ public class EventsAdapter extends BaseAdapter {
         }
     }
 
-    private SpannableStringBuilder setRoundedBackgroundSpan(String eventName){
-        String marker = "  Session  ";
-        String span = eventName + marker;
-//        StringBuilder stringBuilder =  new StringBuilder(eventName);
-//        builder.append(marker);
+    private void setRoundedBackgroundSpan(Event event, EventHolder holder) {
+        String eventName = event.getName();
+        L.e("event test time = " + event.getFromMillis());
+        if (mEventMode == EventMode.Favorites) {
+            String marker = null;
+            if (event.getEventClass() == Event.PROGRAM_CLASS) {
+                marker = "   Session  ";
+            }else if (event.getEventClass() == Event.BOFS_CLASS) {
+                marker = "   BOFS  ";
+            }else if (event.getEventClass() == Event.SOCIALS_CLASS) {
+                marker = "   Socials  ";
+            }
+            String span = eventName + "    " + marker;
 
-        SpannableStringBuilder stringBuilder = new SpannableStringBuilder(span);
-        L.e("Span = " + span);
-        stringBuilder.setSpan(
-                new TagBadgeSpannable(Color.parseColor("#ffffff"), Color.parseColor("#3d4760")),
-                span.length() - marker.length(),
-                span.length(),
-                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-        );
-//        stringBuilder.setSpan(new RelativeSizeSpan(1.4f), 0, span.length() - marker.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            SpannableStringBuilder stringBuilder = new SpannableStringBuilder(span);
+            L.e("Span = " + span);
+            stringBuilder.setSpan(
+                    new TagBadgeSpannable(mContext.getResources().getColor(R.color.white), mContext.getResources().getColor(R.color.primary_dark)),
+                    span.length() - marker.length(),
+                    span.length(),
+                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+            );
+            stringBuilder.setSpan(new RelativeSizeSpan(0.8f), span.length() - marker.length(), span.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-        stringBuilder.append("  ");
+            stringBuilder.append("  ");
 
-        return stringBuilder;
+            holder.txtTitle.setText(stringBuilder);
+        } else {
+            holder.txtTitle.setText(eventName);
+        }
     }
+
 
     private static class HeaderHolder {
         TextView txtTitle;
