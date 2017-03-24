@@ -125,11 +125,9 @@ public class EventGenerator {
 
         for (EventListItem eventListItem : eventListItems) {
             Event event = eventListItem.getEvent();
-            String name = event.getName();
             if (Event.PROGRAM_CLASS == event.getEventClass()) {
                 schedules.add(eventListItem);
             } else if (Event.BOFS_CLASS == event.getEventClass()) {
-//                event.setName(setRoundedBackgroundSpan(name).toString());
                 bofs.add(eventListItem);
             } else if (Event.SOCIALS_CLASS == event.getEventClass()) {
                 socials.add(eventListItem);
@@ -137,27 +135,20 @@ public class EventGenerator {
         }
 
         if (!schedules.isEmpty()) {
-
+            L.e("schedules = " + schedules);
             List<TimeRange> ranges = mEventManager.getDistrictFavoriteTimeRangeSafe(Event.PROGRAM_CLASS, favoriteEventIds, day);
             schedules = getEventItems(eventItemCreator, schedules, ranges);
-//            schedules.add(0, new HeaderItem(App.getContext().getString(R.string.Sessions)));
-
+            L.e("schedules getEventItems= " + schedules);
         }
 
         if (!bofs.isEmpty()) {
-
             List<TimeRange> ranges = mEventManager.getDistrictFavoriteTimeRangeSafe(Event.BOFS_CLASS, favoriteEventIds, day);
             bofs = getEventItems(eventItemCreator, bofs, ranges);
-//            bofs.add(0, new HeaderItem(App.getContext().getString(R.string.bofs)));
-
         }
 
         if (!socials.isEmpty()) {
-
             List<TimeRange> ranges = mEventManager.getDistrictFavoriteTimeRangeSafe(Event.SOCIALS_CLASS, favoriteEventIds, day);
             socials = getEventItems(eventItemCreator, socials, ranges);
-//            socials.add(0, new HeaderItem(App.getContext().getString(R.string.social_events)));
-
         }
 
         result.addAll(schedules);
@@ -165,14 +156,14 @@ public class EventGenerator {
         result.addAll(socials);
         Collections.sort(result, new Comparator<EventListItem>() {
             @Override
-            public int compare(EventListItem lhs, EventListItem rhs) {
-                if (lhs.getEvent().getFromMillis() > rhs.getEvent().getFromMillis()) {
+            public int compare(EventListItem first, EventListItem second) {
+                long order1 = first.getEvent().getFromMillis();
+                long order2 = second.getEvent().getFromMillis();
+                if (order1 > order2) {
                     return 1;
-                }
-                else if (lhs.getEvent().getFromMillis() <  rhs.getEvent().getFromMillis()) {
+                } else if (order1 < order2) {
                     return -1;
-                }
-                else {
+                } else {
                     return 0;
                 }
 
@@ -195,8 +186,6 @@ public class EventGenerator {
                 if (event == null) {
                     continue;
                 }
-//                eventListItem.getEvent().isFavorite()
-
                 if (timeRange.equals(event.getTimeRange())) {
                     timeRangeEvents.add(eventListItem);
                 }
@@ -238,7 +227,7 @@ public class EventGenerator {
     }
 
     private List<EventListItem> generateEventItems(List<EventListItem> eventListItems,
-            EventItemCreator eventItemCreator) {
+                                                   EventItemCreator eventItemCreator) {
         TracksManager tracksManager = Model.instance().getTracksManager();
         List<EventListItem> result = new ArrayList<>();
 
@@ -299,24 +288,4 @@ public class EventGenerator {
         mProgramManager.getEventDao().setShouldBreak(shouldBreak);
     }
 
-    private SpannableStringBuilder setRoundedBackgroundSpan(String eventName){
-        String marker = "  Session  ";
-        String span = eventName + marker;
-//        StringBuilder stringBuilder =  new StringBuilder(eventName);
-//        builder.append(marker);
-
-        SpannableStringBuilder stringBuilder = new SpannableStringBuilder(span);
-        L.e("Span = " + span);
-        stringBuilder.setSpan(
-                new TagBadgeSpannable(Color.parseColor("#ffffff"), Color.parseColor("#3d4760")),
-                span.length() - marker.length(),
-                span.length(),
-                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-        );
-        stringBuilder.setSpan(new RelativeSizeSpan(0.8f), span.length() - marker.length(),span.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-        stringBuilder.append("  ");
-
-        return stringBuilder;
-    }
 }

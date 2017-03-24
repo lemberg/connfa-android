@@ -64,7 +64,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-
             >
 
             <LinearLayout
@@ -80,7 +79,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="8dp"
-                    android:layout_weight="1.0"
+                    android:layout_weight="1"
                     android:clickable="false"
                     android:textColor="@color/black_100"
                     android:textSize="@dimen/text_size_medium"
@@ -184,16 +183,15 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:orientation="vertical"
-                    android:background="@color/black_90_trans"
-                    android:gravity="bottom"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:gravity="bottom"
+                    android:orientation="vertical">
 
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/ic_speakers"/>
+                        android:src="@drawable/friend_schedule" />
 
                 </LinearLayout>
             </LinearLayout>

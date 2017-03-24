@@ -23,16 +23,26 @@ public class TagBadgeSpannable extends ReplacementSpan {
 
     @Override
     public void draw(Canvas canvas, CharSequence text, int start, int end, float x, int top, int y, int bottom, Paint paint) {
-        RectF rect = new RectF(x, top, x + measureText(paint, text, start, end), bottom);
-        L.e("Top = " + top + " Bottom = " + bottom);
+        float textSize = paint.getTextSize();
+        float fontBottom = paint.getFontMetrics().bottom;
+        float fontTop = paint.getFontMetrics().top;
+        L.e("fontBottom = " + fontBottom);
+        L.e("fontTop = " + fontTop);
+//        paint.setColor(backgroundColor);
+//        canvas.drawLine(x, y, x +30, y, paint);
+
+        RectF rect = new RectF(x, y + fontTop, x + measureText(paint, text, start, end),  y + fontBottom);
+//        L.e("Top = " + top + " Bottom = " + bottom);
+//        L.e("Bottom - Top =  " + (bottom - top));
+//        L.e("Text Size = " + paint.getTextSize());
+//        L.e("Paint measure text" + paint.get);
         paint.setColor(backgroundColor);
         canvas.drawRoundRect(rect, CORNER_RADIUS, CORNER_RADIUS, paint);
 
         paint.setColor(textColor);
 //        canvas.drawText(text, start, end, x, (bottom + top)/2, paint);
-        canvas.drawText(text, start, end, x, y-2, paint);
-        L.e("Y = " + y);
-        L.e("(bottom + top)/2 = " + (bottom + top) / 2);
+        canvas.drawText(text, start, end, x, y, paint);
+
     }
 
     @Override
