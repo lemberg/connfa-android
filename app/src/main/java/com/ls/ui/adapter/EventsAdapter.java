@@ -11,14 +11,12 @@ import com.ls.ui.adapter.item.ProgramItem;
 import com.ls.ui.adapter.item.SocialItem;
 import com.ls.ui.adapter.item.TimeRangeItem;
 import com.ls.ui.drawer.EventMode;
-import com.ls.ui.view.TagBadgeSpannable;
+import com.ls.ui.view.RoundedBackgroundSpan;
 import com.ls.utils.DateUtils;
-import com.ls.utils.L;
 
 import android.content.Context;
 import android.graphics.Color;
 import android.support.annotation.Nullable;
-import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -320,17 +318,17 @@ public class EventsAdapter extends BaseAdapter {
         if (mEventMode == EventMode.Favorites) {
             String marker = null;
             if (event.getEventClass() == Event.PROGRAM_CLASS) {
-                marker = "   Session  ";
+                marker = mContext.getString(R.string.Session);
             } else if (event.getEventClass() == Event.BOFS_CLASS) {
-                marker = "   BOFS  ";
+                marker = mContext.getString(R.string.BoF);
             } else if (event.getEventClass() == Event.SOCIALS_CLASS) {
-                marker = "   Socials  ";
+                marker = mContext.getString(R.string.Socials);
             }
             String span = eventName + "   " + marker;
 
             SpannableStringBuilder stringBuilder = new SpannableStringBuilder(span);
             stringBuilder.setSpan(
-                    new TagBadgeSpannable(mContext.getResources().getColor(R.color.white), mContext.getResources().getColor(R.color.primary_dark)),
+                    new RoundedBackgroundSpan(mContext.getResources().getColor(R.color.white), mContext.getResources().getColor(R.color.primary_dark)),
                     span.length() - marker.length(),
                     span.length(),
                     Spanned.SPAN_EXCLUSIVE_EXCLUSIVE

@@ -52,7 +52,9 @@
     <string name="no_default_browser_found">No default browser found</string>
     <string name="social_media">Social Media</string>
     <string name="floor_plan">Floor Plans</string>
-
+    <string name="Session">\u202F\u202F\u202FSession\u202F\u202F\u202F</string>
+    <string name="BoF">\u202F\u202F\u202FBoF\u202F\u202F\u202F</string>
+    <string name="Socials">\u202F\u202F\u202FSocials\u202F\u202F\u202F</string>
 
     <string-array name="months">
         <item>January</item>

@@ -12,7 +12,7 @@ import android.text.style.RelativeSizeSpan;
 import android.widget.TextView;
 
 import com.ls.drupalcon.R;
-import com.ls.ui.view.TagBadgeSpannable;
+import com.ls.ui.view.RoundedBackgroundSpan;
 
 public class MainActivity extends Activity {
 
@@ -26,7 +26,7 @@ public class MainActivity extends Activity {
         SpannableStringBuilder stringBuilder = new SpannableStringBuilder();
         stringBuilder.append(badgeText);
         stringBuilder.setSpan(
-                new TagBadgeSpannable( Color.parseColor("#ffffff"), Color.parseColor("#3d4760")),
+                new RoundedBackgroundSpan( Color.parseColor("#ffffff"), Color.parseColor("#3d4760")),
                 badgeText.length() -11,
                 badgeText.length(),
                 Spanned.SPAN_EXCLUSIVE_EXCLUSIVE

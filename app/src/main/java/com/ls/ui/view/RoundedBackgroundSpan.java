@@ -9,13 +9,13 @@ import android.text.style.ReplacementSpan;
 
 import com.ls.utils.L;
 
-public class TagBadgeSpannable extends ReplacementSpan {
+public class RoundedBackgroundSpan extends ReplacementSpan {
 
     private static int CORNER_RADIUS = 30;
     private final int textColor;
     private final int backgroundColor;
 
-    public TagBadgeSpannable(int textColor, int backgroundColor) {
+    public RoundedBackgroundSpan(int textColor, int backgroundColor) {
         super();
         this.textColor = textColor;
         this.backgroundColor = backgroundColor;

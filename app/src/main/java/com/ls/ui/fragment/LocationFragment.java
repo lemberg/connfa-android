@@ -12,7 +12,7 @@ import com.ls.drupalcon.model.UpdateRequest;
 import com.ls.drupalcon.model.UpdatesManager;
 import com.ls.drupalcon.model.data.Location;
 import com.ls.drupalcon.model.managers.LocationManager;
-import com.ls.ui.view.TagBadgeSpannable;
+import com.ls.ui.view.RoundedBackgroundSpan;
 
 import android.graphics.Color;
 import android.os.AsyncTask;
@@ -58,7 +58,7 @@ public class LocationFragment extends Fragment implements CustomMapFragment.OnAc
 //
 //        stringBuilder.append("Tesddsdsdsdsts");
 //        stringBuilder.setSpan(
-//                new TagBadgeSpannable(2, Color.parseColor("#ffffff"), Color.parseColor("#1f3e98")),
+//                new RoundedBackgroundSpan(2, Color.parseColor("#ffffff"), Color.parseColor("#1f3e98")),
 //                1,
 //                5,
 //                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
@@ -70,7 +70,7 @@ public class LocationFragment extends Fragment implements CustomMapFragment.OnAc
         SpannableStringBuilder stringBuilder = new SpannableStringBuilder();
         stringBuilder.append(badgeText);
         stringBuilder.setSpan(
-                new TagBadgeSpannable(Color.parseColor("#ffffff"), Color.parseColor("#1f3e98")),
+                new RoundedBackgroundSpan(Color.parseColor("#ffffff"), Color.parseColor("#1f3e98")),
                 badgeText.length() -3,
                 badgeText.length(),
                 Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
