@@ -23,7 +23,7 @@ public class RoundedBackgroundSpan extends ReplacementSpan {
 
     @Override
     public void draw(Canvas canvas, CharSequence text, int start, int end, float x, int top, int y, int bottom, Paint paint) {
-        float textSize = paint.getTextSize();
+//        float textSize = paint.getTextSize();
         float fontBottom = paint.getFontMetrics().bottom;
         float fontTop = paint.getFontMetrics().top;
         L.e("fontBottom = " + fontBottom);

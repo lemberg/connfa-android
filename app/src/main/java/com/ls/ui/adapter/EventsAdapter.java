@@ -324,7 +324,7 @@ public class EventsAdapter extends BaseAdapter {
             } else if (event.getEventClass() == Event.SOCIALS_CLASS) {
                 marker = mContext.getString(R.string.Socials);
             }
-            String span = eventName + "   " + marker;
+            String span = eventName + "  " + marker;
 
             SpannableStringBuilder stringBuilder = new SpannableStringBuilder(span);
             stringBuilder.setSpan(
