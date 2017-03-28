@@ -1,5 +1,6 @@
 package com.ls.ui.activity;
 
+import com.ls.MaterialTapTargetPrompt;
 import com.ls.drupalcon.R;
 import com.ls.drupalcon.model.Model;
 import com.ls.drupalcon.model.PreferencesManager;
@@ -32,6 +33,7 @@ import android.os.PersistableBundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ShareCompat;
+import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -123,6 +125,19 @@ public class EventDetailsActivity extends StackKeeperActivity {
         return true;
     }
 
+    public void showSearchPrompt()
+    {
+        new MaterialTapTargetPrompt.Builder(this)
+                .setPrimaryText(R.string.no_apps_can_perform_this_action)
+                .setSecondaryText(R.string.action_remove_from_favorites)
+                .setAnimationInterpolator(new FastOutSlowInInterpolator())
+                .setMaxTextWidth(13050f)
+                .setIcon(R.drawable.ic_arrow_back)
+                .setTarget(R.id.actionShare)
+                .setBackgroundColour(R.color.black)
+                .show();
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -130,6 +145,7 @@ public class EventDetailsActivity extends StackKeeperActivity {
                 finish();
                 return true;
             case R.id.actionShare:
+                showSearchPrompt();
                 if (mEvent != null) {
                     shareEvent(mEvent.getLink());
                 }
@@ -316,6 +332,7 @@ public class EventDetailsActivity extends StackKeeperActivity {
                 checkBoxFavorite.setChecked(!checkBoxFavorite.isChecked());
                 mIsFavorite = checkBoxFavorite.isChecked();
                 setFavorite();
+                showSearchPrompt();
             }
         });
     }
@@ -450,4 +467,5 @@ public class EventDetailsActivity extends StackKeeperActivity {
             mViewToolbar.setAlpha(headerRatio);
         }
     };
+
 }
