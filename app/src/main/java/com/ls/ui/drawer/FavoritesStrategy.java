@@ -30,7 +30,7 @@ public class FavoritesStrategy implements EventHolderFragmentStrategy {
 
     @Override
     public boolean enableOptionMenu() {
-        return false;
+        return true;
     }
 
     @Override

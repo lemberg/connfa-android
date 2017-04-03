@@ -55,13 +55,11 @@ public class EventHolderFragment extends Fragment {
 
     private boolean mIsFilterUsed;
     private EventHolderFragmentStrategy strategy;
-    private List<UpdateRequest> requests = new ArrayList<>();
 
 
     private UpdatesManager.DataUpdatedListener updateReceiver = new UpdatesManager.DataUpdatedListener() {
         @Override
         public void onDataUpdated( List<UpdateRequest> requests) {
-            L.e("requests = " + EventHolderFragment.this.requests.size());
             updateData(requests);
         }
     };
@@ -94,12 +92,17 @@ public class EventHolderFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.menu_filter, menu);
-
-        MenuItem filter = menu.findItem(R.id.actionFilter);
-        if (filter != null) {
-            updateFilterState(filter);
+        if(strategy.getEventMode() == EventMode.Favorites){
+            inflater.inflate(R.menu.menu_my_schedule, menu);
+        }else {
+            inflater.inflate(R.menu.menu_filter, menu);
+            MenuItem filter = menu.findItem(R.id.actionFilter);
+            if (filter != null) {
+                updateFilterState(filter);
+            }
         }
+
+
     }
 
     @Override
