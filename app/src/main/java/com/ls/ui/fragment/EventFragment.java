@@ -1,5 +1,4 @@
 package com.ls.ui.fragment;
-
 import com.ls.drupalcon.R;
 import com.ls.drupalcon.model.EventGenerator;
 import com.ls.drupalcon.model.PreferencesManager;
@@ -12,7 +11,6 @@ import com.ls.ui.adapter.EventsAdapter;
 import com.ls.ui.adapter.item.EventListItem;
 import com.ls.ui.adapter.item.SimpleTimeRangeCreator;
 import com.ls.ui.adapter.item.TimeRangeItem;
-import com.ls.ui.drawer.DrawerMenu;
 import com.ls.ui.drawer.EventMode;
 import com.ls.ui.receiver.ReceiverManager;
 import com.ls.utils.AnalyticsManager;

@@ -1,6 +1,7 @@
 package com.ls.ui.fragment;
 
 import com.astuetz.PagerSlidingTabStrip;
+import com.ls.MaterialTapTargetPrompt;
 import com.ls.drupalcon.R;
 import com.ls.drupalcon.app.App;
 import com.ls.drupalcon.model.Model;
@@ -27,6 +28,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -59,7 +61,7 @@ public class EventHolderFragment extends Fragment {
 
     private UpdatesManager.DataUpdatedListener updateReceiver = new UpdatesManager.DataUpdatedListener() {
         @Override
-        public void onDataUpdated( List<UpdateRequest> requests) {
+        public void onDataUpdated(List<UpdateRequest> requests) {
             updateData(requests);
         }
     };
@@ -92,9 +94,12 @@ public class EventHolderFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        if(strategy.getEventMode() == EventMode.Favorites){
+        L.e("strategy = " + strategy.getEventMode());
+        if (strategy.getEventMode() == EventMode.Favorites) {
             inflater.inflate(R.menu.menu_my_schedule, menu);
-        }else {
+            L.e("Favorites");
+            showSearchPrompt();
+        } else {
             inflater.inflate(R.menu.menu_filter, menu);
             MenuItem filter = menu.findItem(R.id.actionFilter);
             if (filter != null) {
@@ -111,6 +116,9 @@ public class EventHolderFragment extends Fragment {
             case R.id.actionFilter:
                 showFilter();
                 break;
+            case R.id.actionFirst:
+                showSearchPrompt();
+                break;
         }
         return true;
     }
@@ -121,7 +129,6 @@ public class EventHolderFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         Model.instance().getUpdatesManager().registerUpdateListener(updateReceiver);
         favoriteReceiver.register(getActivity());
-
         initData();
         initView();
         new LoadData().execute();
@@ -268,5 +275,18 @@ public class EventHolderFragment extends Fragment {
                 new LoadData().execute();
             }
         }
+    }
+
+
+    public void showSearchPrompt() {
+        new MaterialTapTargetPrompt.Builder(getActivity())
+                .setPrimaryText(R.string.share_your_schedule_with_friends)
+                .setSecondaryText(R.string.tap_the_three_dots)
+                .setAnimationInterpolator(new FastOutSlowInInterpolator())
+                .setMaxTextWidth(1000f)
+                .setIcon(R.drawable.ic_menu_more)
+                .setTarget(R.id.promptAnchor)
+                .setBackgroundColour(R.color.primary)
+                .show();
     }
 }

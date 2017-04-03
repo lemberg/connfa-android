@@ -6,7 +6,13 @@
     <item
         android:id="@+id/actionFirst"
         android:orderInCategory="100"
-        android:title="@string/filter"
-        android:icon="@drawable/ic_menu_more"
-        app:showAsAction="ifRoom"/>
+        android:title="Add a schedule"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/actionFirst1"
+        android:orderInCategory="100"
+        android:title="Share My Schedule"
+        app:showAsAction="never"/>
+
 </menu>

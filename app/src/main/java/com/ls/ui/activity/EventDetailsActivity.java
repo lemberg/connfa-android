@@ -125,19 +125,6 @@ public class EventDetailsActivity extends StackKeeperActivity {
         return true;
     }
 
-    public void showSearchPrompt()
-    {
-        new MaterialTapTargetPrompt.Builder(this)
-                .setPrimaryText(R.string.no_apps_can_perform_this_action)
-                .setSecondaryText(R.string.action_remove_from_favorites)
-                .setAnimationInterpolator(new FastOutSlowInInterpolator())
-                .setMaxTextWidth(13050f)
-                .setIcon(R.drawable.ic_arrow_back)
-                .setTarget(R.id.actionShare)
-                .setBackgroundColour(R.color.black)
-                .show();
-    }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -145,7 +132,6 @@ public class EventDetailsActivity extends StackKeeperActivity {
                 finish();
                 return true;
             case R.id.actionShare:
-                showSearchPrompt();
                 if (mEvent != null) {
                     shareEvent(mEvent.getLink());
                 }
@@ -332,7 +318,6 @@ public class EventDetailsActivity extends StackKeeperActivity {
                 checkBoxFavorite.setChecked(!checkBoxFavorite.isChecked());
                 mIsFavorite = checkBoxFavorite.isChecked();
                 setFavorite();
-                showSearchPrompt();
             }
         });
     }

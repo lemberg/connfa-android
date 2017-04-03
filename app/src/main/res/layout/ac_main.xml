@@ -8,7 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/status_bar_height"
         android:background="@color/black_90_trans"
-        android:visibility="gone"/>
+       />
 
     <android.support.v4.widget.DrawerLayout
         android:id="@+id/drawerLayout"
@@ -30,6 +30,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/primary"/>
+
+            <View
+                android:id="@+id/promptAnchor"
+                android:clickable="false"
+                android:layout_width="1dp"
+                android:layout_height="1dp"
+                android:layout_marginTop="26dp"
+                android:layout_marginRight="26dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true" />
 
         </RelativeLayout>
 

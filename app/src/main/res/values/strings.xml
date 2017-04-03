@@ -56,6 +56,9 @@
     <string name="BoF">\u202F\u202F\u202FBoF\u202F\u202F\u202F</string>
     <string name="Socials">\u202F\u202F\u202FSocials\u202F\u202F\u202F</string>
 
+    <string name="share_your_schedule_with_friends">Share your schedule with friends</string>
+    <string name="tap_the_three_dots">Tap the three dots and choose "Share My Schedule" option</string>
+
     <string-array name="months">
         <item>January</item>
         <item>February</item>
