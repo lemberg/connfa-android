@@ -54,7 +54,6 @@ public class AboutFragment extends Fragment {
         super.onCreate(savedInstanceState);
         Model.instance().getUpdatesManager().registerUpdateListener(updateListener);
         AppCompatActivity activity = (AppCompatActivity) getActivity();
-        activity.getSupportActionBar();
 
         final String[] month = getResources().getStringArray(R.array.months);
 //        Toolbar toolbar = (Toolbar) getView().findViewById(R.id.toolBar);

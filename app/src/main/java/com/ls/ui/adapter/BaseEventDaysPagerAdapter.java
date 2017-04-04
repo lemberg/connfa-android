@@ -4,6 +4,7 @@ package com.ls.ui.adapter;
 import com.ls.ui.drawer.EventHolderFragmentStrategy;
 import com.ls.ui.fragment.EventFragment;
 import com.ls.utils.DateUtils;
+import com.ls.utils.L;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;

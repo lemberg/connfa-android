@@ -4,13 +4,13 @@
       tools:context="com.example.toolbar.MainActivity" >
 
     <item
-        android:id="@+id/actionFirst"
+        android:id="@+id/actionAddSchedule"
         android:orderInCategory="100"
         android:title="Add a schedule"
         app:showAsAction="never"/>
 
     <item
-        android:id="@+id/actionFirst1"
+        android:id="@+id/actionShareMySchedule"
         android:orderInCategory="100"
         android:title="Share My Schedule"
         app:showAsAction="never"/>

@@ -1,4 +1,5 @@
 package com.ls.ui.fragment;
+
 import com.ls.drupalcon.R;
 import com.ls.drupalcon.model.EventGenerator;
 import com.ls.drupalcon.model.PreferencesManager;
@@ -7,6 +8,7 @@ import com.ls.sponsors.GoldSponsors;
 import com.ls.sponsors.SponsorItem;
 import com.ls.sponsors.SponsorManager;
 import com.ls.ui.activity.EventDetailsActivity;
+import com.ls.ui.adapter.BaseEventDaysPagerAdapter;
 import com.ls.ui.adapter.EventsAdapter;
 import com.ls.ui.adapter.item.EventListItem;
 import com.ls.ui.adapter.item.SimpleTimeRangeCreator;
@@ -15,12 +17,17 @@ import com.ls.ui.drawer.EventMode;
 import com.ls.ui.receiver.ReceiverManager;
 import com.ls.utils.AnalyticsManager;
 import com.ls.utils.DateUtils;
+import com.ls.utils.L;
 
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
@@ -82,6 +89,12 @@ public class EventFragment extends Fragment implements EventsAdapter.Listener {
         receiverManager.register(getActivity());
     }
 
+//    @Override
+//    public void onCreate(@Nullable Bundle savedInstanceState) {
+//        super.onCreate(savedInstanceState);
+//        setHasOptionsMenu(true);
+//    }
+
     @Override
     public void onClick(int position) {
         onItemClick(position);
@@ -94,6 +107,16 @@ public class EventFragment extends Fragment implements EventsAdapter.Listener {
         super.onDestroy();
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+//        if (mEventMode == EventMode.Favorites) {
+//             inflater.inflate(R.menu.menu_my_schedule, menu);
+//        }
+
+
+    }
+
     private void initData() {
         Bundle bundle = getArguments();
         if (bundle != null) {
@@ -103,6 +126,7 @@ public class EventFragment extends Fragment implements EventsAdapter.Listener {
             levelIds = PreferencesManager.getInstance().loadExpLevel();
             trackIds = PreferencesManager.getInstance().loadTracks();
         }
+        L.e("mEventMode = " + mEventMode);
         mGenerator = new EventGenerator();
     }
 

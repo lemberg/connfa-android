@@ -8,6 +8,7 @@ import com.ls.drupalcon.model.Model;
 import com.ls.drupalcon.model.PreferencesManager;
 import com.ls.drupalcon.model.UpdateRequest;
 import com.ls.drupalcon.model.UpdatesManager;
+import com.ls.drupalcon.model.managers.ProgramManager;
 import com.ls.ui.activity.HomeActivity;
 import com.ls.ui.adapter.BaseEventDaysPagerAdapter;
 import com.ls.ui.drawer.BofsStrategy;
@@ -29,13 +30,17 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -62,12 +67,14 @@ public class EventHolderFragment extends Fragment {
     private UpdatesManager.DataUpdatedListener updateReceiver = new UpdatesManager.DataUpdatedListener() {
         @Override
         public void onDataUpdated(List<UpdateRequest> requests) {
+            L.e("onDataUpdated = " + requests);
             updateData(requests);
         }
     };
     private ReceiverManager favoriteReceiver = new ReceiverManager(new ReceiverManager.FavoriteUpdatedListener() {
         @Override
         public void onFavoriteUpdated(long eventId, boolean isFavorite) {
+            L.e("eventId = " + eventId);
             updateFavorites();
         }
     });
@@ -94,10 +101,8 @@ public class EventHolderFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        L.e("strategy = " + strategy.getEventMode());
         if (strategy.getEventMode() == EventMode.Favorites) {
             inflater.inflate(R.menu.menu_my_schedule, menu);
-            L.e("Favorites");
             showSearchPrompt();
         } else {
             inflater.inflate(R.menu.menu_filter, menu);
@@ -116,8 +121,11 @@ public class EventHolderFragment extends Fragment {
             case R.id.actionFilter:
                 showFilter();
                 break;
-            case R.id.actionFirst:
-                showSearchPrompt();
+            case R.id.actionAddSchedule:
+                strategy = new SocialStrategy();
+                new LoadData().execute();
+//               new LoadDataStub().execute();
+//                showSearchPrompt();
                 break;
         }
         return true;
@@ -138,6 +146,7 @@ public class EventHolderFragment extends Fragment {
     public void onDestroyView() {
         Model.instance().getUpdatesManager().unregisterUpdateListener(updateReceiver);
         favoriteReceiver.unregister(getActivity());
+        disableCustomToolBar();
         super.onDestroyView();
     }
 
@@ -158,6 +167,7 @@ public class EventHolderFragment extends Fragment {
                         break;
                     case Favorites:
                         strategy = new FavoritesStrategy();
+                        setCustomToolBar();
                         break;
                 }
             }
@@ -200,8 +210,25 @@ public class EventHolderFragment extends Fragment {
         }
     }
 
+    class LoadDataStub extends AsyncTask<Void, Void, List<Long>> {
+
+        @Override
+        protected List<Long> doInBackground(Void... params) {
+            List<Long> dayList = new ArrayList<>();
+            ProgramManager programManager = Model.instance().getProgramManager();
+            dayList.addAll(programManager.getProgramDays());
+            return dayList;
+        }
+
+        @Override
+        protected void onPostExecute(List<Long> result) {
+            updateViews(result);
+        }
+    }
+
 
     private void updateViews(List<Long> dayList) {
+        L.e("List<Long> dayList = " + dayList);
 
         if (dayList.isEmpty()) {
             mPagerTabs.setVisibility(View.GONE);
@@ -288,5 +315,31 @@ public class EventHolderFragment extends Fragment {
                 .setTarget(R.id.promptAnchor)
                 .setBackgroundColour(R.color.primary)
                 .show();
+    }
+
+    private void setCustomToolBar() {
+        AppCompatActivity activity = (AppCompatActivity) getActivity();
+
+        android.support.v7.app.ActionBar toolbar = activity.getSupportActionBar();
+        SpinnerAdapter spinnerAdapter = ArrayAdapter.createFromResource(getContext(), R.array.months, R.layout.item_spinner);
+
+        Spinner navigationSpinner = new Spinner(getContext());
+        navigationSpinner.setPopupBackgroundResource(R.color.white_100);
+        navigationSpinner.setAdapter(spinnerAdapter);
+        if (toolbar != null) {
+            toolbar.setCustomView(navigationSpinner);
+            toolbar.setDisplayShowCustomEnabled(true);
+            toolbar.setDisplayShowTitleEnabled(false);
+            L.e("toolbar is not null");
+        } else {
+            L.e("toolbar is null");
+        }
+    }
+
+    private void disableCustomToolBar(){
+        AppCompatActivity activity = (AppCompatActivity) getActivity();
+        android.support.v7.app.ActionBar toolbar = activity.getSupportActionBar();
+        toolbar.setDisplayShowCustomEnabled(false);
+        toolbar.setDisplayShowTitleEnabled(true);
     }
 }
