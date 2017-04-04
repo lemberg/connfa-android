@@ -4,13 +4,13 @@
         <item name="android:windowBackground">@color/white</item>
         <item name="colorAccent">@color/grey_100</item>
         <item name="colorControlNormal">@color/white_200</item>
-        <item name="android:spinnerItemStyle">@style/SpinnerItem</item>
-        <item name="android:spinnerDropDownItemStyle">@style/SpinnerItem.DropDownItem</item>
     </style>
 
     <style name="Theme.DrupalCon.Home" parent="Theme.DrupalCon">
         <item name="colorPrimaryDark">@color/primary_dark</item>
         <item name="colorPrimary">@color/primary</item>
+        <!--<item name="android:spinnerItemStyle">@style/SpinnerItem</item>-->
+        <!--<item name="android:spinnerDropDownItemStyle">@style/SpinnerItem.DropDownItem</item>-->
     </style>
 
     <style name="Theme.DrupalCon.Speaker" parent="Theme.DrupalCon">
@@ -42,12 +42,12 @@
     </style>
 
 
-    <style name="SpinnerItem" parent="@android:style/Widget.TextView.SpinnerItem">
-        <item name="android:textColor">#00FF00</item>
-    </style>
+    <!--<style name="SpinnerItem" parent="@android:style/Widget.TextView.SpinnerItem">-->
+        <!--<item name="android:textColor">#00FF00</item>-->
+    <!--</style>-->
 
-    <style name="SpinnerItem.DropDownItem" parent="@android:style/Widget.DropDownItem.Spinner">
-        <item name="android:textColor">#FF0000</item>
-    </style>
+    <!--<style name="SpinnerItem.DropDownItem" parent="@android:style/Widget.DropDownItem.Spinner">-->
+        <!--<item name="android:textColor">#FF0000</item>-->
+    <!--</style>-->
 
 </resources>

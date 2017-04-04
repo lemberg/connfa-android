@@ -321,19 +321,21 @@ public class EventHolderFragment extends Fragment {
         AppCompatActivity activity = (AppCompatActivity) getActivity();
 
         android.support.v7.app.ActionBar toolbar = activity.getSupportActionBar();
-        SpinnerAdapter spinnerAdapter = ArrayAdapter.createFromResource(getContext(), R.array.months, R.layout.item_spinner);
+
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(), R.array.months, R.layout.item_spinner);
+        adapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item);
+
+
 
         Spinner navigationSpinner = new Spinner(getContext());
-        navigationSpinner.setPopupBackgroundResource(R.color.white_100);
-        navigationSpinner.setAdapter(spinnerAdapter);
+        navigationSpinner.setAdapter(adapter);
+//        navigationSpinner.setPopupBackgroundResource(R.color.white_100);
         if (toolbar != null) {
             toolbar.setCustomView(navigationSpinner);
             toolbar.setDisplayShowCustomEnabled(true);
             toolbar.setDisplayShowTitleEnabled(false);
-            L.e("toolbar is not null");
-        } else {
-            L.e("toolbar is null");
         }
+
     }
 
     private void disableCustomToolBar(){
