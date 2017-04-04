@@ -1,6 +1,5 @@
 package com.ls.ui.activity;
 
-import com.ls.MaterialTapTargetPrompt;
 import com.ls.drupalcon.R;
 import com.ls.drupalcon.model.Model;
 import com.ls.drupalcon.model.PreferencesManager;
@@ -20,7 +19,6 @@ import com.ls.ui.view.CircleImageView;
 import com.ls.ui.view.NotifyingScrollView;
 import com.ls.utils.AnalyticsManager;
 import com.ls.utils.DateUtils;
-import com.ls.utils.L;
 import com.ls.utils.ScheduleManager;
 import com.ls.utils.WebviewUtils;
 
@@ -28,12 +26,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.PersistableBundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.ShareCompat;
-import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -52,8 +46,6 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 public class EventDetailsActivity extends StackKeeperActivity {

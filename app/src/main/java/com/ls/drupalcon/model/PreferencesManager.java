@@ -21,7 +21,7 @@ public class PreferencesManager {
     private static final String KEY_INFO_MINOR_TITLE = "KEY_INFO_MINOR_TITLE";
     private static final String FILTER_EXP_LEVEL = "FILTER_EXP_LEVEL";
     private static final String FILTER_TRACK = "FILTER_TRACK ";
-
+    private static final String MY_SCHEDULE_FIRS_RUN = "MY_SCHEDULE_FIRS_RUN";
     private static PreferencesManager sInstance;
     private final SharedPreferences mPref;
 
@@ -41,6 +41,14 @@ public class PreferencesManager {
                     " is not initialized, call initializeInstance(..) method first.");
         }
         return sInstance;
+    }
+
+    public void saveFirstRunFlag(){
+        mPref.edit().putBoolean(MY_SCHEDULE_FIRS_RUN, true).apply();
+    }
+
+    public boolean getFirstRunFlag(){
+       return mPref.getBoolean(MY_SCHEDULE_FIRS_RUN, false);
     }
 
     public void saveTimeZone(String timeZone) {

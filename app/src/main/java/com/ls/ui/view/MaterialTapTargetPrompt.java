@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.ls;
+package com.ls.ui.view;
 
 import android.animation.Animator;
 import android.animation.ValueAnimator;

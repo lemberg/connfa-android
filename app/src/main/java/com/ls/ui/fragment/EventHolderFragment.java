@@ -1,14 +1,13 @@
 package com.ls.ui.fragment;
 
 import com.astuetz.PagerSlidingTabStrip;
-import com.ls.MaterialTapTargetPrompt;
+import com.ls.ui.view.MaterialTapTargetPrompt;
 import com.ls.drupalcon.R;
 import com.ls.drupalcon.app.App;
 import com.ls.drupalcon.model.Model;
 import com.ls.drupalcon.model.PreferencesManager;
 import com.ls.drupalcon.model.UpdateRequest;
 import com.ls.drupalcon.model.UpdatesManager;
-import com.ls.drupalcon.model.managers.ProgramManager;
 import com.ls.ui.activity.HomeActivity;
 import com.ls.ui.adapter.BaseEventDaysPagerAdapter;
 import com.ls.ui.drawer.BofsStrategy;
@@ -41,10 +40,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -212,7 +209,6 @@ public class EventHolderFragment extends Fragment {
     }
 
 
-
     private void updateViews(List<Long> dayList) {
         if (dayList.isEmpty()) {
             mPagerTabs.setVisibility(View.GONE);
@@ -290,15 +286,18 @@ public class EventHolderFragment extends Fragment {
 
 
     public void showSearchPrompt() {
-        new MaterialTapTargetPrompt.Builder(getActivity())
-                .setPrimaryText(R.string.share_your_schedule_with_friends)
-                .setSecondaryText(R.string.tap_the_three_dots)
-                .setAnimationInterpolator(new FastOutSlowInInterpolator())
-                .setMaxTextWidth(1000f)
-                .setIcon(R.drawable.ic_menu_more)
-                .setTarget(R.id.promptAnchor)
-                .setBackgroundColour(getResources().getColor(R.color.primary))
-                .show();
+        if (!PreferencesManager.getInstance().getFirstRunFlag()) {
+            PreferencesManager.getInstance().saveFirstRunFlag();
+            new MaterialTapTargetPrompt.Builder(getActivity())
+                    .setPrimaryText(R.string.share_your_schedule_with_friends)
+                    .setSecondaryText(R.string.tap_the_three_dots)
+                    .setAnimationInterpolator(new FastOutSlowInInterpolator())
+                    .setMaxTextWidth(1000f)
+                    .setIcon(R.drawable.ic_menu_more)
+                    .setTarget(R.id.promptAnchor)
+                    .setBackgroundColour(getResources().getColor(R.color.primary))
+                    .show();
+        }
     }
 
     private void setCustomToolBar() {
@@ -308,7 +307,6 @@ public class EventHolderFragment extends Fragment {
 
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(), R.array.months, R.layout.item_spinner);
         adapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item);
-
 
 
         Spinner navigationSpinner = new Spinner(getContext());
@@ -329,10 +327,11 @@ public class EventHolderFragment extends Fragment {
         navigationSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if(position == 0){
+                if (position == 0) {
                     strategy = new FavoritesStrategy();
                     new LoadData().execute();
-                } if(position == 1){
+                }
+                if (position == 1) {
                     strategy = new SocialStrategy();
                     new LoadData().execute();
                 }
@@ -347,7 +346,7 @@ public class EventHolderFragment extends Fragment {
 
     }
 
-    private void disableCustomToolBar(){
+    private void disableCustomToolBar() {
         AppCompatActivity activity = (AppCompatActivity) getActivity();
         android.support.v7.app.ActionBar toolbar = activity.getSupportActionBar();
         toolbar.setDisplayShowCustomEnabled(false);
