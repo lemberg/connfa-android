@@ -38,7 +38,7 @@
 
     <style name="ToolbarStyle" parent="ThemeOverlay.AppCompat.Light">
         <item name="android:colorBackground">@color/white</item>
-        <item name="android:textColor">@color/black_90_trans</item>
+        <item name="android:textColor">@color/black</item>
     </style>
 
 

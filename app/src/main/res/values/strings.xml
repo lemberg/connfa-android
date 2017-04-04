@@ -60,13 +60,8 @@
     <string name="tap_the_three_dots">Tap the three dots and choose "Share My Schedule" option</string>
 
     <string-array name="months">
-        <item>January</item>
-        <item>February</item>
-        <item>March</item>
-        <item>April</item>
-        <item>May</item>
-        <item>June</item>
-        <item>July</item>
-        <item>August</item>
+        <item>My Schedule</item>
+        <item>Pablo Mar 4</item>
+
     </string-array>
 </resources>

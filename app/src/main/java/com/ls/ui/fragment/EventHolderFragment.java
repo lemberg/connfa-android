@@ -37,6 +37,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -122,10 +123,10 @@ public class EventHolderFragment extends Fragment {
                 showFilter();
                 break;
             case R.id.actionAddSchedule:
-                strategy = new SocialStrategy();
-                new LoadData().execute();
-//               new LoadDataStub().execute();
-//                showSearchPrompt();
+
+                break;
+            case R.id.actionShareMySchedule:
+
                 break;
         }
         return true;
@@ -210,26 +211,9 @@ public class EventHolderFragment extends Fragment {
         }
     }
 
-    class LoadDataStub extends AsyncTask<Void, Void, List<Long>> {
-
-        @Override
-        protected List<Long> doInBackground(Void... params) {
-            List<Long> dayList = new ArrayList<>();
-            ProgramManager programManager = Model.instance().getProgramManager();
-            dayList.addAll(programManager.getProgramDays());
-            return dayList;
-        }
-
-        @Override
-        protected void onPostExecute(List<Long> result) {
-            updateViews(result);
-        }
-    }
 
 
     private void updateViews(List<Long> dayList) {
-        L.e("List<Long> dayList = " + dayList);
-
         if (dayList.isEmpty()) {
             mPagerTabs.setVisibility(View.GONE);
             mLayoutPlaceholder.setVisibility(View.VISIBLE);
@@ -313,7 +297,7 @@ public class EventHolderFragment extends Fragment {
                 .setMaxTextWidth(1000f)
                 .setIcon(R.drawable.ic_menu_more)
                 .setTarget(R.id.promptAnchor)
-                .setBackgroundColour(R.color.primary)
+                .setBackgroundColour(getResources().getColor(R.color.primary))
                 .show();
     }
 
@@ -335,6 +319,31 @@ public class EventHolderFragment extends Fragment {
             toolbar.setDisplayShowCustomEnabled(true);
             toolbar.setDisplayShowTitleEnabled(false);
         }
+
+//        navigationSpinner.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                L.e("position = " + position + " id = " + id);
+//            }
+//        });
+        navigationSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if(position == 0){
+                    strategy = new FavoritesStrategy();
+                    new LoadData().execute();
+                } if(position == 1){
+                    strategy = new SocialStrategy();
+                    new LoadData().execute();
+                }
+                L.e("position = " + position + " id = " + id);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
     }
 
