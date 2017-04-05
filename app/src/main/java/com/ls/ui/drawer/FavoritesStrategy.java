@@ -12,10 +12,8 @@ public class FavoritesStrategy implements EventHolderFragmentStrategy {
 
     @Override
     public List<Long> getDayList() {
-        List<Long> dayList = new ArrayList<>();
         FavoriteManager manager = Model.instance().getFavoriteManager();
-        dayList.addAll(manager.getFavoriteEventDays());
-        return dayList;
+        return manager.getFavoriteEventDays();
     }
 
     @Override
@@ -26,11 +24,6 @@ public class FavoritesStrategy implements EventHolderFragmentStrategy {
     @Override
     public int getImageResId() {
         return R.drawable.ic_no_my_schedule;
-    }
-
-    @Override
-    public boolean enableOptionMenu() {
-        return true;
     }
 
     @Override

@@ -12,12 +12,10 @@ public class BofsStrategy implements EventHolderFragmentStrategy {
 
     private static UpdateRequest request = UpdateRequest.BOFS;
 
-     @Override
+    @Override
     public List<Long> getDayList() {
-        List<Long> dayList = new ArrayList<>();
         BofsManager manager = Model.instance().getBofsManager();
-        dayList.addAll(manager.getBofsDays());
-        return dayList;
+        return manager.getBofsDays();
     }
 
     @Override
@@ -28,11 +26,6 @@ public class BofsStrategy implements EventHolderFragmentStrategy {
     @Override
     public int getImageResId() {
         return R.drawable.ic_no_session;
-    }
-
-    @Override
-    public boolean enableOptionMenu() {
-        return true;
     }
 
     @Override

@@ -14,10 +14,8 @@ public class ProgramStrategy implements EventHolderFragmentStrategy {
 
     @Override
     public List<Long> getDayList() {
-        List<Long> dayList = new ArrayList<>();
         ProgramManager programManager = Model.instance().getProgramManager();
-        dayList.addAll(programManager.getProgramDays());
-        return dayList;
+        return programManager.getProgramDays();
     }
 
     @Override
@@ -28,11 +26,6 @@ public class ProgramStrategy implements EventHolderFragmentStrategy {
     @Override
     public int getImageResId() {
         return R.drawable.ic_no_session;
-    }
-
-    @Override
-    public boolean enableOptionMenu() {
-        return true;
     }
 
     @Override

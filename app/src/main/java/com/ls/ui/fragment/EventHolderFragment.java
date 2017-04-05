@@ -1,6 +1,7 @@
 package com.ls.ui.fragment;
 
 import com.astuetz.PagerSlidingTabStrip;
+import com.ls.ui.drawer.AddFavoritesStrategy;
 import com.ls.ui.view.MaterialTapTargetPrompt;
 import com.ls.drupalcon.R;
 import com.ls.drupalcon.app.App;
@@ -101,17 +102,6 @@ public class EventHolderFragment extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         L.e("onCreateOptionsMenu");
-//        if (isFavoriteScreen()) {
-//            inflater.inflate(R.menu.menu_my_schedule, menu);
-//            showSearchPrompt();
-//        } else {
-//            inflater.inflate(R.menu.menu_filter, menu);
-//            MenuItem filter = menu.findItem(R.id.actionFilter);
-//            if (filter != null) {
-//                updateFilterState(filter);
-//            }
-//        }
-
         if (!isFavoriteScreen()) {
             inflater.inflate(R.menu.menu_filter, menu);
             MenuItem filter = menu.findItem(R.id.actionFilter);
@@ -125,7 +115,6 @@ public class EventHolderFragment extends Fragment {
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
-        L.e("onPrepareOptionsMenu");
         if (isFavoriteScreen()) {
             L.e("isFavoriteScreen = " + isFavoriteScreen());
             menu.clear();
@@ -223,7 +212,7 @@ public class EventHolderFragment extends Fragment {
         mTextViewNoContent = (TextView) view.findViewById(R.id.text_view_placeholder);
         mImageViewNoContent = (ImageView) view.findViewById(R.id.image_view_placeholder);
 
-        setHasOptionsMenu(strategy.enableOptionMenu());
+        setHasOptionsMenu(true);
 
     }
 
@@ -358,7 +347,7 @@ public class EventHolderFragment extends Fragment {
                     new LoadData().execute();
                 }
                 if (position == 1) {
-//                    strategy = new SocialStrategy();
+                    strategy = new AddFavoritesStrategy();
                     isMySchedule = false;
                     getActivity().invalidateOptionsMenu();
                     new LoadData().execute();
