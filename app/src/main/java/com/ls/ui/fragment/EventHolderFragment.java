@@ -60,6 +60,7 @@ public class EventHolderFragment extends Fragment {
 
     private boolean mIsFilterUsed;
     private EventHolderFragmentStrategy strategy;
+    private boolean isMySchedule = true;
 
 
     private UpdatesManager.DataUpdatedListener updateReceiver = new UpdatesManager.DataUpdatedListener() {
@@ -99,10 +100,19 @@ public class EventHolderFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        if (strategy.getEventMode() == EventMode.Favorites) {
-            inflater.inflate(R.menu.menu_my_schedule, menu);
-            showSearchPrompt();
-        } else {
+        L.e("onCreateOptionsMenu");
+//        if (isFavoriteScreen()) {
+//            inflater.inflate(R.menu.menu_my_schedule, menu);
+//            showSearchPrompt();
+//        } else {
+//            inflater.inflate(R.menu.menu_filter, menu);
+//            MenuItem filter = menu.findItem(R.id.actionFilter);
+//            if (filter != null) {
+//                updateFilterState(filter);
+//            }
+//        }
+
+        if (!isFavoriteScreen()) {
             inflater.inflate(R.menu.menu_filter, menu);
             MenuItem filter = menu.findItem(R.id.actionFilter);
             if (filter != null) {
@@ -110,7 +120,23 @@ public class EventHolderFragment extends Fragment {
             }
         }
 
+    }
 
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        L.e("onPrepareOptionsMenu");
+        if (isFavoriteScreen()) {
+            L.e("isFavoriteScreen = " + isFavoriteScreen());
+            menu.clear();
+            MenuInflater menuInflater = getActivity().getMenuInflater();
+            if (isMySchedule) {
+                showSearchPrompt();
+                menuInflater.inflate(R.menu.menu_my_schedule, menu);
+            } else {
+                menuInflater.inflate(R.menu.menu_added_schedule, menu);
+            }
+        }
     }
 
     @Override
@@ -120,10 +146,16 @@ public class EventHolderFragment extends Fragment {
                 showFilter();
                 break;
             case R.id.actionAddSchedule:
-
+                L.e("actionAddSchedule");
                 break;
             case R.id.actionShareMySchedule:
-
+                L.e("actionShareMySchedule");
+                break;
+            case R.id.actionEditSchedule:
+                L.e("actionEditSchedule");
+                break;
+            case R.id.actionRemoveSchedule:
+                L.e("actionRemoveSchedule");
                 break;
         }
         return true;
@@ -311,31 +343,26 @@ public class EventHolderFragment extends Fragment {
 
         Spinner navigationSpinner = new Spinner(getContext());
         navigationSpinner.setAdapter(adapter);
-//        navigationSpinner.setPopupBackgroundResource(R.color.white_100);
         if (toolbar != null) {
             toolbar.setCustomView(navigationSpinner);
             toolbar.setDisplayShowCustomEnabled(true);
             toolbar.setDisplayShowTitleEnabled(false);
         }
-
-//        navigationSpinner.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                L.e("position = " + position + " id = " + id);
-//            }
-//        });
         navigationSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (position == 0) {
-                    strategy = new FavoritesStrategy();
+//                    strategy = new FavoritesStrategy();
+                    isMySchedule = true;
+                    getActivity().invalidateOptionsMenu();
                     new LoadData().execute();
                 }
                 if (position == 1) {
-                    strategy = new SocialStrategy();
+//                    strategy = new SocialStrategy();
+                    isMySchedule = false;
+                    getActivity().invalidateOptionsMenu();
                     new LoadData().execute();
                 }
-                L.e("position = " + position + " id = " + id);
             }
 
             @Override
@@ -349,7 +376,13 @@ public class EventHolderFragment extends Fragment {
     private void disableCustomToolBar() {
         AppCompatActivity activity = (AppCompatActivity) getActivity();
         android.support.v7.app.ActionBar toolbar = activity.getSupportActionBar();
-        toolbar.setDisplayShowCustomEnabled(false);
-        toolbar.setDisplayShowTitleEnabled(true);
+        if (toolbar != null) {
+            toolbar.setDisplayShowTitleEnabled(true);
+            toolbar.setDisplayShowCustomEnabled(false);
+        }
+    }
+
+    private boolean isFavoriteScreen() {
+        return strategy.getEventMode() == EventMode.Favorites;
     }
 }
