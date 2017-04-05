@@ -1,6 +1,8 @@
 package com.ls.ui.fragment;
 
 import com.astuetz.PagerSlidingTabStrip;
+import com.ls.ui.dialog.AddScheduleDialog;
+import com.ls.ui.dialog.NoConnectionDialog;
 import com.ls.ui.drawer.AddFavoritesStrategy;
 import com.ls.ui.view.MaterialTapTargetPrompt;
 import com.ls.drupalcon.R;
@@ -24,10 +26,13 @@ import com.ls.utils.L;
 import org.jetbrains.annotations.NotNull;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.support.v7.app.AppCompatActivity;
@@ -46,10 +51,11 @@ import android.widget.TextView;
 import java.util.List;
 
 
-public class EventHolderFragment extends Fragment {
+public class EventHolderFragment extends Fragment implements AddScheduleDialog.DialogClickListener {
 
     public static final String TAG = "ProjectsFragment";
     private static final String EXTRAS_ARG_MODE = "EXTRAS_ARG_MODE";
+    public static final int ADD_SCHEDULE_DIALOG_REQUEST_CODE = 855;
 
     private ViewPager mViewPager;
     private PagerSlidingTabStrip mPagerTabs;
@@ -135,10 +141,13 @@ public class EventHolderFragment extends Fragment {
                 showFilter();
                 break;
             case R.id.actionAddSchedule:
-                L.e("actionAddSchedule");
+                showDialog();
+//                FragmentTransaction ft = getChildFragmentManager().beginTransaction();
+//                ft.add(new AddScheduleDialog(), NoConnectionDialog.TAG);
+//                ft.commitAllowingStateLoss();
                 break;
             case R.id.actionShareMySchedule:
-                L.e("actionShareMySchedule");
+                shareSchedule();
                 break;
             case R.id.actionEditSchedule:
                 L.e("actionEditSchedule");
@@ -214,6 +223,16 @@ public class EventHolderFragment extends Fragment {
 
         setHasOptionsMenu(true);
 
+    }
+
+    @Override
+    public void onYesClick() {
+        L.e("onYesClick");
+    }
+
+    @Override
+    public void onNoClick() {
+        L.e("onNoClick");
     }
 
     class LoadData extends AsyncTask<Void, Void, List<Long>> {
@@ -372,6 +391,39 @@ public class EventHolderFragment extends Fragment {
     }
 
     private boolean isFavoriteScreen() {
-        return strategy.getEventMode() == EventMode.Favorites;
+        return strategy.getEventMode() == EventMode.Favorites || strategy.getEventMode() == EventMode.addFavorites;
     }
+
+    private void shareSchedule() {
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, "Test share intent");
+        sendIntent.setType("text/plain");
+        startActivity(sendIntent);
+    }
+
+    void showDialog() {
+        DialogFragment newFragment = AddScheduleDialog.newInstance();
+        newFragment.setTargetFragment(this, ADD_SCHEDULE_DIALOG_REQUEST_CODE);
+        newFragment.show(getChildFragmentManager(), "Tag");
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case ADD_SCHEDULE_DIALOG_REQUEST_CODE:
+                L.e("weeee");
+
+                if (resultCode == Activity.RESULT_OK) {
+                    // After Ok code.
+                    L.e("data = " + data.getStringExtra("Qwe"));
+                } else if (resultCode == Activity.RESULT_CANCELED) {
+                    // After Cancel code.
+                }
+
+                break;
+        }
+    }
+
+
 }

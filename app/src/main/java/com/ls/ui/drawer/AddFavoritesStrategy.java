@@ -39,6 +39,6 @@ public class AddFavoritesStrategy implements EventHolderFragmentStrategy {
 
     @Override
     public EventMode getEventMode() {
-        return EventMode.Favorites;
+        return EventMode.addFavorites;
     }
 }

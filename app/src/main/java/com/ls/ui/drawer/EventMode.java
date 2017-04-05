@@ -9,5 +9,6 @@ public enum EventMode {
     FloorPlan,
     Location,
     Speakers,
-    About
+    About,
+    addFavorites
 }
