@@ -1,8 +1,8 @@
 package com.ls.ui.fragment;
 
 import com.astuetz.PagerSlidingTabStrip;
+import com.ls.ui.activity.TestActivity;
 import com.ls.ui.dialog.AddScheduleDialog;
-import com.ls.ui.dialog.NoConnectionDialog;
 import com.ls.ui.drawer.AddFavoritesStrategy;
 import com.ls.ui.view.MaterialTapTargetPrompt;
 import com.ls.drupalcon.R;
@@ -30,9 +30,9 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.support.v7.app.AppCompatActivity;
@@ -49,7 +49,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import java.util.List;
-
 
 public class EventHolderFragment extends Fragment implements AddScheduleDialog.DialogClickListener {
 
@@ -115,7 +114,6 @@ public class EventHolderFragment extends Fragment implements AddScheduleDialog.D
                 updateFilterState(filter);
             }
         }
-
     }
 
     @Override
@@ -345,7 +343,7 @@ public class EventHolderFragment extends Fragment implements AddScheduleDialog.D
 
         android.support.v7.app.ActionBar toolbar = activity.getSupportActionBar();
 
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(), R.array.months, R.layout.item_spinner);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(), R.array.test_list, R.layout.item_spinner);
         adapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item);
 
 
@@ -370,6 +368,9 @@ public class EventHolderFragment extends Fragment implements AddScheduleDialog.D
                     isMySchedule = false;
                     getActivity().invalidateOptionsMenu();
                     new LoadData().execute();
+                }
+                if (position == 2) {
+                    TestActivity.startActivity(getActivity());
                 }
             }
 
@@ -412,17 +413,26 @@ public class EventHolderFragment extends Fragment implements AddScheduleDialog.D
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case ADD_SCHEDULE_DIALOG_REQUEST_CODE:
-                L.e("weeee");
-
                 if (resultCode == Activity.RESULT_OK) {
                     // After Ok code.
-                    L.e("data = " + data.getStringExtra("Qwe"));
+                    L.e("data = " + data.getStringExtra(AddScheduleDialog.EXTRA_SCHEDULE_CODE));
+                    undo();
                 } else if (resultCode == Activity.RESULT_CANCELED) {
                     // After Cancel code.
                 }
 
                 break;
         }
+
+    }
+
+    private void undo() {
+        Snackbar.make(getView(), "Hi there!", Snackbar.LENGTH_LONG).setAction("Undo", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                L.e("Hi there!");
+            }
+        }).show();
     }
 
 

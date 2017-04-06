@@ -129,6 +129,14 @@ public class EventDao extends AbstractEntityDAO<Event, Long> {
         return querySafe(String.format(query, getArrayAsString(eventIds)), selectionArgs);
     }
 
+    public List<Event> selectFriendsFavoritesSafe() {
+        String[] selectionArgs = ArrayUtils.build(Event.BOFS_CLASS);
+        String query = mContext.getString(R.string.select_events_by_class);
+
+        return querySafe(query, selectionArgs);
+    }
+
+
     private String getArrayAsString(List<Long> eventIds) {
         StringBuilder builder = new StringBuilder();
 
@@ -223,8 +231,31 @@ public class EventDao extends AbstractEntityDAO<Event, Long> {
         }
     }
 
+    public void setFriendsFavoriteSafe(long evenId, boolean isFavorite) {
+        ILAPIDBFacade facade = getFacade();
+
+        try {
+            facade.open();
+
+            String[] selectionArgs = ArrayUtils.build(evenId, 123);
+            String query = isFavorite
+                    ? mContext.getString(R.string.insert_friends_favorite_event)
+                    : mContext.getString(R.string.delete_friends_event_favorite)
+            ;
+
+            facade.execSQL(query, selectionArgs);
+        } finally {
+            facade.close();
+        }
+    }
+
     public List<Long> selectFavoriteEventsSafe() {
         String query = mContext.getString(R.string.select_favorite_events);
+        return selectLongArraySafe(null, query);
+    }
+
+    public List<Long> selectFriendsFavoriteEventsSafe() {
+        String query = mContext.getString(R.string.select_friends_favorite_events);
         return selectLongArraySafe(null, query);
     }
 

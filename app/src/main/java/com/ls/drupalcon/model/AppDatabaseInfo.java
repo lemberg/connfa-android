@@ -30,6 +30,7 @@ public class AppDatabaseInfo implements DBInfo, IMigrationTask {
 
     private static final String TABLE_EVENT_SPEAKER = "table_event_and_speaker";
     private static final String TABLE_FAVORITE_EVENTS = "table_favorite_events";
+    private static final String TABLE_FRIENDS_FAVORITE_EVENTS = "table_friends_favorite_events";
     private static final String DELETE_TABLE_IF_EXIST = "DROP TABLE IF EXISTS ";
 
     private Resources mResources;
@@ -56,6 +57,7 @@ public class AppDatabaseInfo implements DBInfo, IMigrationTask {
         dbTableNameList.add(InfoDao.TABLE_NAME);
         dbTableNameList.add(TABLE_EVENT_SPEAKER);
         dbTableNameList.add(TABLE_FAVORITE_EVENTS);
+        dbTableNameList.add(TABLE_FRIENDS_FAVORITE_EVENTS);
         dbTableNameList.add(FloorPlanDao.TABLE_NAME);
         return dbTableNameList;
     }
@@ -112,6 +114,8 @@ public class AppDatabaseInfo implements DBInfo, IMigrationTask {
         addStringWithIdToList(dbSchemaQueryList, R.string.create_table_info);
         addStringWithIdToList(dbSchemaQueryList, R.string.create_table_poi);
         addStringWithIdToList(dbSchemaQueryList, R.string.create_table_floor_plans);
+        addStringWithIdToList(dbSchemaQueryList, R.string.create_table_favorite_events_added);
+        addStringWithIdToList(dbSchemaQueryList, R.string.create_table_friends_favorite_events);
         return dbSchemaQueryList;
     }
 

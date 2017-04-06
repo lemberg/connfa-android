@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-  <!--==============================================================-->
-  <!--CREATE TABLES-->
-  <!--==============================================================-->
+    <!--==============================================================-->
+    <!--CREATE TABLES-->
+    <!--==============================================================-->
 
   <string name="create_table_type" translatable="false">
         CREATE TABLE table_type (
@@ -147,9 +147,36 @@
         )
     </string>
 
-  <!--==============================================================-->
-  <!--INSERT-->
-  <!--==============================================================-->
+      <string name="create_table_favorite_events_added" translatable="false">
+        CREATE TABLE favorite_events_added (
+        _id				        INTEGER,
+        _date			        INTEGER,
+        _from			        INTEGER,
+        _to				        INTEGER,
+        _type			        INTEGER,
+        _name			        TEXT,
+        _track			        INTEGER,
+        _experience_level		TEXT,
+        _place				    TEXT,
+        _description			TEXT,
+        _link                   TEXT,
+        _event_class			INTEGER,
+        _favorite       		INTEGER,
+        _order                  DOUBLE,
+        _deleted                BOOLEAN
+        )
+    </string>
+
+      <string name="create_table_friends_favorite_events" translatable="false">
+        CREATE TABLE table_friends_favorite_events (
+        _id				         INTEGER,
+        _friend_id		         INTEGER
+        )
+    </string>
+
+    <!--==============================================================-->
+    <!--INSERT-->
+    <!--==============================================================-->
 
   <string name="insert_event_speaker" translatable="false">
         INSERT INTO table_event_and_speaker (_event_id, _speaker_id)
@@ -161,9 +188,14 @@
         VALUES (?)
     </string>
 
-  <!--==============================================================-->
-  <!--UPDATE -->
-  <!--==============================================================-->
+      <string name="insert_friends_favorite_event" translatable="false">
+        INSERT INTO table_friends_favorite_events (_event_id, _friend_id)
+        VALUES (?,?)
+    </string>
+
+    <!--==============================================================-->
+    <!--UPDATE -->
+    <!--==============================================================-->
 
   <string name="update_event_favorite" translatable="false">
         UPDATE table_event
@@ -171,9 +203,9 @@
         WHERE _id=?
     </string>
 
-  <!--==============================================================-->
-  <!--DELETE  -->
-  <!--==============================================================-->
+    <!--==============================================================-->
+    <!--DELETE  -->
+    <!--==============================================================-->
 
   <string name="delete_event_favorite" translatable="false">
         DELETE FROM table_favorite_events
@@ -199,9 +231,14 @@
         WHERE _event_id =? AND _speaker_id =?
     </string>
 
-  <!--==============================================================-->
-  <!--SELECT-->
-  <!--==============================================================-->
+      <string name="delete_friends_event_favorite" translatable="false">
+        DELETE FROM table_friends_favorite_events
+        WHERE _event_id=?
+    </string>
+
+    <!--==============================================================-->
+    <!--SELECT-->
+    <!--==============================================================-->
 
   <string name="select_speaker_events" translatable="false">
         SELECT _event_id
@@ -473,6 +510,12 @@
         SELECT *
         FROM table_speaker
         ORDER BY first_name|| \' \' ||last_name COLLATE NOCASE, _order
+    </string>
+
+      <string name="select_friends_favorite_events" translatable="false">
+        SELECT *
+        FROM table_friends_favorite_events
+        ORDER BY _event_id
     </string>
 
 </resources>

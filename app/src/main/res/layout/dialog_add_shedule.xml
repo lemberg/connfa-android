@@ -2,24 +2,24 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="16dp">
 
     <com.ls.ui.view.FontTextView
-        android:text="Schedule unique code"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:text="Schedule unique code" />
 
     <EditText
         android:id="@+id/uniqueCode"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="number"
-        android:textSize="@dimen/text_size_20"/>
+        android:textSize="@dimen/text_size_20" />
 
     <com.ls.ui.view.FontTextView
-        android:text="This code you may get from a person who already shared his/her own schedule with you"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:text="This code you may get from a person who already shared his/her own schedule with you" />
 
 </LinearLayout>

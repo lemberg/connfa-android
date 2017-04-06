@@ -62,8 +62,9 @@
     <string name="add">Add</string>
 
 
-    <string-array name="months">
+    <string-array name="test_list">
         <item>My Schedule</item>
         <item>Pablo Mar 4</item>
+        <item>Database Test</item>
     </string-array>
 </resources>

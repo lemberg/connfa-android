@@ -55,10 +55,10 @@ public class AboutFragment extends Fragment {
         Model.instance().getUpdatesManager().registerUpdateListener(updateListener);
         AppCompatActivity activity = (AppCompatActivity) getActivity();
 
-        final String[] month = getResources().getStringArray(R.array.months);
+        final String[] month = getResources().getStringArray(R.array.test_list);
 //        Toolbar toolbar = (Toolbar) getView().findViewById(R.id.toolBar);
         android.support.v7.app.ActionBar toolbar = activity.getSupportActionBar();
-        SpinnerAdapter spinnerAdapter = ArrayAdapter.createFromResource(getContext(), R.array.months, android.R.layout.simple_spinner_dropdown_item);
+        SpinnerAdapter spinnerAdapter = ArrayAdapter.createFromResource(getContext(), R.array.test_list, android.R.layout.simple_spinner_dropdown_item);
 
         Spinner navigationSpinner = new Spinner(getContext());
         navigationSpinner.setAdapter(spinnerAdapter);

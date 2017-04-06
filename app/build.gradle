@@ -82,5 +82,6 @@ dependencies {
         transitive = true;
     }
     compile 'com.android.support:multidex:1.0.1'
+    compile 'com.android.support:design:22.2.0'
 //    compile 'uk.co.samuelwall:material-tap-target-prompt:1.9.3'
 }

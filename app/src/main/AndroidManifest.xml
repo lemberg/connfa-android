@@ -62,12 +62,15 @@
             android:value="e92185b02a2fa31062b797232c3d5cccf9867952" />
 
         <activity android:name="com.ls.ui.activity.MainActivity">
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MAIN" />-->
 
-                <!--<category android:name="android.intent.category.LAUNCHER" />-->
-            <!--</intent-filter>-->
+            <!-- <intent-filter> -->
+            <!-- <action android:name="android.intent.action.MAIN" /> -->
+
+
+            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+            <!-- </intent-filter> -->
         </activity>
+        <activity android:name="com.ls.ui.activity.TestActivity"></activity>
     </application>
 
 </manifest>
