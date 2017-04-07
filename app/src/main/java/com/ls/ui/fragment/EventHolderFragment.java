@@ -3,6 +3,7 @@ package com.ls.ui.fragment;
 import com.astuetz.PagerSlidingTabStrip;
 import com.ls.ui.activity.TestActivity;
 import com.ls.ui.dialog.AddScheduleDialog;
+import com.ls.ui.dialog.ScheduleNameDialog;
 import com.ls.ui.drawer.AddFavoritesStrategy;
 import com.ls.ui.view.MaterialTapTargetPrompt;
 import com.ls.drupalcon.R;
@@ -55,6 +56,7 @@ public class EventHolderFragment extends Fragment implements AddScheduleDialog.D
     public static final String TAG = "ProjectsFragment";
     private static final String EXTRAS_ARG_MODE = "EXTRAS_ARG_MODE";
     public static final int ADD_SCHEDULE_DIALOG_REQUEST_CODE = 855;
+    public static final int SCHEDULE_NAME_DIALOG_REQUEST_CODE = 8255;
 
     private ViewPager mViewPager;
     private PagerSlidingTabStrip mPagerTabs;
@@ -144,7 +146,7 @@ public class EventHolderFragment extends Fragment implements AddScheduleDialog.D
                 shareSchedule();
                 break;
             case R.id.actionEditSchedule:
-                L.e("actionEditSchedule");
+                showScheduleNameDialog();
                 break;
             case R.id.actionRemoveSchedule:
                 L.e("actionRemoveSchedule");
@@ -402,14 +404,20 @@ public class EventHolderFragment extends Fragment implements AddScheduleDialog.D
     void showAddScheduleDialog() {
         DialogFragment newFragment = AddScheduleDialog.newInstance();
         newFragment.setTargetFragment(this, ADD_SCHEDULE_DIALOG_REQUEST_CODE);
-        newFragment.show(getChildFragmentManager(), "Tag");
+        newFragment.show(getChildFragmentManager(), "");
+    }
+
+    void showScheduleNameDialog() {
+        DialogFragment newFragment = ScheduleNameDialog.newInstance();
+        newFragment.setTargetFragment(this, SCHEDULE_NAME_DIALOG_REQUEST_CODE);
+        newFragment.show(getChildFragmentManager(), "");
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case ADD_SCHEDULE_DIALOG_REQUEST_CODE:
-                switch (resultCode){
+                switch (resultCode) {
                     case Activity.RESULT_OK:
                         undo();
                         break;
@@ -417,6 +425,18 @@ public class EventHolderFragment extends Fragment implements AddScheduleDialog.D
                         undo();
                         break;
                 }
+                break;
+            case SCHEDULE_NAME_DIALOG_REQUEST_CODE:
+                switch (resultCode) {
+                    case Activity.RESULT_OK:
+                        String stringExtra = data.getStringExtra(ScheduleNameDialog.EXTRA_SCHEDULE_CODE);
+                        undo();
+                        break;
+                    case Activity.RESULT_CANCELED:
+                        undo();
+                        break;
+                }
+                break;
         }
 
     }
@@ -430,10 +450,6 @@ public class EventHolderFragment extends Fragment implements AddScheduleDialog.D
             }
         });
         snack.setActionTextColor(android.R.color.holo_red_light);
-//
-//        View view = snack.getView();
-//        TextView tv = (TextView) view.findViewById(android.support.design.R.id.snackbar_text);
-//        tv.setTextColor(Color.RED);
         snack.show();
     }
 
