@@ -52,34 +52,6 @@ public class LocationFragment extends Fragment implements CustomMapFragment.OnAc
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fr_location, null);
-//        final String nbspSpacing = "\u202F\u202F"; // none-breaking spaces
-//        String badgeText = nbspSpacing + "Tesddsdsdsdsts" + nbspSpacing;
-//        SpannableStringBuilder stringBuilder = new SpannableStringBuilder();
-//
-//        stringBuilder.append("Tesddsdsdsdsts");
-//        stringBuilder.setSpan(
-//                new RoundedBackgroundSpan(2, Color.parseColor("#ffffff"), Color.parseColor("#1f3e98")),
-//                1,
-//                5,
-//                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-//        );
-//        stringBuilder.append("  ");
-
-        final String nbspSpacing = "\u202F\u202F"; // none-breaking spaces
-        String badgeText = nbspSpacing + "Test Nazar UI" + nbspSpacing;
-        SpannableStringBuilder stringBuilder = new SpannableStringBuilder();
-        stringBuilder.append(badgeText);
-        stringBuilder.setSpan(
-                new RoundedBackgroundSpan(Color.parseColor("#ffffff"), Color.parseColor("#1f3e98")),
-                badgeText.length() -3,
-                badgeText.length(),
-                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-        );
-        stringBuilder.append("  ");
-
-        TextView viewById = (TextView) view.findViewById(R.id.textView12);
-        viewById.setText(stringBuilder);
-
         return view;
     }
 
