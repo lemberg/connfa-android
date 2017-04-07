@@ -7,18 +7,20 @@ import com.ls.drupalcon.model.data.Level;
 import com.ls.drupalcon.model.data.Type;
 import com.ls.ui.adapter.item.BofsItem;
 import com.ls.ui.adapter.item.EventListItem;
-import com.ls.ui.adapter.item.HeaderItem;
 import com.ls.ui.adapter.item.ProgramItem;
 import com.ls.ui.adapter.item.SocialItem;
 import com.ls.ui.adapter.item.TimeRangeItem;
-import com.ls.ui.drawer.DrawerMenu;
 import com.ls.ui.drawer.EventMode;
+import com.ls.ui.view.RoundedBackgroundSpan;
 import com.ls.utils.DateUtils;
 
 import android.content.Context;
 import android.graphics.Color;
 import android.support.annotation.Nullable;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.style.RelativeSizeSpan;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,9 +35,7 @@ import java.util.List;
 
 public class EventsAdapter extends BaseAdapter {
 
-    private static final int TYPE_COUNT = 5;
-    private static final int SINGLE_LINE_COUNT = 1;
-    private static final int MULTI_LINE_COUNT = 3;
+    private static final int TYPE_COUNT = 4;
 
     private Context mContext;
     private List<EventListItem> mData;
@@ -97,8 +97,6 @@ public class EventsAdapter extends BaseAdapter {
             resultView = initProgramView(position, convertView, parent);
         } else if (itemViewType == EventListItem.TYPE_SOCIAL) {
             resultView = initSocialView(position, convertView, parent);
-        } else if (itemViewType == EventListItem.TYPE_SECTION_NAME) {
-            resultView = initSectionNameView(position, convertView, parent);
         } else {
             resultView = new View(mInflater.getContext());
         }
@@ -208,27 +206,6 @@ public class EventsAdapter extends BaseAdapter {
         return resultView;
     }
 
-    public View initSectionNameView(int position, View convertView, ViewGroup parent) {
-        View resultView = convertView;
-        HeaderHolder holder;
-
-        if (resultView == null) {
-            resultView = mInflater.inflate(R.layout.item_header, parent, false);
-
-            holder = new HeaderHolder();
-            holder.txtTitle = (TextView) resultView.findViewById(R.id.txtTitle);
-
-            resultView.setTag(holder);
-        } else {
-            holder = (HeaderHolder) resultView.getTag();
-        }
-
-        HeaderItem item = (HeaderItem) getItem(position);
-        holder.txtTitle.setText(item.getTitle());
-        holder.txtTitle.setVisibility(View.VISIBLE);
-
-        return resultView;
-    }
 
     private void fillDate(EventHolder holder, Event event) {
         String fromTime = DateUtils.getInstance().getTime(mContext, event.getFromMillis());
@@ -257,7 +234,7 @@ public class EventsAdapter extends BaseAdapter {
     }
 
     private void fillEventInfo(EventHolder holder, Event event, @Nullable String track, @Nullable List<String> speakerNameList) {
-        holder.txtTitle.setText(event.getName());
+        setRoundedBackgroundSpan(event, holder);
         if (event.isFavorite()) {
             holder.txtTitle.setTextColor(mContext.getResources().getColor(R.color.link));
         } else {
@@ -336,9 +313,34 @@ public class EventsAdapter extends BaseAdapter {
         }
     }
 
-    private static class HeaderHolder {
-        TextView txtTitle;
+    private void setRoundedBackgroundSpan(Event event, EventHolder holder) {
+        String eventName = event.getName();
+        if (mEventMode == EventMode.Favorites) {
+            String marker = null;
+            if (event.getEventClass() == Event.PROGRAM_CLASS) {
+                marker = mContext.getString(R.string.Session);
+            } else if (event.getEventClass() == Event.BOFS_CLASS) {
+                marker = mContext.getString(R.string.BoF);
+            } else if (event.getEventClass() == Event.SOCIALS_CLASS) {
+                marker = mContext.getString(R.string.Socials);
+            }
+            String span = eventName + "  " + marker;
+
+            SpannableStringBuilder stringBuilder = new SpannableStringBuilder(span);
+            stringBuilder.setSpan(
+                    new RoundedBackgroundSpan(mContext.getResources().getColor(R.color.white), mContext.getResources().getColor(R.color.primary_dark)),
+                    span.length() - marker.length(),
+                    span.length(),
+                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+            );
+            stringBuilder.setSpan(new RelativeSizeSpan(0.8f), span.length() - marker.length(), span.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+            holder.txtTitle.setText(stringBuilder);
+        } else {
+            holder.txtTitle.setText(eventName);
+        }
     }
+
 
     private EventHolder createEventHolder(View resultView) {
         EventHolder holder = new EventHolder();

@@ -64,22 +64,24 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
+
             >
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
+                android:paddingTop="12dp"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
-                android:paddingTop="12dp">
+                android:orientation="horizontal">
 
                 <com.ls.ui.view.FontTextView
                     android:id="@+id/txtTitle"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="4dp"
                     android:layout_marginRight="8dp"
-                    android:layout_weight="1"
+                    android:layout_weight="1.0"
                     android:clickable="false"
                     android:textColor="@color/black_100"
                     android:textSize="@dimen/text_size_medium"
@@ -98,10 +100,10 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
                 android:paddingBottom="12dp"
                 android:paddingLeft="16dp"
-                android:paddingRight="16dp">
+                android:paddingRight="16dp"
+                android:orientation="horizontal">
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -180,22 +182,10 @@
                     </LinearLayout>
 
 
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:gravity="bottom"
-                    android:orientation="vertical">
-
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:visibility="gone"
-                        android:src="@drawable/friend_schedule" />
-
-                </LinearLayout>
             </LinearLayout>
+
+
+        </LinearLayout>
 
             <View
                 android:id="@+id/margin_divider"

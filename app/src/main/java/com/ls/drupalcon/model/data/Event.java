@@ -189,6 +189,11 @@ public class Event extends AbstractEntity<Long> implements Comparable<Event>{
         }
     }
 
+   public void  getHashtagTagText(){
+//       if(mType)
+
+    }
+
     @Override
     public Long getId() {
         return mId;
