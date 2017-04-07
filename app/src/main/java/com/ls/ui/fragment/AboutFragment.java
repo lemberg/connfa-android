@@ -53,43 +53,6 @@ public class AboutFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Model.instance().getUpdatesManager().registerUpdateListener(updateListener);
-        AppCompatActivity activity = (AppCompatActivity) getActivity();
-        activity.getSupportActionBar();
-
-        final String[] month = getResources().getStringArray(R.array.months);
-//        Toolbar toolbar = (Toolbar) getView().findViewById(R.id.toolBar);
-        android.support.v7.app.ActionBar toolbar = activity.getSupportActionBar();
-        SpinnerAdapter spinnerAdapter = ArrayAdapter.createFromResource(getContext(), R.array.months, android.R.layout.simple_spinner_dropdown_item);
-
-        Spinner navigationSpinner = new Spinner(getContext());
-        navigationSpinner.setAdapter(spinnerAdapter);
-        if (toolbar != null) {
-            toolbar.setCustomView(navigationSpinner);
-            toolbar.setDisplayShowCustomEnabled(true);
-            toolbar.setTitle("TEST");
-            L.e("toolbar is not null");
-        } else {
-            L.e("toolbar is null");
-        }
-
-//        toolbar.addView(navigationSpinner, 0);
-
-        navigationSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(getContext(), "you selected: " + month[position], Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
-
-
-
-
     }
 
     @Nullable
