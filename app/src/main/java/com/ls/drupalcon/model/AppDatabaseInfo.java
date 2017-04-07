@@ -114,7 +114,6 @@ public class AppDatabaseInfo implements DBInfo, IMigrationTask {
         addStringWithIdToList(dbSchemaQueryList, R.string.create_table_info);
         addStringWithIdToList(dbSchemaQueryList, R.string.create_table_poi);
         addStringWithIdToList(dbSchemaQueryList, R.string.create_table_floor_plans);
-        addStringWithIdToList(dbSchemaQueryList, R.string.create_table_favorite_events_added);
         addStringWithIdToList(dbSchemaQueryList, R.string.create_table_friends_favorite_events);
         return dbSchemaQueryList;
     }

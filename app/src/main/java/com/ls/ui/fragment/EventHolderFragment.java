@@ -358,7 +358,7 @@ public class EventHolderFragment extends Fragment implements AddScheduleDialog.D
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (position == 0) {
-//                    strategy = new FavoritesStrategy();
+                    strategy = new FavoritesStrategy();
                     isMySchedule = true;
                     getActivity().invalidateOptionsMenu();
                     new LoadData().execute();

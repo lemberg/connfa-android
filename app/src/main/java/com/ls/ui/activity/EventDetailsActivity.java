@@ -372,7 +372,7 @@ public class EventDetailsActivity extends StackKeeperActivity {
 
                 FriendsFavoriteManager favoriteManager = new FriendsFavoriteManager();
 //                favoriteManager.setFriendsFavoriteSafe(mEventId, mIsFavorite);
-                FriendsTestDao friendsTestDao = favoriteManager.getmFriendsTestDao();
+                FriendsTestDao friendsTestDao = favoriteManager.getFriendsTestDao();
                 friendsTestDao.saveDataSafe(new Favorite(mEventId, "Test"));
 
             }

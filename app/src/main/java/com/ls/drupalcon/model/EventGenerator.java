@@ -1,12 +1,15 @@
 package com.ls.drupalcon.model;
 
+import com.ls.drupalcon.model.dao.FriendsTestDao;
 import com.ls.drupalcon.model.data.Event;
+import com.ls.drupalcon.model.data.Favorite;
 import com.ls.drupalcon.model.data.Speaker;
 import com.ls.drupalcon.model.data.TimeRange;
 import com.ls.drupalcon.model.data.Track;
 import com.ls.drupalcon.model.managers.BofsManager;
 import com.ls.drupalcon.model.managers.EventManager;
 import com.ls.drupalcon.model.managers.FavoriteManager;
+import com.ls.drupalcon.model.managers.FriendsFavoriteManager;
 import com.ls.drupalcon.model.managers.ProgramManager;
 import com.ls.drupalcon.model.managers.SocialManager;
 import com.ls.drupalcon.model.managers.SpeakerManager;
@@ -25,8 +28,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
 
 public class EventGenerator {
 
@@ -97,7 +98,21 @@ public class EventGenerator {
 
         FavoriteManager favoriteManager = new FavoriteManager();
         List<Long> favoriteEventIds = favoriteManager.getFavoriteEventsSafe();
+        L.e("Favorites  = " + favoriteEventIds);
+        List<EventListItem> eventListItems = mProgramManager.getFavoriteProgramItemsSafe(favoriteEventIds, day);
+        if (mShouldBreak) {
+            return new ArrayList<>();
+        }
 
+        return sortFavorites(favoriteEventIds, eventListItems, day, eventItemCreator);
+    }
+
+    public List<EventListItem> generateForFriendsFavorites(long day, @NotNull EventItemCreator eventItemCreator) {
+
+        FriendsFavoriteManager favoriteManager = new FriendsFavoriteManager();
+        List<Long> favoriteEventIds = favoriteManager.getFavoriteEventIds();
+        long wtf = favoriteManager.getWtf();
+        L.e("wtf = " + wtf);
         List<EventListItem> eventListItems = mProgramManager.getFavoriteProgramItemsSafe(favoriteEventIds, day);
         if (mShouldBreak) {
             return new ArrayList<>();

@@ -147,26 +147,6 @@
         )
     </string>
 
-      <string name="create_table_favorite_events_added" translatable="false">
-        CREATE TABLE favorite_events_added (
-        _id				        INTEGER,
-        _date			        INTEGER,
-        _from			        INTEGER,
-        _to				        INTEGER,
-        _type			        INTEGER,
-        _name			        TEXT,
-        _track			        INTEGER,
-        _experience_level		TEXT,
-        _place				    TEXT,
-        _description			TEXT,
-        _link                   TEXT,
-        _event_class			INTEGER,
-        _favorite       		INTEGER,
-        _order                  DOUBLE,
-        _deleted                BOOLEAN
-        )
-    </string>
-
       <string name="create_table_friends_favorite_events" translatable="false">
         CREATE TABLE table_friends_favorite_events (
         _id				         INTEGER,
@@ -516,6 +496,12 @@
         SELECT *
         FROM table_friends_favorite_events
         ORDER BY _event_id
+    </string>
+
+      <string name="select_favorite_day" translatable="false">
+        SELECT _date
+        FROM table_event
+        WHERE _id=?
     </string>
 
 </resources>
