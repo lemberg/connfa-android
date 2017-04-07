@@ -1,8 +1,6 @@
 package com.ls.drupalcon.model;
 
-import com.ls.drupalcon.model.dao.FriendsTestDao;
 import com.ls.drupalcon.model.data.Event;
-import com.ls.drupalcon.model.data.Favorite;
 import com.ls.drupalcon.model.data.Speaker;
 import com.ls.drupalcon.model.data.TimeRange;
 import com.ls.drupalcon.model.data.Track;
@@ -111,8 +109,7 @@ public class EventGenerator {
 
         FriendsFavoriteManager favoriteManager = new FriendsFavoriteManager();
         List<Long> favoriteEventIds = favoriteManager.getFavoriteEventIds();
-        long wtf = favoriteManager.getWtf();
-        L.e("wtf = " + wtf);
+
         List<EventListItem> eventListItems = mProgramManager.getFavoriteProgramItemsSafe(favoriteEventIds, day);
         if (mShouldBreak) {
             return new ArrayList<>();

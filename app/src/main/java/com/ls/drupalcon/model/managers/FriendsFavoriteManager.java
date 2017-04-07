@@ -23,35 +23,24 @@ public class FriendsFavoriteManager {
         mFriendsTestDao = new FriendsTestDao(App.getContext());
     }
 
-    public List<Favorite> getFriendsFavoriteEvent() {
+    public List<Favorite> getAllFriendsFavorite() {
         return mFriendsTestDao.getAllSafe();
     }
 
     public List<Long> getFavoriteEventIds() {
         List<Long> favoriteEventIds = new ArrayList<>();
-        for (Favorite favorite : getFriendsFavoriteEvent()) {
+        for (Favorite favorite : getAllFriendsFavorite()) {
             favoriteEventIds.add(favorite.getEventId());
         }
         return favoriteEventIds;
     }
 
-    public long getWtf() {
+    public List<Event> getAllFriendsFavoriteEvent() {
         EventManager eventManager = Model.instance().getEventManager();
         EventDao eventDao = eventManager.getEventDao();
         List<Event> events = eventDao.selectEventsByIdsSafe(getFavoriteEventIds());
-
-        L.e("getWtf = " + events);
-//        List<Event> allSafe = eventDao.getAllSafe();
-//
-//
-//        for(Event event: allSafe){
-//            if(event.getId() == 68){
-//                L.e("Event event: allSafe = "+ event);
-//                return event.getFromMillis();
-//            }
-//        }
-
-        return 0;
+        L.e("getAllFriendsFavoriteEvent = " + events.toString());
+        return events;
     }
 
 

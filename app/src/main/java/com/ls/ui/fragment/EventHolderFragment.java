@@ -72,14 +72,12 @@ public class EventHolderFragment extends Fragment implements AddScheduleDialog.D
     private UpdatesManager.DataUpdatedListener updateReceiver = new UpdatesManager.DataUpdatedListener() {
         @Override
         public void onDataUpdated(List<UpdateRequest> requests) {
-            L.e("onDataUpdated = " + requests);
             updateData(requests);
         }
     };
     private ReceiverManager favoriteReceiver = new ReceiverManager(new ReceiverManager.FavoriteUpdatedListener() {
         @Override
         public void onFavoriteUpdated(long eventId, boolean isFavorite) {
-            L.e("eventId = " + eventId);
             updateFavorites();
         }
     });
@@ -106,7 +104,6 @@ public class EventHolderFragment extends Fragment implements AddScheduleDialog.D
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        L.e("onCreateOptionsMenu");
         if (!isFavoriteScreen()) {
             inflater.inflate(R.menu.menu_filter, menu);
             MenuItem filter = menu.findItem(R.id.actionFilter);
@@ -120,7 +117,6 @@ public class EventHolderFragment extends Fragment implements AddScheduleDialog.D
     public void onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
         if (isFavoriteScreen()) {
-            L.e("isFavoriteScreen = " + isFavoriteScreen());
             menu.clear();
             MenuInflater menuInflater = getActivity().getMenuInflater();
             if (isMySchedule) {
