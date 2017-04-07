@@ -135,7 +135,7 @@ public class EventHolderFragment extends Fragment implements AddScheduleDialog.D
                 showFilter();
                 break;
             case R.id.actionAddSchedule:
-                showDialog();
+                showAddScheduleDialog();
 //                FragmentTransaction ft = getChildFragmentManager().beginTransaction();
 //                ft.add(new AddScheduleDialog(), NoConnectionDialog.TAG);
 //                ft.commitAllowingStateLoss();
@@ -399,7 +399,7 @@ public class EventHolderFragment extends Fragment implements AddScheduleDialog.D
         startActivity(sendIntent);
     }
 
-    void showDialog() {
+    void showAddScheduleDialog() {
         DialogFragment newFragment = AddScheduleDialog.newInstance();
         newFragment.setTargetFragment(this, ADD_SCHEDULE_DIALOG_REQUEST_CODE);
         newFragment.show(getChildFragmentManager(), "Tag");
@@ -409,26 +409,32 @@ public class EventHolderFragment extends Fragment implements AddScheduleDialog.D
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case ADD_SCHEDULE_DIALOG_REQUEST_CODE:
-                if (resultCode == Activity.RESULT_OK) {
-                    // After Ok code.
-                    L.e("data = " + data.getStringExtra(AddScheduleDialog.EXTRA_SCHEDULE_CODE));
-                    undo();
-                } else if (resultCode == Activity.RESULT_CANCELED) {
-                    // After Cancel code.
+                switch (resultCode){
+                    case Activity.RESULT_OK:
+                        undo();
+                        break;
+                    case Activity.RESULT_CANCELED:
+                        undo();
+                        break;
                 }
-
-                break;
         }
 
     }
 
     private void undo() {
-        Snackbar.make(getView(), "Hi there!", Snackbar.LENGTH_LONG).setAction("Undo", new View.OnClickListener() {
+        Snackbar snack = Snackbar.make(getView(), "Schedule name is removed", Snackbar.LENGTH_LONG);
+        snack.setAction("Undo", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                L.e("Hi there!");
+                L.e("Undo");
             }
-        }).show();
+        });
+        snack.setActionTextColor(android.R.color.holo_red_light);
+//
+//        View view = snack.getView();
+//        TextView tv = (TextView) view.findViewById(android.support.design.R.id.snackbar_text);
+//        tv.setTextColor(Color.RED);
+        snack.show();
     }
 
 

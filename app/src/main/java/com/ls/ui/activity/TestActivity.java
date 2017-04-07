@@ -6,7 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.ls.drupalcon.R;
-import com.ls.drupalcon.model.dao.FriendsTestDao;
+import com.ls.drupalcon.model.dao.FriendsFavoriteDao;
 import com.ls.drupalcon.model.managers.FriendsFavoriteManager;
 import com.ls.utils.L;
 
@@ -24,8 +24,8 @@ public class TestActivity extends AppCompatActivity {
 
         FriendsFavoriteManager favoriteManager = new FriendsFavoriteManager();
 
-        FriendsTestDao friendsTestDao = favoriteManager.getFriendsTestDao();
-        L.e("FriendsTestDao = " + friendsTestDao.getAllSafe());
+        FriendsFavoriteDao friendsTestDao = favoriteManager.getFriendsTestDao();
+        L.e("FriendsFavoriteDao = " + friendsTestDao.getAllSafe());
 
     }
 }

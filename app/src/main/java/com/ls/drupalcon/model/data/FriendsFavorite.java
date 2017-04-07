@@ -9,13 +9,9 @@ import com.ls.utils.CursorStringParser;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
-
-public class Favorite extends AbstractEntity<Long> implements Comparable<Favorite> {
-    public final static String COLUMN_ID = "_id";
+public class FriendsFavorite extends AbstractEntity<Long> implements Comparable<FriendsFavorite> {
+    private final static String COLUMN_ID = "_id";
     private final static String COLUMN_EVENT_ID = "_friend_id";
 
 
@@ -48,7 +44,7 @@ public class Favorite extends AbstractEntity<Long> implements Comparable<Favorit
     }
 
     @Override
-    public int compareTo(@NotNull Favorite event) {
+    public int compareTo(@NotNull FriendsFavorite event) {
 
         int result;
         if (eventId == event.eventId) {
@@ -78,17 +74,17 @@ public class Favorite extends AbstractEntity<Long> implements Comparable<Favorit
         this.friendId = friendId;
     }
 
-    public Favorite() {
+    public FriendsFavorite() {
     }
 
-    public Favorite(long eventId, String friendId) {
+    public FriendsFavorite(long eventId, String friendId) {
         this.eventId = eventId;
         this.friendId = friendId;
     }
 
     @Override
     public String toString() {
-        return "Favorite{" +
+        return "FriendsFavorite{" +
                 "eventId=" + eventId +
                 ", friendId='" + friendId + '\'' +
                 '}';
