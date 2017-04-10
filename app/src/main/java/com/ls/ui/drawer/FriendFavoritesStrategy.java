@@ -11,7 +11,7 @@ import com.ls.drupalcon.model.managers.ProgramManager;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AddFavoritesStrategy implements EventHolderFragmentStrategy {
+public class FriendFavoritesStrategy implements EventHolderFragmentStrategy {
 
     @Override
     public List<Long> getDayList() {
@@ -20,7 +20,11 @@ public class AddFavoritesStrategy implements EventHolderFragmentStrategy {
         List<Long> dayList = new ArrayList<>();
 
         for (Event event : allFriendsFavoriteEvent) {
-            dayList.add(event.getTimeRange().getDate());
+            long date = event.getTimeRange().getDate();
+            if (!dayList.contains(date)) {
+                dayList.add(date);
+            }
+
         }
         return dayList;
     }

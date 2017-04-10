@@ -2,10 +2,9 @@ package com.ls.ui.fragment;
 
 import com.astuetz.PagerSlidingTabStrip;
 import com.ls.drupalcon.model.managers.FriendsScheduleManager;
-import com.ls.ui.activity.TestActivity;
 import com.ls.ui.dialog.AddScheduleDialog;
 import com.ls.ui.dialog.ScheduleNameDialog;
-import com.ls.ui.drawer.AddFavoritesStrategy;
+import com.ls.ui.drawer.FriendFavoritesStrategy;
 import com.ls.ui.view.MaterialTapTargetPrompt;
 import com.ls.drupalcon.R;
 import com.ls.drupalcon.app.App;
@@ -114,6 +113,11 @@ public class EventHolderFragment extends Fragment implements AddScheduleDialog.D
                 updateFilterState(filter);
             }
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
     }
 
     @Override
@@ -343,7 +347,7 @@ public class EventHolderFragment extends Fragment implements AddScheduleDialog.D
         android.support.v7.app.ActionBar toolbar = activity.getSupportActionBar();
 
         FriendsScheduleManager friendsScheduleManager = Model.instance().getFriendsScheduleManager();
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), R.layout.item_spinner, friendsScheduleManager.getFriendsScheduleList());
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), R.layout.item_spinner, friendsScheduleManager.getAllScheduleList());
         adapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item);
         Spinner navigationSpinner = new Spinner(getContext());
         navigationSpinner.setAdapter(adapter);
@@ -361,16 +365,13 @@ public class EventHolderFragment extends Fragment implements AddScheduleDialog.D
                     isMySchedule = true;
                     getActivity().invalidateOptionsMenu();
                     new LoadData().execute();
-                }
-                if (position == 1) {
-                    strategy = new AddFavoritesStrategy();
+                }else {
+                    strategy = new FriendFavoritesStrategy();
                     isMySchedule = false;
                     getActivity().invalidateOptionsMenu();
                     new LoadData().execute();
                 }
-                if (position == 2) {
-                    TestActivity.startActivity(getActivity());
-                }
+
             }
 
             @Override
@@ -420,10 +421,13 @@ public class EventHolderFragment extends Fragment implements AddScheduleDialog.D
             case ADD_SCHEDULE_DIALOG_REQUEST_CODE:
                 switch (resultCode) {
                     case Activity.RESULT_OK:
-                        undo();
+                        String stringExtra = data.getStringExtra(ScheduleNameDialog.EXTRA_SCHEDULE_CODE);
+                        Model.instance().getFriendsScheduleManager().addSchedule(stringExtra);
+                        setCustomToolBar();
+                        undo("Schedule is added");
                         break;
                     case Activity.RESULT_CANCELED:
-                        undo();
+//                        undo("Schedule name is removed");
                         break;
                 }
                 break;
@@ -431,10 +435,10 @@ public class EventHolderFragment extends Fragment implements AddScheduleDialog.D
                 switch (resultCode) {
                     case Activity.RESULT_OK:
                         String stringExtra = data.getStringExtra(ScheduleNameDialog.EXTRA_SCHEDULE_CODE);
-                        undo();
+                        undo("Schedule name is renamed");
                         break;
                     case Activity.RESULT_CANCELED:
-                        undo();
+//                        undo("Schedule name is removed");
                         break;
                 }
                 break;
@@ -442,8 +446,8 @@ public class EventHolderFragment extends Fragment implements AddScheduleDialog.D
 
     }
 
-    private void undo() {
-        Snackbar snack = Snackbar.make(getView(), "Schedule name is removed", Snackbar.LENGTH_LONG);
+    private void undo(String message) {
+        Snackbar snack = Snackbar.make(getView(), message, Snackbar.LENGTH_LONG);
         snack.setAction("Undo", new View.OnClickListener() {
             @Override
             public void onClick(View v) {

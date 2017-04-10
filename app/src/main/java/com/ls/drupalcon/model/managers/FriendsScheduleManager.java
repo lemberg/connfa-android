@@ -1,39 +1,38 @@
 package com.ls.drupalcon.model.managers;
 
+import com.ls.drupalcon.model.data.FriendsFavoriteSchedule;
+
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class FriendsScheduleManager {
-
-    private Map<String, Integer> map = new HashMap<>();
-    private int ScheduleNumber;
+    private List<FriendsFavoriteSchedule> list = new ArrayList<>();
+    private int scheduleNumber;
 
     public FriendsScheduleManager() {
-        this.map.put("Test schedule 1", 1111);
-        this.map.put("My schedule", 0);
+        this.list.add(new FriendsFavoriteSchedule("My schedule", "My schedule"));
+//        this.list.add(new FriendsFavoriteSchedule("Test schedule 1", "Test schedule 1"));
     }
 
-    public List<String> getFriendsScheduleList() {
+    public List<String> getAllScheduleList() {
         List<String> result = new ArrayList<>();
-        for (Map.Entry<String, Integer> entry : map.entrySet()) {
-            result.add(entry.getKey());
+        for (FriendsFavoriteSchedule item : list) {
+            result.add(item.getScheduleName());
         }
         return result;
 
     }
 
     public void setScheduleNumber(int scheduleNumber) {
-        ScheduleNumber = scheduleNumber;
+        this.scheduleNumber = scheduleNumber;
     }
 
-    public int getCurrentFriendId() {
-        if (ScheduleNumber == 0) {
-            return 0;
-        } else {
-            return 1111;
-        }
-
+    public String getCurrentFriendId() {
+        return list.get(scheduleNumber).getFriendId();
     }
+
+    public void addSchedule(String friendId) {
+        list.add(new FriendsFavoriteSchedule(friendId, "Schedule" + friendId));
+    }
+
 }
