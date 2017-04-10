@@ -17,7 +17,6 @@ public class AddScheduleDialog extends DialogFragment {
 
     public static final String TAG = AddScheduleDialog.class.getName();
     public static final String EXTRA_SCHEDULE_CODE = "extra_schedule_code";
-    private DialogClickListener callback;
 
     public static AddScheduleDialog newInstance() {
 
@@ -28,29 +27,12 @@ public class AddScheduleDialog extends DialogFragment {
         return fragment;
     }
 
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        try {
-            callback = (DialogClickListener) getTargetFragment();
-        } catch (ClassCastException e) {
-            throw new ClassCastException("Calling fragment must implement DialogClickListener interface");
-        }
-    }
-
 
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-
-        try {
-            callback = (DialogClickListener) getTargetFragment();
-        } catch (ClassCastException e) {
-            throw new ClassCastException("Calling fragment must implement DialogClickListener interface");
-        }
-
         ViewGroup contentView = (ViewGroup) LayoutInflater.from(getActivity()).inflate(R.layout.dialog_add_shedule, null);
-        final EditText editTextId = (EditText)contentView.findViewById(R.id.uniqueCode);
+        final EditText editTextId = (EditText) contentView.findViewById(R.id.uniqueCode);
 
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
         alertDialogBuilder.setTitle(R.string.add_a_schedule);
@@ -58,7 +40,6 @@ public class AddScheduleDialog extends DialogFragment {
         alertDialogBuilder.setPositiveButton(getActivity().getString(R.string.add), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-               callback.onYesClick();
 
                 getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, getActivity().getIntent().putExtra(EXTRA_SCHEDULE_CODE, editTextId.getText().toString()));
             }
@@ -67,7 +48,6 @@ public class AddScheduleDialog extends DialogFragment {
         alertDialogBuilder.setNegativeButton(getActivity().getString(android.R.string.cancel), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                callback.onYesClick();
                 getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, getActivity().getIntent());
             }
         });
@@ -76,12 +56,6 @@ public class AddScheduleDialog extends DialogFragment {
 //        dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.primary));
 //        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.primary));
         return dialog;
-    }
-
-    public interface DialogClickListener {
-        void onYesClick();
-
-        void onNoClick();
     }
 
 }

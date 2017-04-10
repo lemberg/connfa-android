@@ -60,6 +60,7 @@
     <string name="tap_the_three_dots">Tap the three dots and choose "Share My Schedule" option</string>
     <string name="add_a_schedule">Add a schedule</string>
     <string name="add">Add</string>
+    <string name="undo">Undo</string>
 
 
     <string-array name="test_list">

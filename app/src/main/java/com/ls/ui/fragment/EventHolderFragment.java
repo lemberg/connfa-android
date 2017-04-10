@@ -51,7 +51,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
-public class EventHolderFragment extends Fragment implements AddScheduleDialog.DialogClickListener {
+public class EventHolderFragment extends Fragment {
 
     public static final String TAG = "ProjectsFragment";
     private static final String EXTRAS_ARG_MODE = "EXTRAS_ARG_MODE";
@@ -226,16 +226,6 @@ public class EventHolderFragment extends Fragment implements AddScheduleDialog.D
 
     }
 
-    @Override
-    public void onYesClick() {
-        L.e("onYesClick");
-    }
-
-    @Override
-    public void onNoClick() {
-        L.e("onNoClick");
-    }
-
     class LoadData extends AsyncTask<Void, Void, List<Long>> {
 
         @Override
@@ -342,6 +332,11 @@ public class EventHolderFragment extends Fragment implements AddScheduleDialog.D
     }
 
     private void setCustomToolBar() {
+        List<String> allScheduleList = Model.instance().getFriendsScheduleManager().getAllScheduleList();
+        L.e("allScheduleList = " + allScheduleList.size());
+        if (Model.instance().getFriendsScheduleManager().getAllScheduleList().size() < 2) {
+            return;
+        }
         AppCompatActivity activity = (AppCompatActivity) getActivity();
 
         android.support.v7.app.ActionBar toolbar = activity.getSupportActionBar();
@@ -365,7 +360,7 @@ public class EventHolderFragment extends Fragment implements AddScheduleDialog.D
                     isMySchedule = true;
                     getActivity().invalidateOptionsMenu();
                     new LoadData().execute();
-                }else {
+                } else {
                     strategy = new FriendFavoritesStrategy();
                     isMySchedule = false;
                     getActivity().invalidateOptionsMenu();
@@ -435,7 +430,7 @@ public class EventHolderFragment extends Fragment implements AddScheduleDialog.D
                 switch (resultCode) {
                     case Activity.RESULT_OK:
                         String stringExtra = data.getStringExtra(ScheduleNameDialog.EXTRA_SCHEDULE_CODE);
-                        undo("Schedule name is renamed");
+                        undo("stringExtra Schedule name is renamed");
                         break;
                     case Activity.RESULT_CANCELED:
 //                        undo("Schedule name is removed");
@@ -448,7 +443,7 @@ public class EventHolderFragment extends Fragment implements AddScheduleDialog.D
 
     private void undo(String message) {
         Snackbar snack = Snackbar.make(getView(), message, Snackbar.LENGTH_LONG);
-        snack.setAction("Undo", new View.OnClickListener() {
+        snack.setAction(R.string.undo, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 L.e("Undo");
