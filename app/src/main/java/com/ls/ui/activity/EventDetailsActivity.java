@@ -5,9 +5,7 @@ import com.ls.drupalcon.model.Model;
 import com.ls.drupalcon.model.PreferencesManager;
 import com.ls.drupalcon.model.UpdateRequest;
 import com.ls.drupalcon.model.UpdatesManager;
-import com.ls.drupalcon.model.dao.FriendsFavoriteDao;
 import com.ls.drupalcon.model.data.EventDetailsEvent;
-import com.ls.drupalcon.model.data.FriendsFavorite;
 import com.ls.drupalcon.model.data.Level;
 import com.ls.drupalcon.model.data.Speaker;
 import com.ls.drupalcon.model.managers.EventManager;
@@ -371,9 +369,7 @@ public class EventDetailsActivity extends StackKeeperActivity {
                 manager.setFavoriteEvent(mEventId, mIsFavorite);
 
                 FriendsFavoriteManager favoriteManager = new FriendsFavoriteManager();
-//                favoriteManager.setFriendsFavoriteSafe(mEventId, mIsFavorite);
-                FriendsFavoriteDao friendsTestDao = favoriteManager.getFriendsTestDao();
-                friendsTestDao.saveDataSafe(new FriendsFavorite(mEventId, "Test"));
+                favoriteManager.saveFavorite(mEventId);
 
             }
         }).start();

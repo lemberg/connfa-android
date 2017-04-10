@@ -1,6 +1,7 @@
 package com.ls.ui.fragment;
 
 import com.astuetz.PagerSlidingTabStrip;
+import com.ls.drupalcon.model.managers.FriendsScheduleManager;
 import com.ls.ui.activity.TestActivity;
 import com.ls.ui.dialog.AddScheduleDialog;
 import com.ls.ui.dialog.ScheduleNameDialog;
@@ -341,10 +342,9 @@ public class EventHolderFragment extends Fragment implements AddScheduleDialog.D
 
         android.support.v7.app.ActionBar toolbar = activity.getSupportActionBar();
 
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(), R.array.test_list, R.layout.item_spinner);
+        FriendsScheduleManager friendsScheduleManager = Model.instance().getFriendsScheduleManager();
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), R.layout.item_spinner, friendsScheduleManager.getFriendsScheduleList());
         adapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item);
-
-
         Spinner navigationSpinner = new Spinner(getContext());
         navigationSpinner.setAdapter(adapter);
         if (toolbar != null) {
@@ -355,6 +355,7 @@ public class EventHolderFragment extends Fragment implements AddScheduleDialog.D
         navigationSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Model.instance().getFriendsScheduleManager().setScheduleNumber(position);
                 if (position == 0) {
                     strategy = new FavoritesStrategy();
                     isMySchedule = true;

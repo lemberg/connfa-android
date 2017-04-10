@@ -5,7 +5,7 @@ import com.ls.drupalcon.model.Model;
 import com.ls.drupalcon.model.dao.EventDao;
 import com.ls.drupalcon.model.dao.FriendsFavoriteDao;
 import com.ls.drupalcon.model.data.Event;
-import com.ls.drupalcon.model.data.FriendsFavorite;
+import com.ls.drupalcon.model.data.FriendsFavoriteItem;
 import com.ls.utils.L;
 
 import java.util.ArrayList;
@@ -13,23 +13,26 @@ import java.util.List;
 
 public class FriendsFavoriteManager {
 
-    private FriendsFavoriteDao mFriendsTestDao;
+    private FriendsFavoriteDao mFriendsDao;
 
     public FriendsFavoriteDao getFriendsTestDao() {
-        return mFriendsTestDao;
+        return mFriendsDao;
     }
 
     public FriendsFavoriteManager() {
-        mFriendsTestDao = new FriendsFavoriteDao(App.getContext());
+        mFriendsDao = new FriendsFavoriteDao(App.getContext());
     }
 
-    public List<FriendsFavorite> getAllFriendsFavorite() {
-        return mFriendsTestDao.getAllSafe();
+    public List<FriendsFavoriteItem> getAllFriendsFavorite() {
+        List<FriendsFavoriteItem> allSafe = mFriendsDao.getAllSafe();
+        L.e("getAllFriendsFavorite = " + allSafe.toString());
+        return allSafe;
     }
 
     public List<Long> getFavoriteEventIds() {
+
         List<Long> favoriteEventIds = new ArrayList<>();
-        for (FriendsFavorite favorite : getAllFriendsFavorite()) {
+        for (FriendsFavoriteItem favorite : getAllFriendsFavorite()) {
             favoriteEventIds.add(favorite.getEventId());
         }
         return favoriteEventIds;
@@ -39,6 +42,12 @@ public class FriendsFavoriteManager {
         EventManager eventManager = Model.instance().getEventManager();
         EventDao eventDao = eventManager.getEventDao();
         return eventDao.selectEventsByIdsSafe(getFavoriteEventIds());
+    }
+
+    public void saveFavorite(long id) {
+        FriendsScheduleManager friendsScheduleManager = Model.instance().getFriendsScheduleManager();
+        int currentFriendId = friendsScheduleManager.getCurrentFriendId();
+        mFriendsDao.saveDataSafe(new FriendsFavoriteItem(id, String.valueOf(currentFriendId)));
     }
 
 

@@ -3,11 +3,11 @@ package com.ls.drupalcon.model.dao;
 import android.content.Context;
 
 import com.ls.drupalcon.model.AppDatabaseInfo;
-import com.ls.drupalcon.model.data.FriendsFavorite;
+import com.ls.drupalcon.model.data.FriendsFavoriteItem;
 import com.ls.drupalcon.model.database.AbstractEntityDAO;
 
 
-public class FriendsFavoriteDao extends AbstractEntityDAO<FriendsFavorite, Long> {
+public class FriendsFavoriteDao extends AbstractEntityDAO<FriendsFavoriteItem, Long> {
 
     public static final String TABLE_NAME = "table_friends_favorite_events";
     private final Context mContext;
@@ -37,8 +37,8 @@ public class FriendsFavoriteDao extends AbstractEntityDAO<FriendsFavorite, Long>
     }
 
     @Override
-    protected FriendsFavorite newInstance() {
-        return new FriendsFavorite();
+    protected FriendsFavoriteItem newInstance() {
+        return new FriendsFavoriteItem();
     }
 
     @Override
