@@ -4,7 +4,9 @@ import com.ls.drupalcon.R;
 import com.ls.drupalcon.model.Model;
 import com.ls.drupalcon.model.UpdateRequest;
 import com.ls.drupalcon.model.UpdatesManager;
+import com.ls.drupalcon.model.dao.SharedScheduleDao;
 import com.ls.drupalcon.model.data.InfoItem;
+import com.ls.drupalcon.model.managers.SharedScheduleManager;
 import com.ls.drupalcon.model.managers.InfoManager;
 import com.ls.ui.activity.AboutDetailsActivity;
 import com.ls.utils.L;
@@ -15,18 +17,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
-import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,42 +50,9 @@ public class AboutFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Model.instance().getUpdatesManager().registerUpdateListener(updateListener);
-        AppCompatActivity activity = (AppCompatActivity) getActivity();
-
-        final String[] month = getResources().getStringArray(R.array.test_list);
-//        Toolbar toolbar = (Toolbar) getView().findViewById(R.id.toolBar);
-        android.support.v7.app.ActionBar toolbar = activity.getSupportActionBar();
-        SpinnerAdapter spinnerAdapter = ArrayAdapter.createFromResource(getContext(), R.array.test_list, android.R.layout.simple_spinner_dropdown_item);
-
-        Spinner navigationSpinner = new Spinner(getContext());
-        navigationSpinner.setAdapter(spinnerAdapter);
-        if (toolbar != null) {
-            toolbar.setCustomView(navigationSpinner);
-            toolbar.setDisplayShowCustomEnabled(true);
-            toolbar.setTitle("TEST");
-            L.e("toolbar is not null");
-        } else {
-            L.e("toolbar is null");
-        }
-
-//        toolbar.addView(navigationSpinner, 0);
-
-        navigationSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(getContext(), "you selected: " + month[position], Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
-
-
-
-
+        SharedScheduleManager sharedScheduleManager = Model.instance().getSharedScheduleManager();
+        SharedScheduleDao sharedScheduleDao = sharedScheduleManager.getSharedScheduleDao();
+        L.e("SharedScheduleDao = " + sharedScheduleDao.getAllSafe().toString());
     }
 
     @Nullable

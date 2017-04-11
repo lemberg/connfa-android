@@ -315,7 +315,7 @@ public class EventsAdapter extends BaseAdapter {
 
     private void setRoundedBackgroundSpan(Event event, EventHolder holder) {
         String eventName = event.getName();
-        if (mEventMode == EventMode.Favorites) {
+        if (mEventMode == EventMode.Favorites || mEventMode == EventMode.SharedSchedules) {
             String marker = null;
             if (event.getEventClass() == Event.PROGRAM_CLASS) {
                 marker = mContext.getString(R.string.Session);

@@ -147,12 +147,20 @@
         )
     </string>
 
-      <string name="create_table_friends_favorite_events" translatable="false">
+    <string name="create_table_friends_favorite_events" translatable="false">
         CREATE TABLE table_friends_favorite_events (
         _id				         INTEGER,
         _friend_id		         INTEGER
         )
     </string>
+
+    <string name="create_table_shared_schedules" translatable="false">
+        CREATE TABLE table_shared_schedules (
+        _id				         STRING,
+        _schedule_name_id		 STRING
+        )
+    </string>
+
 
     <!--==============================================================-->
     <!--INSERT-->

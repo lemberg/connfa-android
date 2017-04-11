@@ -18,7 +18,7 @@ import com.ls.drupalcon.model.managers.EventManager;
 import com.ls.drupalcon.model.managers.FavoriteManager;
 import com.ls.drupalcon.model.managers.FloorPlansManager;
 import com.ls.drupalcon.model.managers.FriendsFavoriteManager;
-import com.ls.drupalcon.model.managers.FriendsScheduleManager;
+import com.ls.drupalcon.model.managers.SharedScheduleManager;
 import com.ls.drupalcon.model.managers.InfoManager;
 import com.ls.drupalcon.model.managers.LevelsManager;
 import com.ls.drupalcon.model.managers.LocationManager;
@@ -32,7 +32,6 @@ import com.ls.drupalcon.model.managers.TracksManager;
 import com.ls.drupalcon.model.managers.TypesManager;
 import com.ls.http.base.BaseRequest;
 import com.ls.http.base.ResponseData;
-import com.ls.utils.ScheduleManager;
 
 import android.content.Context;
 import android.content.pm.PackageInfo;
@@ -96,7 +95,7 @@ public class Model {
     private SettingsManager settingsManager;
     private FloorPlansManager floorPlansManager;
     private FriendsFavoriteManager friendsFavoriteManager;
-    private FriendsScheduleManager friendsScheduleManager;
+    private SharedScheduleManager sharedScheduleManager;
 
     public DrupalClient getClient() {
         return client;
@@ -188,8 +187,8 @@ public class Model {
         this.settingsManager = settingsManager;
     }
 
-    public FriendsScheduleManager getFriendsScheduleManager() {
-        return friendsScheduleManager;
+    public SharedScheduleManager getSharedScheduleManager() {
+        return sharedScheduleManager;
     }
 
     /**
@@ -227,7 +226,7 @@ public class Model {
         settingsManager = new SettingsManager(client);
         floorPlansManager = new FloorPlansManager(client);
         friendsFavoriteManager =  new FriendsFavoriteManager();
-        friendsScheduleManager =  new FriendsScheduleManager();
+        sharedScheduleManager =  new SharedScheduleManager();
     }
 
 

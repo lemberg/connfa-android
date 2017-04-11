@@ -2,15 +2,12 @@ package com.ls.ui.fragment;
 
 import com.ls.drupalcon.R;
 import com.ls.drupalcon.model.EventGenerator;
-import com.ls.drupalcon.model.Model;
 import com.ls.drupalcon.model.PreferencesManager;
 import com.ls.drupalcon.model.data.Event;
-import com.ls.drupalcon.model.managers.FriendsFavoriteManager;
 import com.ls.sponsors.GoldSponsors;
 import com.ls.sponsors.SponsorItem;
 import com.ls.sponsors.SponsorManager;
 import com.ls.ui.activity.EventDetailsActivity;
-import com.ls.ui.adapter.BaseEventDaysPagerAdapter;
 import com.ls.ui.adapter.EventsAdapter;
 import com.ls.ui.adapter.item.EventListItem;
 import com.ls.ui.adapter.item.SimpleTimeRangeCreator;
@@ -24,12 +21,10 @@ import com.ls.utils.L;
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
@@ -185,7 +180,7 @@ public class EventFragment extends Fragment implements EventsAdapter.Listener {
             case Favorites:
                 eventList.addAll(mGenerator.generateForFavorites(mDay, new SimpleTimeRangeCreator()));
                 break;
-            case addFavorites:
+            case SharedSchedules:
                 eventList.addAll(mGenerator.generateForFriendsFavorites(mDay, new SimpleTimeRangeCreator()));
                 break;
         }

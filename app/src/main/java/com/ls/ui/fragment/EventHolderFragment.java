@@ -1,7 +1,7 @@
 package com.ls.ui.fragment;
 
 import com.astuetz.PagerSlidingTabStrip;
-import com.ls.drupalcon.model.managers.FriendsScheduleManager;
+import com.ls.drupalcon.model.managers.SharedScheduleManager;
 import com.ls.ui.dialog.AddScheduleDialog;
 import com.ls.ui.dialog.ScheduleNameDialog;
 import com.ls.ui.drawer.FriendFavoritesStrategy;
@@ -155,7 +155,7 @@ public class EventHolderFragment extends Fragment {
                 showScheduleNameDialog();
                 break;
             case R.id.actionRemoveSchedule:
-                undo(Model.instance().getFriendsScheduleManager().getCurrentFriendScheduleName() + "is removed");
+                undo(Model.instance().getSharedScheduleManager().getCurrentFriendScheduleName() + "is removed");
                 break;
         }
         return true;
@@ -170,7 +170,6 @@ public class EventHolderFragment extends Fragment {
         initData();
         initView();
         new LoadData().execute();
-        undo("Reee");
     }
 
     @Override
@@ -334,17 +333,17 @@ public class EventHolderFragment extends Fragment {
     }
 
     private void setCustomToolBar() {
-        List<String> allScheduleList = Model.instance().getFriendsScheduleManager().getAllScheduleList();
+        List<String> allScheduleList = Model.instance().getSharedScheduleManager().getAllScheduleList();
         L.e("allScheduleList = " + allScheduleList.size());
-        if (Model.instance().getFriendsScheduleManager().getAllScheduleList().size() < 2) {
+        if (Model.instance().getSharedScheduleManager().getAllScheduleList().size() < 2) {
             return;
         }
         AppCompatActivity activity = (AppCompatActivity) getActivity();
 
         android.support.v7.app.ActionBar toolbar = activity.getSupportActionBar();
 
-        FriendsScheduleManager friendsScheduleManager = Model.instance().getFriendsScheduleManager();
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), R.layout.item_spinner, friendsScheduleManager.getAllScheduleList());
+        SharedScheduleManager sharedScheduleManager = Model.instance().getSharedScheduleManager();
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), R.layout.item_spinner, sharedScheduleManager.getAllScheduleList());
         adapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item);
         Spinner navigationSpinner = new Spinner(getContext());
         navigationSpinner.setAdapter(adapter);
@@ -356,7 +355,7 @@ public class EventHolderFragment extends Fragment {
         navigationSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Model.instance().getFriendsScheduleManager().setScheduleNumber(position);
+                Model.instance().getSharedScheduleManager().setScheduleNumber(position);
                 if (position == 0) {
                     strategy = new FavoritesStrategy();
                     isMySchedule = true;
@@ -389,7 +388,7 @@ public class EventHolderFragment extends Fragment {
     }
 
     private boolean isFavoriteScreen() {
-        return strategy.getEventMode() == EventMode.Favorites || strategy.getEventMode() == EventMode.addFavorites;
+        return strategy.getEventMode() == EventMode.Favorites || strategy.getEventMode() == EventMode.SharedSchedules;
     }
 
     private void shareSchedule() {
@@ -419,9 +418,8 @@ public class EventHolderFragment extends Fragment {
                 switch (resultCode) {
                     case Activity.RESULT_OK:
                         String stringExtra = data.getStringExtra(ScheduleNameDialog.EXTRA_SCHEDULE_CODE);
-                        Model.instance().getFriendsScheduleManager().addSchedule(stringExtra);
+                        Model.instance().getSharedScheduleManager().addSchedule(stringExtra);
                         setCustomToolBar();
-                        undo("Schedule is added");
                         break;
                     case Activity.RESULT_CANCELED:
 //                        undo("Schedule name is removed");
@@ -431,8 +429,9 @@ public class EventHolderFragment extends Fragment {
             case SCHEDULE_NAME_DIALOG_REQUEST_CODE:
                 switch (resultCode) {
                     case Activity.RESULT_OK:
-                        String stringExtra = data.getStringExtra(ScheduleNameDialog.EXTRA_SCHEDULE_CODE);
-                        undo(stringExtra + " Schedule name is renamed");
+                        String newName = data.getStringExtra(ScheduleNameDialog.EXTRA_SCHEDULE_CODE);
+                        undo(newName + " schedule name is renamed");
+                        Model.instance().getSharedScheduleManager().renameSchedule(newName);
                         break;
                     case Activity.RESULT_CANCELED:
 //                        undo("Schedule name is removed");

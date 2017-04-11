@@ -4,9 +4,7 @@ import com.ls.drupalcon.R;
 import com.ls.drupalcon.model.Model;
 import com.ls.drupalcon.model.UpdateRequest;
 import com.ls.drupalcon.model.data.Event;
-import com.ls.drupalcon.model.managers.FavoriteManager;
 import com.ls.drupalcon.model.managers.FriendsFavoriteManager;
-import com.ls.drupalcon.model.managers.ProgramManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,6 +49,6 @@ public class FriendFavoritesStrategy implements EventHolderFragmentStrategy {
 
     @Override
     public EventMode getEventMode() {
-        return EventMode.addFavorites;
+        return EventMode.SharedSchedules;
     }
 }

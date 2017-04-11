@@ -27,7 +27,7 @@ public class FriendsFavoriteManager {
 
         List<Long> favoriteEventIds = new ArrayList<>();
         for (FriendsFavoriteItem favorite : getAllFriendsFavorite()) {
-            if (favorite.getFriendId().equals(Model.instance().getFriendsScheduleManager().getCurrentFriendId()))
+            if (favorite.getFriendId().equals(Model.instance().getSharedScheduleManager().getCurrentFriendId()))
                 favoriteEventIds.add(favorite.getEventId());
         }
         return favoriteEventIds;
@@ -40,8 +40,8 @@ public class FriendsFavoriteManager {
     }
 
     public void saveFavorite(long id) {
-        FriendsScheduleManager friendsScheduleManager = Model.instance().getFriendsScheduleManager();
-        String currentFriendId = friendsScheduleManager.getCurrentFriendId();
+        SharedScheduleManager sharedScheduleManager = Model.instance().getSharedScheduleManager();
+        String currentFriendId = sharedScheduleManager.getCurrentFriendId();
         mFriendsDao.saveDataSafe(new FriendsFavoriteItem(id, currentFriendId));
     }
 

@@ -9,6 +9,7 @@ import com.ls.drupalcon.model.dao.InfoDao;
 import com.ls.drupalcon.model.dao.LevelDao;
 import com.ls.drupalcon.model.dao.LocationDao;
 import com.ls.drupalcon.model.dao.POIDao;
+import com.ls.drupalcon.model.dao.SharedScheduleDao;
 import com.ls.drupalcon.model.dao.SpeakerDao;
 import com.ls.drupalcon.model.dao.TrackDao;
 import com.ls.drupalcon.model.dao.TypeDao;
@@ -61,6 +62,7 @@ public class AppDatabaseInfo implements DBInfo, IMigrationTask {
         dbTableNameList.add(TABLE_FRIENDS_FAVORITE_EVENTS);
         dbTableNameList.add(FloorPlanDao.TABLE_NAME);
         dbTableNameList.add(FriendsFavoriteDao.TABLE_NAME);
+        dbTableNameList.add(SharedScheduleDao.TABLE_NAME);
         return dbTableNameList;
     }
 
@@ -117,6 +119,7 @@ public class AppDatabaseInfo implements DBInfo, IMigrationTask {
         addStringWithIdToList(dbSchemaQueryList, R.string.create_table_poi);
         addStringWithIdToList(dbSchemaQueryList, R.string.create_table_floor_plans);
         addStringWithIdToList(dbSchemaQueryList, R.string.create_table_friends_favorite_events);
+        addStringWithIdToList(dbSchemaQueryList, R.string.create_table_shared_schedules);
         return dbSchemaQueryList;
     }
 
