@@ -1,7 +1,4 @@
 package com.ls.drupalcon.model.dao;
-
-import android.content.Context;
-
 import com.ls.drupalcon.model.AppDatabaseInfo;
 import com.ls.drupalcon.model.data.FriendsFavoriteItem;
 import com.ls.drupalcon.model.database.AbstractEntityDAO;
@@ -10,11 +7,6 @@ import com.ls.drupalcon.model.database.AbstractEntityDAO;
 public class FriendsFavoriteDao extends AbstractEntityDAO<FriendsFavoriteItem, Long> {
 
     public static final String TABLE_NAME = "table_friends_favorite_events";
-    private final Context mContext;
-
-    public FriendsFavoriteDao(Context context) {
-        mContext = context;
-    }
 
     @Override
     protected String getSearchCondition() {

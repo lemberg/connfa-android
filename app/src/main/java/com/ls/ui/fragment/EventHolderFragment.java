@@ -28,6 +28,7 @@ import org.jetbrains.annotations.NotNull;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -154,7 +155,7 @@ public class EventHolderFragment extends Fragment {
                 showScheduleNameDialog();
                 break;
             case R.id.actionRemoveSchedule:
-                L.e("actionRemoveSchedule");
+                undo(Model.instance().getFriendsScheduleManager().getCurrentFriendScheduleName() + "is removed");
                 break;
         }
         return true;
@@ -169,6 +170,7 @@ public class EventHolderFragment extends Fragment {
         initData();
         initView();
         new LoadData().execute();
+        undo("Reee");
     }
 
     @Override
@@ -430,7 +432,7 @@ public class EventHolderFragment extends Fragment {
                 switch (resultCode) {
                     case Activity.RESULT_OK:
                         String stringExtra = data.getStringExtra(ScheduleNameDialog.EXTRA_SCHEDULE_CODE);
-                        undo("stringExtra Schedule name is renamed");
+                        undo(stringExtra + " Schedule name is renamed");
                         break;
                     case Activity.RESULT_CANCELED:
 //                        undo("Schedule name is removed");
@@ -443,13 +445,13 @@ public class EventHolderFragment extends Fragment {
 
     private void undo(String message) {
         Snackbar snack = Snackbar.make(getView(), message, Snackbar.LENGTH_LONG);
-        snack.setAction(R.string.undo, new View.OnClickListener() {
+        snack.setAction("Undo", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 L.e("Undo");
             }
         });
-        snack.setActionTextColor(android.R.color.holo_red_light);
+        snack.setActionTextColor(Color.RED);
         snack.show();
     }
 

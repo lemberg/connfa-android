@@ -31,6 +31,11 @@ public class FriendsScheduleManager {
         return list.get(scheduleNumber).getFriendId();
     }
 
+    public String getCurrentFriendScheduleName() {
+        return list.get(scheduleNumber).getScheduleName();
+    }
+
+
     public void addSchedule(String friendId) {
         list.add(new FriendsFavoriteSchedule(friendId, "Schedule" + friendId));
     }

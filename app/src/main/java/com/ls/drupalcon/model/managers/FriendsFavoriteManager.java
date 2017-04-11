@@ -1,6 +1,4 @@
 package com.ls.drupalcon.model.managers;
-
-import com.ls.drupalcon.app.App;
 import com.ls.drupalcon.model.Model;
 import com.ls.drupalcon.model.dao.EventDao;
 import com.ls.drupalcon.model.dao.FriendsFavoriteDao;
@@ -15,12 +13,8 @@ public class FriendsFavoriteManager {
 
     private FriendsFavoriteDao mFriendsDao;
 
-    public FriendsFavoriteDao getFriendsTestDao() {
-        return mFriendsDao;
-    }
-
     public FriendsFavoriteManager() {
-        mFriendsDao = new FriendsFavoriteDao(App.getContext());
+        mFriendsDao = new FriendsFavoriteDao();
     }
 
     public List<FriendsFavoriteItem> getAllFriendsFavorite() {
@@ -33,8 +27,8 @@ public class FriendsFavoriteManager {
 
         List<Long> favoriteEventIds = new ArrayList<>();
         for (FriendsFavoriteItem favorite : getAllFriendsFavorite()) {
-            if(favorite.getFriendId().equals(Model.instance().getFriendsScheduleManager().getCurrentFriendId()))
-            favoriteEventIds.add(favorite.getEventId());
+            if (favorite.getFriendId().equals(Model.instance().getFriendsScheduleManager().getCurrentFriendId()))
+                favoriteEventIds.add(favorite.getEventId());
         }
         return favoriteEventIds;
     }
