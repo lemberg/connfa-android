@@ -6,18 +6,18 @@ import com.ls.drupalcon.model.data.SharedSchedule;
 import com.ls.drupalcon.model.database.AbstractEntityDAO;
 
 
-public class SharedScheduleDao extends AbstractEntityDAO<SharedSchedule, String> {
+public class SharedScheduleDao extends AbstractEntityDAO<SharedSchedule, Long> {
 
     public static final String TABLE_NAME = "table_shared_schedules";
 
     @Override
     protected String getSearchCondition() {
-        return FloorPlan.COLUMN_ID + "=?";
+        return SharedSchedule.COLUMN_ID + "=?";
     }
 
     @Override
-    protected String[] getSearchConditionArguments(String theId) {
-        return new String[]{theId};
+    protected String[] getSearchConditionArguments(Long theId) {
+        return new String[]{theId.toString()};
     }
 
     @Override

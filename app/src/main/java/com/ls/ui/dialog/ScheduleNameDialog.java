@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 
 import com.ls.drupalcon.R;
+import com.ls.utils.L;
 
 public class ScheduleNameDialog extends DialogFragment {
 

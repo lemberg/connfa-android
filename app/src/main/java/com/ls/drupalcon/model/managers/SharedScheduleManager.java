@@ -5,6 +5,7 @@ import android.widget.Toast;
 import com.ls.drupalcon.app.App;
 import com.ls.drupalcon.model.dao.SharedScheduleDao;
 import com.ls.drupalcon.model.data.SharedSchedule;
+import com.ls.utils.L;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,11 +13,12 @@ import java.util.List;
 public class SharedScheduleManager {
     private SharedScheduleDao sharedScheduleDao;
     private List<SharedSchedule> list = new ArrayList<>();
-    private int scheduleNumber;
+    //    private int scheduleNumber;
+    private SharedSchedule currentSchedule;
 
     public SharedScheduleManager() {
         this.sharedScheduleDao = new SharedScheduleDao();
-        this.sharedScheduleDao.saveDataSafe(new SharedSchedule("My schedule", "My schedule"));
+        this.sharedScheduleDao.saveDataSafe(new SharedSchedule(0000, "My schedule"));
         this.list.addAll(this.sharedScheduleDao.getAllSafe());
     }
 
@@ -24,7 +26,7 @@ public class SharedScheduleManager {
         return sharedScheduleDao;
     }
 
-    public List<String> getAllScheduleList() {
+    public List<String> getAllSchedulesNameList() {
         List<String> result = new ArrayList<>();
         for (SharedSchedule item : list) {
             result.add(item.getScheduleName());
@@ -33,16 +35,17 @@ public class SharedScheduleManager {
 
     }
 
-    public void setScheduleNumber(int scheduleNumber) {
-        this.scheduleNumber = scheduleNumber;
+    public void setCurrentSchedule(int scheduleOrder) {
+        this.currentSchedule = list.get(scheduleOrder);
     }
 
     public SharedSchedule getCurrentSchedule() {
-        return list.get(scheduleNumber);
+        L.e("getCurrentSchedule = " + currentSchedule);
+        return currentSchedule;
     }
 
-    public String getCurrentFriendId() {
-        return getCurrentSchedule().getId();
+    public long getCurrentScheduleId() {
+        return currentSchedule.getId();
     }
 
     public String getCurrentFriendScheduleName() {
@@ -50,8 +53,8 @@ public class SharedScheduleManager {
     }
 
 
-    public void addSchedule(String friendId) {
-        SharedSchedule sharedSchedule = new SharedSchedule(friendId, "Schedule " + friendId);
+    public void addSchedule(long scheduleCode) {
+        SharedSchedule sharedSchedule = new SharedSchedule(scheduleCode, "Schedule " + scheduleCode);
         if (list.contains(sharedSchedule)) {
             Toast.makeText(App.getContext(), "This schedule already exist", Toast.LENGTH_LONG).show();
         } else {
@@ -60,8 +63,9 @@ public class SharedScheduleManager {
         }
     }
 
-    public void renameSchedule(String friendId) {
-        SharedSchedule sharedSchedule = new SharedSchedule(getCurrentFriendId(), "Schedule " + friendId);
+    public void renameSchedule(String newScheduleName) {
+        SharedSchedule sharedSchedule = new SharedSchedule(getCurrentScheduleId(), "Schedule " + newScheduleName);
+        list.set(list.indexOf(currentSchedule), sharedSchedule);
         this.sharedScheduleDao.saveOrUpdateSafe(sharedSchedule);
 
     }

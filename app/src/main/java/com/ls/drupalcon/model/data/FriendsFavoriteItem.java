@@ -12,14 +12,14 @@ import org.jetbrains.annotations.NotNull;
 
 public class FriendsFavoriteItem extends AbstractEntity<Long> implements Comparable<FriendsFavoriteItem> {
     private final static String COLUMN_ID = "_id";
-    private final static String COLUMN_EVENT_ID = "_friend_id";
+    private final static String COLUMN_EVENT_ID = "_shared_schedule_code";
 
 
     @SerializedName("_id")
     private long eventId;
 
-    @SerializedName("_friend_id")
-    private String friendId;
+    @SerializedName("_shared_schedule_code")
+    private long sharedScheduleCode;
 
 
     @Override
@@ -31,7 +31,7 @@ public class FriendsFavoriteItem extends AbstractEntity<Long> implements Compara
     public ContentValues getContentValues() {
         ContentValues result = new ContentValues();
         result.put(COLUMN_ID, eventId);
-        result.put(COLUMN_EVENT_ID, friendId);
+        result.put(COLUMN_EVENT_ID, sharedScheduleCode);
 
         return result;
     }
@@ -40,7 +40,7 @@ public class FriendsFavoriteItem extends AbstractEntity<Long> implements Compara
     public void initialize(Cursor cursor) {
         CursorStringParser parser = new CursorStringParser(cursor);
         eventId = parser.readLong(COLUMN_ID);
-        friendId = parser.readString(COLUMN_EVENT_ID);
+        sharedScheduleCode = parser.readLong(COLUMN_EVENT_ID);
     }
 
     @Override
@@ -66,27 +66,27 @@ public class FriendsFavoriteItem extends AbstractEntity<Long> implements Compara
         this.eventId = eventId;
     }
 
-    public String getFriendId() {
-        return friendId;
+    public long getSharedScheduleCode() {
+        return sharedScheduleCode;
     }
 
-    public void setFriendId(String friendId) {
-        this.friendId = friendId;
+    public void setSharedScheduleCode(long sharedScheduleCode) {
+        this.sharedScheduleCode = sharedScheduleCode;
     }
 
     public FriendsFavoriteItem() {
     }
 
-    public FriendsFavoriteItem(long eventId, String friendId) {
+    public FriendsFavoriteItem(long eventId, long friendId) {
         this.eventId = eventId;
-        this.friendId = friendId;
+        this.sharedScheduleCode = friendId;
     }
 
     @Override
     public String toString() {
         return "FriendsFavoriteItem{" +
                 "eventId=" + eventId +
-                ", friendId='" + friendId + '\'' +
+                ", sharedScheduleCode='" + sharedScheduleCode + '\'' +
                 '}';
     }
 }

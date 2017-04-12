@@ -41,7 +41,7 @@ public class AddScheduleDialog extends DialogFragment {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
-                getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, getActivity().getIntent().putExtra(EXTRA_SCHEDULE_CODE, editTextId.getText().toString()));
+                getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, getActivity().getIntent().putExtra(EXTRA_SCHEDULE_CODE, Long.parseLong(editTextId.getText().toString())));
             }
         });
 

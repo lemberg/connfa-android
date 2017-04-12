@@ -7,18 +7,18 @@ import android.database.Cursor;
 import com.ls.drupalcon.model.database.AbstractEntity;
 import com.ls.utils.CursorStringParser;
 
-public class SharedSchedule extends AbstractEntity<String> {
-    private final static String COLUMN_ID = "_id";
+public class SharedSchedule extends AbstractEntity<Long> {
+    public final static String COLUMN_ID = "_id";
     private final static String COLUMN_SCHEDULE_NAME_ID = "_schedule_name_id";
 
-    private String friendId;
+    private Long friendId;
     private String scheduleName;
 
     public SharedSchedule() {
     }
 
     @Override
-    public String getId() {
+    public Long getId() {
         return friendId;
     }
 
@@ -34,17 +34,13 @@ public class SharedSchedule extends AbstractEntity<String> {
     @Override
     public void initialize(Cursor theCursor) {
         CursorStringParser parser = new CursorStringParser(theCursor);
-        friendId = parser.readString(COLUMN_ID);
+        friendId = parser.readLong(COLUMN_ID);
         scheduleName = parser.readString(COLUMN_SCHEDULE_NAME_ID);
     }
 
-    public SharedSchedule(String friendId, String scheduleName) {
+    public SharedSchedule(long friendId, String scheduleName) {
         this.friendId = friendId;
         this.scheduleName = scheduleName;
-    }
-
-    public void setFriendId(String friendId) {
-        this.friendId = friendId;
     }
 
     public String getScheduleName() {

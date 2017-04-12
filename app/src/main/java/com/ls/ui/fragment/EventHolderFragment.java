@@ -1,9 +1,6 @@
 package com.ls.ui.fragment;
 
 import com.astuetz.PagerSlidingTabStrip;
-import com.ls.drupalcon.model.data.SharedSchedule;
-import com.ls.drupalcon.model.managers.BofsManager;
-import com.ls.drupalcon.model.managers.LocationManager;
 import com.ls.drupalcon.model.managers.SharedScheduleManager;
 import com.ls.ui.dialog.AddScheduleDialog;
 import com.ls.ui.dialog.ScheduleNameDialog;
@@ -354,9 +351,9 @@ public class EventHolderFragment extends Fragment implements SwipeRefreshLayout.
     }
 
     private void setCustomToolBar() {
-        List<String> allScheduleList = Model.instance().getSharedScheduleManager().getAllScheduleList();
+        List<String> allScheduleList = Model.instance().getSharedScheduleManager().getAllSchedulesNameList();
         L.e("allScheduleList = " + allScheduleList.size());
-        if (Model.instance().getSharedScheduleManager().getAllScheduleList().size() < 2) {
+        if (Model.instance().getSharedScheduleManager().getAllSchedulesNameList().size() < 2) {
             return;
         }
         AppCompatActivity activity = (AppCompatActivity) getActivity();
@@ -364,7 +361,7 @@ public class EventHolderFragment extends Fragment implements SwipeRefreshLayout.
         android.support.v7.app.ActionBar toolbar = activity.getSupportActionBar();
 
         SharedScheduleManager sharedScheduleManager = Model.instance().getSharedScheduleManager();
-        spinnerAdapter = new ArrayAdapter<>(getContext(), R.layout.item_spinner, sharedScheduleManager.getAllScheduleList());
+        spinnerAdapter = new ArrayAdapter<>(getContext(), R.layout.item_spinner, sharedScheduleManager.getAllSchedulesNameList());
         spinnerAdapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item);
         Spinner navigationSpinner = new Spinner(getContext());
         navigationSpinner.setAdapter(spinnerAdapter);
@@ -376,7 +373,7 @@ public class EventHolderFragment extends Fragment implements SwipeRefreshLayout.
         navigationSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Model.instance().getSharedScheduleManager().setScheduleNumber(position);
+                Model.instance().getSharedScheduleManager().setCurrentSchedule(position);
                 if (position == 0) {
                     strategy = new FavoritesStrategy();
                     isMySchedule = true;
@@ -438,13 +435,13 @@ public class EventHolderFragment extends Fragment implements SwipeRefreshLayout.
             case ADD_SCHEDULE_DIALOG_REQUEST_CODE:
                 switch (resultCode) {
                     case Activity.RESULT_OK:
-                        String stringExtra = data.getStringExtra(ScheduleNameDialog.EXTRA_SCHEDULE_CODE);
-                        Model.instance().getSharedScheduleManager().addSchedule(stringExtra);
+                        long id = data.getLongExtra(AddScheduleDialog.EXTRA_SCHEDULE_CODE, -1);
+                        Model.instance().getSharedScheduleManager().addSchedule(id);
                         if (spinnerAdapter == null) {
                             setCustomToolBar();
                         } else {
                             spinnerAdapter.clear();
-                            spinnerAdapter.addAll(Model.instance().getSharedScheduleManager().getAllScheduleList());
+                            spinnerAdapter.addAll(Model.instance().getSharedScheduleManager().getAllSchedulesNameList());
                         }
                         break;
                     case Activity.RESULT_CANCELED:
@@ -458,6 +455,8 @@ public class EventHolderFragment extends Fragment implements SwipeRefreshLayout.
                         String newName = data.getStringExtra(ScheduleNameDialog.EXTRA_SCHEDULE_CODE);
                         undo(newName + " schedule name is renamed");
                         Model.instance().getSharedScheduleManager().renameSchedule(newName);
+                        spinnerAdapter.clear();
+                        spinnerAdapter.addAll(Model.instance().getSharedScheduleManager().getAllSchedulesNameList());
                         break;
                     case Activity.RESULT_CANCELED:
 //                        undo("Schedule name is removed");

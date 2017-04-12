@@ -27,7 +27,7 @@ public class FriendsFavoriteManager {
 
         List<Long> favoriteEventIds = new ArrayList<>();
         for (FriendsFavoriteItem favorite : getAllFriendsFavorite()) {
-            if (favorite.getFriendId().equals(Model.instance().getSharedScheduleManager().getCurrentFriendId()))
+            if (favorite.getSharedScheduleCode() == (Model.instance().getSharedScheduleManager().getCurrentScheduleId()))
                 favoriteEventIds.add(favorite.getEventId());
         }
         return favoriteEventIds;
@@ -36,13 +36,15 @@ public class FriendsFavoriteManager {
     public List<Event> getAllFriendsFavoriteEvent() {
         EventManager eventManager = Model.instance().getEventManager();
         EventDao eventDao = eventManager.getEventDao();
-        return eventDao.selectEventsByIdsSafe(getFavoriteEventIds());
+        List<Event> events = eventDao.selectEventsByIdsSafe(getFavoriteEventIds());
+        L.e("getAllFriendsFavoriteEvent = " + events.toString());
+        return events;
     }
 
     public void saveFavorite(long id) {
         SharedScheduleManager sharedScheduleManager = Model.instance().getSharedScheduleManager();
-        String currentFriendId = sharedScheduleManager.getCurrentFriendId();
-        mFriendsDao.saveDataSafe(new FriendsFavoriteItem(id, currentFriendId));
+        long currentScheduleId = sharedScheduleManager.getCurrentScheduleId();
+        mFriendsDao.saveDataSafe(new FriendsFavoriteItem(id, currentScheduleId));
     }
 
 
