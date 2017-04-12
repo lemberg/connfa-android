@@ -1,6 +1,9 @@
 package com.ls.ui.fragment;
 
 import com.astuetz.PagerSlidingTabStrip;
+import com.ls.drupalcon.model.data.SharedSchedule;
+import com.ls.drupalcon.model.managers.BofsManager;
+import com.ls.drupalcon.model.managers.LocationManager;
 import com.ls.drupalcon.model.managers.SharedScheduleManager;
 import com.ls.ui.dialog.AddScheduleDialog;
 import com.ls.ui.dialog.ScheduleNameDialog;
@@ -23,6 +26,7 @@ import com.ls.ui.drawer.SocialStrategy;
 import com.ls.ui.receiver.ReceiverManager;
 import com.ls.utils.DateUtils;
 import com.ls.utils.L;
+import com.ls.utils.NetworkUtils;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -37,6 +41,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -49,10 +54,11 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
-public class EventHolderFragment extends Fragment {
+public class EventHolderFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
     public static final String TAG = "ProjectsFragment";
     private static final String EXTRAS_ARG_MODE = "EXTRAS_ARG_MODE";
@@ -70,12 +76,14 @@ public class EventHolderFragment extends Fragment {
     private boolean mIsFilterUsed;
     private EventHolderFragmentStrategy strategy;
     private boolean isMySchedule = true;
-
+    private SwipeRefreshLayout refreshLayout;
+    private ArrayAdapter<String> spinnerAdapter;
 
     private UpdatesManager.DataUpdatedListener updateReceiver = new UpdatesManager.DataUpdatedListener() {
         @Override
         public void onDataUpdated(List<UpdateRequest> requests) {
             updateData(requests);
+            refreshLayout.setRefreshing(false);
         }
     };
     private ReceiverManager favoriteReceiver = new ReceiverManager(new ReceiverManager.FavoriteUpdatedListener() {
@@ -225,6 +233,19 @@ public class EventHolderFragment extends Fragment {
 
         setHasOptionsMenu(true);
 
+        refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefresh);
+        refreshLayout.setOnRefreshListener(this);
+    }
+
+    @Override
+    public void onRefresh() {
+        if (NetworkUtils.isOn(getContext())) {
+            UpdatesManager manager = Model.instance().getUpdatesManager();
+            manager.startLoading(null);
+        } else {
+            Toast.makeText(getContext(), getString(R.string.NoConnectionMessage), Toast.LENGTH_LONG).show();
+            refreshLayout.setRefreshing(false);
+        }
     }
 
     class LoadData extends AsyncTask<Void, Void, List<Long>> {
@@ -343,10 +364,10 @@ public class EventHolderFragment extends Fragment {
         android.support.v7.app.ActionBar toolbar = activity.getSupportActionBar();
 
         SharedScheduleManager sharedScheduleManager = Model.instance().getSharedScheduleManager();
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), R.layout.item_spinner, sharedScheduleManager.getAllScheduleList());
-        adapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item);
+        spinnerAdapter = new ArrayAdapter<>(getContext(), R.layout.item_spinner, sharedScheduleManager.getAllScheduleList());
+        spinnerAdapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item);
         Spinner navigationSpinner = new Spinner(getContext());
-        navigationSpinner.setAdapter(adapter);
+        navigationSpinner.setAdapter(spinnerAdapter);
         if (toolbar != null) {
             toolbar.setCustomView(navigationSpinner);
             toolbar.setDisplayShowCustomEnabled(true);
@@ -419,7 +440,12 @@ public class EventHolderFragment extends Fragment {
                     case Activity.RESULT_OK:
                         String stringExtra = data.getStringExtra(ScheduleNameDialog.EXTRA_SCHEDULE_CODE);
                         Model.instance().getSharedScheduleManager().addSchedule(stringExtra);
-                        setCustomToolBar();
+                        if (spinnerAdapter == null) {
+                            setCustomToolBar();
+                        } else {
+                            spinnerAdapter.clear();
+                            spinnerAdapter.addAll(Model.instance().getSharedScheduleManager().getAllScheduleList());
+                        }
                         break;
                     case Activity.RESULT_CANCELED:
 //                        undo("Schedule name is removed");
