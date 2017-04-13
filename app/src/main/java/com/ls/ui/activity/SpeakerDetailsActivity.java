@@ -354,8 +354,6 @@ public class SpeakerDetailsActivity extends StackKeeperActivity implements View.
             if (resolveInfoList.size() > 0) {
                 ResolveInfo info = resolveInfoList.get(0);
                 String browserPackageName = info.activityInfo.packageName;
-                L.e("packageName = " + browserPackageName);
-
                 Intent intent = new Intent(Intent.ACTION_VIEW);
                 intent.setData(Uri.parse(url));
                 intent.setPackage(browserPackageName);

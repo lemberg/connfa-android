@@ -19,7 +19,6 @@ public class FriendsFavoriteManager {
 
     public List<FriendsFavoriteItem> getAllFriendsFavorite() {
         List<FriendsFavoriteItem> allSafe = mFriendsDao.getAllSafe();
-        L.e("getAllFriendsFavorite = " + allSafe.toString());
         return allSafe;
     }
 
@@ -37,7 +36,6 @@ public class FriendsFavoriteManager {
         EventManager eventManager = Model.instance().getEventManager();
         EventDao eventDao = eventManager.getEventDao();
         List<Event> events = eventDao.selectEventsByIdsSafe(getFavoriteEventIds());
-        L.e("getAllFriendsFavoriteEvent = " + events.toString());
         return events;
     }
 

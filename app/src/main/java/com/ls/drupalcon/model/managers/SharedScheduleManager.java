@@ -2,6 +2,7 @@ package com.ls.drupalcon.model.managers;
 
 import android.widget.Toast;
 
+import com.ls.drupalcon.R;
 import com.ls.drupalcon.app.App;
 import com.ls.drupalcon.model.dao.FriendsFavoriteDao;
 import com.ls.drupalcon.model.dao.SharedScheduleDao;
@@ -15,13 +16,12 @@ public class SharedScheduleManager {
     private SharedScheduleDao sharedScheduleDao;
     private FriendsFavoriteDao mFriendsDao;
     private List<SharedSchedule> list = new ArrayList<>();
-    //    private int scheduleNumber;
     private SharedSchedule currentSchedule;
 
     public SharedScheduleManager() {
         this.sharedScheduleDao = new SharedScheduleDao();
         this.mFriendsDao = new FriendsFavoriteDao();
-        this.sharedScheduleDao.saveDataSafe(new SharedSchedule(0000, "My schedule"));
+        this.sharedScheduleDao.saveDataSafe(new SharedSchedule(-1, App.getContext().getString(R.string.my_schedule)));
         this.list.addAll(this.sharedScheduleDao.getAllSafe());
     }
 
@@ -43,7 +43,6 @@ public class SharedScheduleManager {
     }
 
     public SharedSchedule getCurrentSchedule() {
-        L.e("getCurrentSchedule = " + currentSchedule);
         return currentSchedule;
     }
 

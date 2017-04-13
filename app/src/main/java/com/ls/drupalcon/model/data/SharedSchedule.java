@@ -11,7 +11,7 @@ public class SharedSchedule extends AbstractEntity<Long> {
     public final static String COLUMN_ID = "_id";
     private final static String COLUMN_SCHEDULE_NAME_ID = "_schedule_name_id";
 
-    private Long friendId;
+    private Long scheduleCode;
     private String scheduleName;
 
     public SharedSchedule() {
@@ -19,13 +19,13 @@ public class SharedSchedule extends AbstractEntity<Long> {
 
     @Override
     public Long getId() {
-        return friendId;
+        return scheduleCode;
     }
 
     @Override
     public ContentValues getContentValues() {
         ContentValues result = new ContentValues();
-        result.put(COLUMN_ID, friendId);
+        result.put(COLUMN_ID, scheduleCode);
         result.put(COLUMN_SCHEDULE_NAME_ID, scheduleName);
 
         return result;
@@ -34,12 +34,12 @@ public class SharedSchedule extends AbstractEntity<Long> {
     @Override
     public void initialize(Cursor theCursor) {
         CursorStringParser parser = new CursorStringParser(theCursor);
-        friendId = parser.readLong(COLUMN_ID);
+        scheduleCode = parser.readLong(COLUMN_ID);
         scheduleName = parser.readString(COLUMN_SCHEDULE_NAME_ID);
     }
 
     public SharedSchedule(long friendId, String scheduleName) {
-        this.friendId = friendId;
+        this.scheduleCode = friendId;
         this.scheduleName = scheduleName;
     }
 
@@ -54,7 +54,7 @@ public class SharedSchedule extends AbstractEntity<Long> {
     @Override
     public String toString() {
         return "SharedSchedule{" +
-                "friendId='" + friendId + '\'' +
+                "scheduleCode='" + scheduleCode + '\'' +
                 ", scheduleName='" + scheduleName + '\'' +
                 '}';
     }
@@ -66,7 +66,7 @@ public class SharedSchedule extends AbstractEntity<Long> {
 
         SharedSchedule that = (SharedSchedule) o;
 
-        if (friendId != null ? !friendId.equals(that.friendId) : that.friendId != null)
+        if (scheduleCode != null ? !scheduleCode.equals(that.scheduleCode) : that.scheduleCode != null)
             return false;
         return scheduleName != null ? scheduleName.equals(that.scheduleName) : that.scheduleName == null;
 
@@ -74,7 +74,7 @@ public class SharedSchedule extends AbstractEntity<Long> {
 
     @Override
     public int hashCode() {
-        int result = friendId != null ? friendId.hashCode() : 0;
+        int result = scheduleCode != null ? scheduleCode.hashCode() : 0;
         result = 31 * result + (scheduleName != null ? scheduleName.hashCode() : 0);
         return result;
     }

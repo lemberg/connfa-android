@@ -161,10 +161,10 @@ public class EventHolderFragment extends Fragment implements SwipeRefreshLayout.
                 showScheduleNameDialog();
                 break;
             case R.id.actionRemoveSchedule:
-                undo(Model.instance().getSharedScheduleManager().getCurrentFriendScheduleName() + "is removed");
+                undo(Model.instance().getSharedScheduleManager().getCurrentFriendScheduleName() + " is removed");
                 Model.instance().getSharedScheduleManager().deleteSharedSchedule();
                 refreshSpinner();
-                navigationSpinner.setSelection(0);
+                setSpinnerPosition(0);
                 break;
         }
         return true;
@@ -355,9 +355,7 @@ public class EventHolderFragment extends Fragment implements SwipeRefreshLayout.
     }
 
     private void setCustomToolBar() {
-        List<String> allScheduleList = Model.instance().getSharedScheduleManager().getAllSchedulesNameList();
-        L.e("allScheduleList = " + allScheduleList.size());
-        if (Model.instance().getSharedScheduleManager().getAllSchedulesNameList().size() < 2) {
+        if (Model.instance().getSharedScheduleManager().getAllSchedulesNameList().size() == 1) {
             return;
         }
         AppCompatActivity activity = (AppCompatActivity) getActivity();
@@ -409,10 +407,10 @@ public class EventHolderFragment extends Fragment implements SwipeRefreshLayout.
         }
     }
 
-    private void setToolbarTitle(){
+    private void setToolbarTitle() {
         AppCompatActivity activity = (AppCompatActivity) getActivity();
         android.support.v7.app.ActionBar toolbar = activity.getSupportActionBar();
-        if(toolbar != null){
+        if (toolbar != null) {
             toolbar.setTitle(getString(R.string.my_schedule));
         }
     }
@@ -447,8 +445,8 @@ public class EventHolderFragment extends Fragment implements SwipeRefreshLayout.
             case ADD_SCHEDULE_DIALOG_REQUEST_CODE:
                 switch (resultCode) {
                     case Activity.RESULT_OK:
-                        long id = data.getLongExtra(AddScheduleDialog.EXTRA_SCHEDULE_CODE, -1);
-                        Model.instance().getSharedScheduleManager().addSchedule(id);
+                        long scheduleCode = data.getLongExtra(AddScheduleDialog.EXTRA_SCHEDULE_CODE, -1);
+                        Model.instance().getSharedScheduleManager().addSchedule(scheduleCode);
                         if (spinnerAdapter == null) {
                             setCustomToolBar();
                         } else {
@@ -501,6 +499,10 @@ public class EventHolderFragment extends Fragment implements SwipeRefreshLayout.
             spinnerAdapter.clear();
             spinnerAdapter.addAll(sharedScheduleManager.getAllSchedulesNameList());
         }
+    }
+
+    private void setSpinnerPosition(int position) {
+        navigationSpinner.setSelection(position);
     }
 
 

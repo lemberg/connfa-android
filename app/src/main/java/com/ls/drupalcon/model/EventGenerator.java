@@ -96,7 +96,6 @@ public class EventGenerator {
 
         FavoriteManager favoriteManager = new FavoriteManager();
         List<Long> favoriteEventIds = favoriteManager.getFavoriteEventsSafe();
-        L.e("Favorites  = " + favoriteEventIds);
         List<EventListItem> eventListItems = mProgramManager.getFavoriteProgramItemsSafe(favoriteEventIds, day);
         if (mShouldBreak) {
             return new ArrayList<>();

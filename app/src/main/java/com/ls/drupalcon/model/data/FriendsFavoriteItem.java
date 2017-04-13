@@ -12,14 +12,15 @@ import org.jetbrains.annotations.NotNull;
 
 public class FriendsFavoriteItem extends AbstractEntity<Long> implements Comparable<FriendsFavoriteItem> {
     private final static String COLUMN_ID = "_id";
-    private final static String COLUMN_EVENT_ID = "_shared_schedule_code";
-
+    private final static String COLUMN_EVENT_ID = "_event_id";
 
     @SerializedName("_id")
+    private long sharedScheduleCode;
+
+    @SerializedName("_event_id")
     private long eventId;
 
-    @SerializedName("_shared_schedule_code")
-    private long sharedScheduleCode;
+
 
 
     @Override
