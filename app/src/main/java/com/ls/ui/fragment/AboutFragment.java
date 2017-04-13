@@ -4,8 +4,10 @@ import com.ls.drupalcon.R;
 import com.ls.drupalcon.model.Model;
 import com.ls.drupalcon.model.UpdateRequest;
 import com.ls.drupalcon.model.UpdatesManager;
+import com.ls.drupalcon.model.dao.FriendsFavoriteDao;
 import com.ls.drupalcon.model.dao.SharedScheduleDao;
 import com.ls.drupalcon.model.data.InfoItem;
+import com.ls.drupalcon.model.managers.FriendsFavoriteManager;
 import com.ls.drupalcon.model.managers.SharedScheduleManager;
 import com.ls.drupalcon.model.managers.InfoManager;
 import com.ls.ui.activity.AboutDetailsActivity;
@@ -51,8 +53,11 @@ public class AboutFragment extends Fragment {
         super.onCreate(savedInstanceState);
         Model.instance().getUpdatesManager().registerUpdateListener(updateListener);
         SharedScheduleManager sharedScheduleManager = Model.instance().getSharedScheduleManager();
+        FriendsFavoriteManager friendsFavoriteManager = Model.instance().getFriendsFavoriteManager();
         SharedScheduleDao sharedScheduleDao = sharedScheduleManager.getSharedScheduleDao();
+        FriendsFavoriteDao FriendsFavoriteDao = friendsFavoriteManager.getmFriendsDao();
         L.e("SharedScheduleDao = " + sharedScheduleDao.getAllSafe().toString());
+        L.e("FriendsFavoriteDao = " + FriendsFavoriteDao.getAllSafe().toString());
     }
 
     @Nullable

@@ -47,5 +47,7 @@ public class FriendsFavoriteManager {
         mFriendsDao.saveDataSafe(new FriendsFavoriteItem(id, currentScheduleId));
     }
 
-
+    public FriendsFavoriteDao getmFriendsDao() {
+        return mFriendsDao;
+    }
 }

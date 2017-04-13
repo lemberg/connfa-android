@@ -75,6 +75,7 @@ public class EventHolderFragment extends Fragment implements SwipeRefreshLayout.
     private boolean isMySchedule = true;
     private SwipeRefreshLayout refreshLayout;
     private ArrayAdapter<String> spinnerAdapter;
+    private Spinner navigationSpinner;
 
     private UpdatesManager.DataUpdatedListener updateReceiver = new UpdatesManager.DataUpdatedListener() {
         @Override
@@ -161,6 +162,9 @@ public class EventHolderFragment extends Fragment implements SwipeRefreshLayout.
                 break;
             case R.id.actionRemoveSchedule:
                 undo(Model.instance().getSharedScheduleManager().getCurrentFriendScheduleName() + "is removed");
+                Model.instance().getSharedScheduleManager().deleteSharedSchedule();
+                refreshSpinner();
+                navigationSpinner.setSelection(0);
                 break;
         }
         return true;
@@ -363,7 +367,7 @@ public class EventHolderFragment extends Fragment implements SwipeRefreshLayout.
         SharedScheduleManager sharedScheduleManager = Model.instance().getSharedScheduleManager();
         spinnerAdapter = new ArrayAdapter<>(getContext(), R.layout.item_spinner, sharedScheduleManager.getAllSchedulesNameList());
         spinnerAdapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item);
-        Spinner navigationSpinner = new Spinner(getContext());
+        navigationSpinner = new Spinner(getContext());
         navigationSpinner.setAdapter(spinnerAdapter);
         if (toolbar != null) {
             toolbar.setCustomView(navigationSpinner);
@@ -405,6 +409,14 @@ public class EventHolderFragment extends Fragment implements SwipeRefreshLayout.
         }
     }
 
+    private void setToolbarTitle(){
+        AppCompatActivity activity = (AppCompatActivity) getActivity();
+        android.support.v7.app.ActionBar toolbar = activity.getSupportActionBar();
+        if(toolbar != null){
+            toolbar.setTitle(getString(R.string.my_schedule));
+        }
+    }
+
     private boolean isFavoriteScreen() {
         return strategy.getEventMode() == EventMode.Favorites || strategy.getEventMode() == EventMode.SharedSchedules;
     }
@@ -440,8 +452,7 @@ public class EventHolderFragment extends Fragment implements SwipeRefreshLayout.
                         if (spinnerAdapter == null) {
                             setCustomToolBar();
                         } else {
-                            spinnerAdapter.clear();
-                            spinnerAdapter.addAll(Model.instance().getSharedScheduleManager().getAllSchedulesNameList());
+                            refreshSpinner();
                         }
                         break;
                     case Activity.RESULT_CANCELED:
@@ -455,8 +466,7 @@ public class EventHolderFragment extends Fragment implements SwipeRefreshLayout.
                         String newName = data.getStringExtra(ScheduleNameDialog.EXTRA_SCHEDULE_CODE);
                         undo(newName + " schedule name is renamed");
                         Model.instance().getSharedScheduleManager().renameSchedule(newName);
-                        spinnerAdapter.clear();
-                        spinnerAdapter.addAll(Model.instance().getSharedScheduleManager().getAllSchedulesNameList());
+                        refreshSpinner();
                         break;
                     case Activity.RESULT_CANCELED:
 //                        undo("Schedule name is removed");
@@ -477,6 +487,20 @@ public class EventHolderFragment extends Fragment implements SwipeRefreshLayout.
         });
         snack.setActionTextColor(Color.RED);
         snack.show();
+    }
+
+    private void refreshSpinner() {
+        SharedScheduleManager sharedScheduleManager = Model.instance().getSharedScheduleManager();
+        List<String> allSchedulesNameList = sharedScheduleManager.getAllSchedulesNameList();
+        if (allSchedulesNameList.size() == 1) {
+            disableCustomToolBar();
+            setToolbarTitle();
+            isMySchedule = true;
+            getActivity().invalidateOptionsMenu();
+        } else {
+            spinnerAdapter.clear();
+            spinnerAdapter.addAll(sharedScheduleManager.getAllSchedulesNameList());
+        }
     }
 
 
