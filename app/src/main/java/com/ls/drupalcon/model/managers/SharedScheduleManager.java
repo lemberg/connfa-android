@@ -11,12 +11,18 @@ import com.ls.utils.L;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class SharedScheduleManager {
     private SharedScheduleDao sharedScheduleDao;
     private FriendsFavoriteDao mFriendsDao;
     private List<SharedSchedule> list = new ArrayList<>();
     private SharedSchedule currentSchedule;
+    private SharedSchedule newSchedule;
+    private List<SharedSchedule> scheduleTemp= new ArrayList<>();
+    private SharedSchedule currentScheduleTemp;
+    private Timer timer = new Timer();
 
     public SharedScheduleManager() {
         this.sharedScheduleDao = new SharedScheduleDao();
@@ -35,7 +41,6 @@ public class SharedScheduleManager {
             result.add(item.getScheduleName());
         }
         return result;
-
     }
 
     public void setCurrentSchedule(int scheduleOrder) {
@@ -55,13 +60,17 @@ public class SharedScheduleManager {
     }
 
 
-    public void addSchedule(long scheduleCode) {
-        SharedSchedule sharedSchedule = new SharedSchedule(scheduleCode, "Schedule " + scheduleCode);
-        if (list.contains(sharedSchedule)) {
+    public void setNewScheduleCode(long scheduleCode){
+        this.newSchedule = new SharedSchedule();
+        this.newSchedule.setScheduleCode(scheduleCode);
+    }
+    public void createSchedule(String scheduleName) {
+        this.newSchedule.setScheduleName(scheduleName);
+        if (list.contains(newSchedule)) {
             Toast.makeText(App.getContext(), "This schedule already exist", Toast.LENGTH_LONG).show();
         } else {
-            list.add(sharedSchedule);
-            this.sharedScheduleDao.saveDataSafe(sharedSchedule);
+            list.add(newSchedule);
+            this.sharedScheduleDao.saveDataSafe(newSchedule);
         }
     }
 
@@ -72,14 +81,38 @@ public class SharedScheduleManager {
 
     }
 
+//    public void deleteSharedSchedule(){
+//        this.sharedScheduleDao.deleteDataSafe(currentSchedule.getId());
+////        int currentPosition = list.indexOf(currentSchedule);
+//        list.remove(currentSchedule);
+//        L.e("Updated list = " + list.toString());
+//        this.mFriendsDao.deleteDataSafe(currentSchedule.getId());
+////        this.currentSchedule = list.get(currentPosition - 1);
+//        this.currentSchedule = list.get(0);
+//    }
+
     public void deleteSharedSchedule(){
+        //temp
+        scheduleTemp = list;
+        currentScheduleTemp = currentSchedule;
+
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                L.e("Timer");
+            }
+        }, 2000);
         this.sharedScheduleDao.deleteDataSafe(currentSchedule.getId());
-//        int currentPosition = list.indexOf(currentSchedule);
         list.remove(currentSchedule);
-        L.e("Updated list = " + list.toString());
         this.mFriendsDao.deleteDataSafe(currentSchedule.getId());
-//        this.currentSchedule = list.get(currentPosition - 1);
         this.currentSchedule = list.get(0);
+
     }
+
+//    public void restoreSchedule(){
+//        list.add(currentScheduleTemp);
+//        this.mFriendsDao.saveOrUpdate();
+//        this.sharedScheduleDao.saveDataSafe();
+//    }
 
 }

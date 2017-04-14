@@ -47,10 +47,6 @@ public class SharedSchedule extends AbstractEntity<Long> {
         return scheduleName;
     }
 
-    public void setScheduleName(String scheduleName) {
-        this.scheduleName = scheduleName;
-    }
-
     @Override
     public String toString() {
         return "SharedSchedule{" +
@@ -77,5 +73,13 @@ public class SharedSchedule extends AbstractEntity<Long> {
         int result = scheduleCode != null ? scheduleCode.hashCode() : 0;
         result = 31 * result + (scheduleName != null ? scheduleName.hashCode() : 0);
         return result;
+    }
+
+    public void setScheduleCode(Long scheduleCode) {
+        this.scheduleCode = scheduleCode;
+    }
+
+    public void setScheduleName(String scheduleName) {
+        this.scheduleName = scheduleName;
     }
 }
