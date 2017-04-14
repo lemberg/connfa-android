@@ -76,6 +76,7 @@ public class SharedScheduleManager {
         this.sharedScheduleDao.deleteDataSafe(currentSchedule.getId());
 //        int currentPosition = list.indexOf(currentSchedule);
         list.remove(currentSchedule);
+        L.e("Updated list = " + list.toString());
         this.mFriendsDao.deleteDataSafe(currentSchedule.getId());
 //        this.currentSchedule = list.get(currentPosition - 1);
         this.currentSchedule = list.get(0);

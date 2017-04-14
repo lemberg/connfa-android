@@ -150,9 +150,6 @@ public class EventHolderFragment extends Fragment implements SwipeRefreshLayout.
                 break;
             case R.id.actionAddSchedule:
                 showAddScheduleDialog();
-//                FragmentTransaction ft = getChildFragmentManager().beginTransaction();
-//                ft.add(new AddScheduleDialog(), NoConnectionDialog.TAG);
-//                ft.commitAllowingStateLoss();
                 break;
             case R.id.actionShareMySchedule:
                 shareSchedule();
@@ -163,6 +160,7 @@ public class EventHolderFragment extends Fragment implements SwipeRefreshLayout.
             case R.id.actionRemoveSchedule:
                 undo(Model.instance().getSharedScheduleManager().getCurrentFriendScheduleName() + " is removed");
                 Model.instance().getSharedScheduleManager().deleteSharedSchedule();
+                mAdapter.notifyDataSetChanged();
                 refreshSpinner();
                 setSpinnerPosition(0);
                 break;
@@ -430,13 +428,13 @@ public class EventHolderFragment extends Fragment implements SwipeRefreshLayout.
     void showAddScheduleDialog() {
         DialogFragment newFragment = AddScheduleDialog.newInstance();
         newFragment.setTargetFragment(this, ADD_SCHEDULE_DIALOG_REQUEST_CODE);
-        newFragment.show(getChildFragmentManager(), "");
+        newFragment.show(getChildFragmentManager(), AddScheduleDialog.TAG);
     }
 
     void showScheduleNameDialog() {
         DialogFragment newFragment = ScheduleNameDialog.newInstance();
         newFragment.setTargetFragment(this, SCHEDULE_NAME_DIALOG_REQUEST_CODE);
-        newFragment.show(getChildFragmentManager(), "");
+        newFragment.show(getChildFragmentManager(), ScheduleNameDialog.TAG);
     }
 
     @Override
@@ -452,6 +450,7 @@ public class EventHolderFragment extends Fragment implements SwipeRefreshLayout.
                         } else {
                             refreshSpinner();
                         }
+                        setSpinnerPosition(Model.instance().getSharedScheduleManager().getAllSchedulesNameList().size() - 1);
                         break;
                     case Activity.RESULT_CANCELED:
 //                        undo("Schedule name is removed");

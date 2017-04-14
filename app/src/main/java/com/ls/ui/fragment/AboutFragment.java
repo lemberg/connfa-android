@@ -55,7 +55,7 @@ public class AboutFragment extends Fragment {
         SharedScheduleManager sharedScheduleManager = Model.instance().getSharedScheduleManager();
         FriendsFavoriteManager friendsFavoriteManager = Model.instance().getFriendsFavoriteManager();
         SharedScheduleDao sharedScheduleDao = sharedScheduleManager.getSharedScheduleDao();
-        FriendsFavoriteDao FriendsFavoriteDao = friendsFavoriteManager.getmFriendsDao();
+        FriendsFavoriteDao FriendsFavoriteDao = friendsFavoriteManager.getFriendsDao();
         L.e("SharedScheduleDao = " + sharedScheduleDao.getAllSafe().toString());
         L.e("FriendsFavoriteDao = " + FriendsFavoriteDao.getAllSafe().toString());
     }
