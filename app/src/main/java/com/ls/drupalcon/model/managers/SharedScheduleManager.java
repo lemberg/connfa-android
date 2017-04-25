@@ -2,15 +2,29 @@ package com.ls.drupalcon.model.managers;
 
 import android.widget.Toast;
 
+import com.google.gson.reflect.TypeToken;
+import com.ls.drupal.DrupalClient;
 import com.ls.drupalcon.R;
 import com.ls.drupalcon.app.App;
+import com.ls.drupalcon.model.Model;
+import com.ls.drupalcon.model.PreferencesManager;
+import com.ls.drupalcon.model.UpdatesManager;
 import com.ls.drupalcon.model.dao.FriendsFavoriteDao;
 import com.ls.drupalcon.model.dao.SharedScheduleDao;
+import com.ls.drupalcon.model.data.Data;
+import com.ls.drupalcon.model.data.PostResponse;
 import com.ls.drupalcon.model.data.SharedSchedule;
+import com.ls.drupalcon.model.data.UpdateDate;
+import com.ls.http.base.BaseRequest;
+import com.ls.http.base.RequestConfig;
+import com.ls.http.base.ResponseData;
 import com.ls.utils.L;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -113,6 +127,44 @@ public class SharedScheduleManager {
 //        list.clear();
 //        list.addAll(schedulesTemp);
 //        timer.cancel();
+    }
+
+    public void postData(){
+        Type dataType = new TypeToken<PostResponse>() {}.getType();
+
+        RequestConfig requestConfig = new RequestConfig();
+        requestConfig.setResponseFormat(BaseRequest.ResponseFormat.JSON);
+        requestConfig.setRequestFormat(BaseRequest.RequestFormat.JSON);
+        requestConfig.setResponseClassSpecifier(PostResponse.class);
+        ArrayList<Integer> ids = new ArrayList<>();
+        ids.add(19);
+        ids.add(32);
+        Map<String, ArrayList<Integer>> objectToPost = new HashMap<>();
+        objectToPost.put("data", ids);
+
+        BaseRequest request = new BaseRequest(BaseRequest.RequestMethod.POST, App.getContext().getString(R.string.api_value_base_url) + "createSchedule", requestConfig);
+        request.setObjectToPost(objectToPost);
+//        String lastDate = PreferencesManager.getInstance().getLastUpdateDate();
+//        request.addRequestHeader(UpdatesManager.IF_MODIFIED_SINCE_HEADER, lastDate);
+
+        DrupalClient client = Model.instance().getClient();
+        client.performRequest(request, "post", new DrupalClient.OnResponseListener() {
+            @Override
+            public void onResponseReceived(ResponseData data, Object tag) {
+                PostResponse response = (PostResponse) data.getData();
+                L.e("ResponseData = " + response.toString()+  " Tag = " + tag);
+            }
+
+            @Override
+            public void onError(ResponseData data, Object tag) {
+                L.e("ResponseData = " + data);
+            }
+
+            @Override
+            public void onCancel(Object tag) {
+                L.e("Object = " + tag);
+            }
+        }, false);
     }
 
 }

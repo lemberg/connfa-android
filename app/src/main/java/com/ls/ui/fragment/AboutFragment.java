@@ -58,6 +58,7 @@ public class AboutFragment extends Fragment {
         FriendsFavoriteDao FriendsFavoriteDao = friendsFavoriteManager.getFriendsDao();
         L.e("SharedScheduleDao = " + sharedScheduleDao.getAllSafe().toString());
         L.e("FriendsFavoriteDao = " + FriendsFavoriteDao.getAllSafe().toString());
+        Model.instance().getSharedScheduleManager().postData();
     }
 
     @Nullable
