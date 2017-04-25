@@ -7,11 +7,13 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
 import com.ls.drupalcon.R;
+import com.ls.drupalcon.model.managers.ToastManager;
 import com.ls.utils.L;
 
 public class ScheduleNameDialog extends DialogFragment {
@@ -42,8 +44,12 @@ public class ScheduleNameDialog extends DialogFragment {
         alertDialogBuilder.setPositiveButton(getActivity().getString(android.R.string.ok), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-
-                getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, getActivity().getIntent().putExtra(EXTRA_SCHEDULE_CODE, editTextId.getText().toString()));
+                String text = editTextId.getText().toString();
+                if (TextUtils.isEmpty(text)) {
+                    ToastManager.message(getContext(), "Please enter schedule name");
+                }else {
+                    getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, getActivity().getIntent().putExtra(EXTRA_SCHEDULE_CODE, text));
+                }
             }
         });
 

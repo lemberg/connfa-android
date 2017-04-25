@@ -78,9 +78,10 @@ public class EventHolderFragment extends Fragment implements SwipeRefreshLayout.
     private ArrayAdapter<String> spinnerAdapter;
     private Spinner navigationSpinner;
 
-    public interface OnUndoClickListener{
-       void onUndoClick();
+    public interface OnUndoClickListener {
+        void onUndoClick();
     }
+
     private OnUndoClickListener undoClickListener;
 
     private UpdatesManager.DataUpdatedListener updateReceiver = new UpdatesManager.DataUpdatedListener() {
@@ -166,9 +167,9 @@ public class EventHolderFragment extends Fragment implements SwipeRefreshLayout.
             case R.id.actionRemoveSchedule:
                 undo(Model.instance().getSharedScheduleManager().getCurrentFriendScheduleName() + " is removed");
                 Model.instance().getSharedScheduleManager().deleteSharedSchedule();
-                new LoadData().execute();
                 refreshSpinner();
                 setSpinnerPosition(0);
+                new LoadData().execute();
                 break;
         }
         return true;
@@ -503,7 +504,10 @@ public class EventHolderFragment extends Fragment implements SwipeRefreshLayout.
             @Override
             public void onClick(View v) {
                 L.e("Undo");
-               Model.instance().getSharedScheduleManager().restoreSchedule();
+                SharedScheduleManager manager = Model.instance().getSharedScheduleManager();
+                manager.restoreSchedule();
+                refreshSpinner();
+                setSpinnerPosition(Model.instance().getSharedScheduleManager().getItemPosition());
             }
         });
         snack.setActionTextColor(Color.RED);
@@ -517,13 +521,15 @@ public class EventHolderFragment extends Fragment implements SwipeRefreshLayout.
             disableCustomToolBar();
             setToolbarTitle();
             isMySchedule = true;
-            getActivity().invalidateOptionsMenu();
             strategy = new FavoritesStrategy();
         } else {
+            isMySchedule = false;
+            setCustomToolBar();
             spinnerAdapter.clear();
             spinnerAdapter.addAll(sharedScheduleManager.getAllSchedulesNameList());
             strategy = new FriendFavoritesStrategy();
         }
+        getActivity().invalidateOptionsMenu();
     }
 
     private void setSpinnerPosition(int position) {

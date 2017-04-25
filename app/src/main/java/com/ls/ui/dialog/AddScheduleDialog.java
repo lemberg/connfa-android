@@ -7,11 +7,16 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
+import android.text.Editable;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.ls.drupalcon.R;
+import com.ls.drupalcon.app.App;
+import com.ls.drupalcon.model.managers.ToastManager;
 
 public class AddScheduleDialog extends DialogFragment {
 
@@ -40,8 +45,13 @@ public class AddScheduleDialog extends DialogFragment {
         alertDialogBuilder.setPositiveButton(getActivity().getString(R.string.add), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-
-                getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, getActivity().getIntent().putExtra(EXTRA_SCHEDULE_CODE, Long.parseLong(editTextId.getText().toString())));
+                String text = editTextId.getText().toString();
+                if (TextUtils.isEmpty(text)) {
+                    ToastManager.message(getContext(), "Please enter code");
+//                    Toast.makeText(getContext(), "Please enter code", Toast.LENGTH_LONG).show();
+                } else {
+                    getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, getActivity().getIntent().putExtra(EXTRA_SCHEDULE_CODE, Long.parseLong(text)));
+                }
             }
         });
 

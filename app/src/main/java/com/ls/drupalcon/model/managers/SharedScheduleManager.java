@@ -20,8 +20,8 @@ public class SharedScheduleManager {
     private List<SharedSchedule> list = new ArrayList<>();
     private SharedSchedule currentSchedule;
     private SharedSchedule newSchedule;
-    private List<SharedSchedule> scheduleTemp= new ArrayList<>();
-    private SharedSchedule currentScheduleTemp;
+    private List<SharedSchedule> schedulesTemp;
+    private SharedSchedule scheduleTemp;
     private Timer timer = new Timer();
 
     public SharedScheduleManager() {
@@ -40,6 +40,7 @@ public class SharedScheduleManager {
         for (SharedSchedule item : list) {
             result.add(item.getScheduleName());
         }
+        L.e("All Schedules Name List = " + list);
         return result;
     }
 
@@ -60,10 +61,15 @@ public class SharedScheduleManager {
     }
 
 
-    public void setNewScheduleCode(long scheduleCode){
+    public void setNewScheduleCode(long scheduleCode) {
         this.newSchedule = new SharedSchedule();
         this.newSchedule.setScheduleCode(scheduleCode);
     }
+
+    public int getItemPosition(){
+       return list.indexOf(currentSchedule);
+    }
+
     public void createSchedule(String scheduleName) {
         this.newSchedule.setScheduleName(scheduleName);
         if (list.contains(newSchedule)) {
@@ -81,38 +87,32 @@ public class SharedScheduleManager {
 
     }
 
-//    public void deleteSharedSchedule(){
-//        this.sharedScheduleDao.deleteDataSafe(currentSchedule.getId());
-////        int currentPosition = list.indexOf(currentSchedule);
-//        list.remove(currentSchedule);
-//        L.e("Updated list = " + list.toString());
-//        this.mFriendsDao.deleteDataSafe(currentSchedule.getId());
-////        this.currentSchedule = list.get(currentPosition - 1);
-//        this.currentSchedule = list.get(0);
-//    }
-
-    public void deleteSharedSchedule(){
-        //temp
-        scheduleTemp = list;
-        currentScheduleTemp = currentSchedule;
-
+    public void deleteSharedSchedule() {
+        schedulesTemp = new ArrayList<>(list);
+        scheduleTemp = currentSchedule;
+        L.e("Temp = " + schedulesTemp);
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                L.e("Timer");
+                sharedScheduleDao.deleteDataSafe(currentSchedule.getId());
+                mFriendsDao.deleteDataSafe(currentSchedule.getId());
             }
         }, 2000);
-        this.sharedScheduleDao.deleteDataSafe(currentSchedule.getId());
+
+
         list.remove(currentSchedule);
-        this.mFriendsDao.deleteDataSafe(currentSchedule.getId());
         this.currentSchedule = list.get(0);
 
     }
 
-//    public void restoreSchedule(){
-//        list.add(currentScheduleTemp);
-//        this.mFriendsDao.saveOrUpdate();
-//        this.sharedScheduleDao.saveDataSafe();
-//    }
+    public void restoreSchedule() {
+        list = schedulesTemp;
+        currentSchedule = scheduleTemp;
+        timer.cancel();
+        timer = new Timer();
+//        list.clear();
+//        list.addAll(schedulesTemp);
+//        timer.cancel();
+    }
 
 }
