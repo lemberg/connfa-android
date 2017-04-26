@@ -18,6 +18,7 @@ import com.ls.drupalcon.model.managers.EventManager;
 import com.ls.drupalcon.model.managers.FavoriteManager;
 import com.ls.drupalcon.model.managers.FloorPlansManager;
 import com.ls.drupalcon.model.managers.FriendsFavoriteManager;
+import com.ls.drupalcon.model.managers.ScheduleManager;
 import com.ls.drupalcon.model.managers.SharedScheduleManager;
 import com.ls.drupalcon.model.managers.InfoManager;
 import com.ls.drupalcon.model.managers.LevelsManager;
@@ -96,6 +97,7 @@ public class Model {
     private FloorPlansManager floorPlansManager;
     private FriendsFavoriteManager friendsFavoriteManager;
     private SharedScheduleManager sharedScheduleManager;
+    private ScheduleManager scheduleManager;
 
     public DrupalClient getClient() {
         return client;
@@ -191,6 +193,10 @@ public class Model {
         return sharedScheduleManager;
     }
 
+    public ScheduleManager getScheduleManager() {
+        return scheduleManager;
+    }
+
     /**
      * NOTE: login is performed in synchroneus way so you must never call it from UI thread.
      * @param userName
@@ -227,6 +233,7 @@ public class Model {
         floorPlansManager = new FloorPlansManager(client);
         friendsFavoriteManager =  new FriendsFavoriteManager();
         sharedScheduleManager =  new SharedScheduleManager();
+        scheduleManager = new ScheduleManager(client);
     }
 
 
