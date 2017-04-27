@@ -22,6 +22,7 @@ public class PreferencesManager {
     private static final String FILTER_EXP_LEVEL = "FILTER_EXP_LEVEL";
     private static final String FILTER_TRACK = "FILTER_TRACK ";
     private static final String MY_SCHEDULE_FIRS_RUN = "MY_SCHEDULE_FIRS_RUN";
+    private static final String MY_SCHEDULE_CODE = "MY_SCHEDULE_CODE";
     private static PreferencesManager sInstance;
     private final SharedPreferences mPref;
 
@@ -43,12 +44,12 @@ public class PreferencesManager {
         return sInstance;
     }
 
-    public void saveFirstRunFlag(){
+    public void saveFirstRunFlag() {
         mPref.edit().putBoolean(MY_SCHEDULE_FIRS_RUN, true).apply();
     }
 
-    public boolean getFirstRunFlag(){
-       return mPref.getBoolean(MY_SCHEDULE_FIRS_RUN, false);
+    public boolean getFirstRunFlag() {
+        return mPref.getBoolean(MY_SCHEDULE_FIRS_RUN, false);
     }
 
     public void saveTimeZone(String timeZone) {
@@ -92,6 +93,14 @@ public class PreferencesManager {
         mPref.edit()
                 .putString(KEY_INFO_MINOR_TITLE, value)
                 .commit();
+    }
+
+    public void saveMyScheduleCode(Long code) {
+        mPref.edit().putLong(MY_SCHEDULE_CODE, code).apply();
+    }
+
+    public Long getMyScheduleCode() {
+       return mPref.getLong(MY_SCHEDULE_CODE, -1);
     }
 
     public String getMinorInfoTitle() {

@@ -23,8 +23,15 @@ public class Schedule {
         @SerializedName("schedules")
         private List<Schedule> schedules = new ArrayList<>();
 
-        public List<Schedule> getLocations() {
+        public List<Schedule> getSchedules() {
             return schedules;
+        }
+
+        @Override
+        public String toString() {
+            return "Holder{" +
+                    "schedules=" + schedules +
+                    '}';
         }
     }
 

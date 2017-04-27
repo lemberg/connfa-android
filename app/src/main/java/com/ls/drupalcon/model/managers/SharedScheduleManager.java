@@ -9,7 +9,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.gson.reflect.TypeToken;
 import com.ls.drupal.DrupalClient;
 import com.ls.drupalcon.R;
 import com.ls.drupalcon.app.App;
@@ -18,19 +17,18 @@ import com.ls.drupalcon.model.PreferencesManager;
 import com.ls.drupalcon.model.UpdatesManager;
 import com.ls.drupalcon.model.dao.FriendsFavoriteDao;
 import com.ls.drupalcon.model.dao.SharedScheduleDao;
-import com.ls.drupalcon.model.data.Data;
+import com.ls.drupalcon.model.data.FriendsFavoriteItem;
 import com.ls.drupalcon.model.data.PostResponse;
 import com.ls.drupalcon.model.data.Schedule;
 import com.ls.drupalcon.model.data.SharedSchedule;
-import com.ls.drupalcon.model.data.UpdateDate;
 import com.ls.http.base.BaseRequest;
 import com.ls.http.base.RequestConfig;
 import com.ls.http.base.ResponseData;
+import com.ls.http.base.SharedGson;
 import com.ls.utils.L;
 
 import org.json.JSONObject;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -47,6 +45,7 @@ public class SharedScheduleManager {
     private List<SharedSchedule> schedulesTemp;
     private SharedSchedule scheduleTemp;
     private Timer timer = new Timer();
+    private ArrayList<Long> codeList = new ArrayList<>();
 
     public SharedScheduleManager() {
         this.sharedScheduleDao = new SharedScheduleDao();
@@ -150,6 +149,7 @@ public class SharedScheduleManager {
         Map<String, ArrayList<Integer>> objectToPost = new HashMap<>();
         objectToPost.put("data", ids);
 
+        final PreferencesManager instance = PreferencesManager.getInstance();
         BaseRequest request = new BaseRequest(BaseRequest.RequestMethod.POST, App.getContext().getString(R.string.api_value_base_url) + "createSchedule", requestConfig);
         request.setObjectToPost(objectToPost);
 
@@ -158,7 +158,11 @@ public class SharedScheduleManager {
             @Override
             public void onResponseReceived(ResponseData data, Object tag) {
                 PostResponse response = (PostResponse) data.getData();
-                L.e("ResponseData = " + response.toString() + " Tag = " + tag);
+                L.e("Schedule Code  = " + response.getCode() + " Tag = " + tag);
+                if (instance.getMyScheduleCode() != -1) {
+                    instance.saveMyScheduleCode(response.getCode());
+                }
+                codeList.add(response.getCode());
             }
 
             @Override
@@ -190,7 +194,7 @@ public class SharedScheduleManager {
 //                Schedule.Holder response = (Schedule.Holder) data.getData();
 //                L.e("getAllSharedSchedule = " + data.toString()+  " Tag = " + tag);
                 L.e("Object = " + tag);
-                L.e("getAllSharedSchedule = " + data.getData().toString());
+//                L.e("getAllSharedSchedule = " + data.getData().toString());
             }
 
             @Override
@@ -208,14 +212,26 @@ public class SharedScheduleManager {
     }
 
     public void getTest() {
-        final String url = "http://connfa-integration.uat.link/api/v2/euna-mcdermott-dds/getSchedules?codes[]=1373";
-        RequestQueue queue = Volley.newRequestQueue(App.getContext());
-// prepare the Request
+        final PreferencesManager instance = PreferencesManager.getInstance();
+        final String url = "http://connfa-integration.uat.link/api/v2/euna-mcdermott-dds/getSchedules?codes[]=6964&codes[]=" + instance.getMyScheduleCode();
+        FriendsFavoriteManager friendsFavoriteManager = Model.instance().getFriendsFavoriteManager();
+        final FriendsFavoriteDao friendsFavoriteDao = friendsFavoriteManager.getFriendsDao();
+
         Response.Listener<JSONObject> listener = new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 // display response
-                L.e("Response = " + response.toString());
+                Schedule.Holder holder = SharedGson.getGson().fromJson(response.toString(), Schedule.Holder.class);
+
+                ArrayList<FriendsFavoriteItem> sharedSchedules = new ArrayList<>();
+                List<Schedule> schedules = holder.getSchedules();
+                for (Schedule schedule : schedules) {
+                    for (Long eventId : schedule.getEvents()) {
+                        sharedSchedules.add(new FriendsFavoriteItem(schedule.getCode(), eventId));
+                    }
+                }
+                friendsFavoriteDao.saveDataSafe(sharedSchedules);
+                L.e("Schedule.Holder.class = " + holder.toString());
             }
         };
 
@@ -229,7 +245,7 @@ public class SharedScheduleManager {
         JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, url, listener, errorListener);
 
 // add it to the RequestQueue
-        queue.add(getRequest);
+        Model.instance().getQueue().add(getRequest);
     }
 
     public void updateData() {
@@ -243,7 +259,7 @@ public class SharedScheduleManager {
         Map<String, ArrayList<Integer>> objectToPost = new HashMap<>();
         objectToPost.put("data", ids);
 
-        BaseRequest request = new BaseRequest(BaseRequest.RequestMethod.PUT, App.getContext().getString(R.string.api_value_base_url) + "updateSchedule/1373", requestConfig);
+        BaseRequest request = new BaseRequest(BaseRequest.RequestMethod.PUT, App.getContext().getString(R.string.api_value_base_url) + "updateSchedule/8498", requestConfig);
         request.setObjectToPost(objectToPost);
 
         DrupalClient client = Model.instance().getClient();

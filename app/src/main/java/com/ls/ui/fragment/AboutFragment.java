@@ -65,8 +65,9 @@ public class AboutFragment extends Fragment {
 
         sharedScheduleManager.getTest();
         sharedScheduleManager.updateData();
-//        ScheduleManager scheduleManager = Model.instance().getScheduleManager();
-//        scheduleManager.fetchData();
+
+        //test
+//        sharedScheduleManager.getAllSharedSchedule();
 
 
         new AsyncTask<Void, Void, Boolean>() {
