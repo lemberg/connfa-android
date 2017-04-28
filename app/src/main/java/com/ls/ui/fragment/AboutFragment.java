@@ -62,7 +62,7 @@ public class AboutFragment extends Fragment {
 
         //test
 //        sharedScheduleManager.getAllSharedSchedule();
-//        sharedScheduleManager.getTest();
+        sharedScheduleManager.getTest();
 
 
         new AsyncTask<Void, Void, Boolean>() {

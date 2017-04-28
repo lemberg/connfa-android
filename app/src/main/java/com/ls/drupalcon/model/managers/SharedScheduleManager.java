@@ -45,13 +45,15 @@ public class SharedScheduleManager {
     private List<SharedSchedule> schedulesTemp;
     private SharedSchedule scheduleTemp;
     private Timer timer = new Timer();
-    private ArrayList<Long> codeList = new ArrayList<>();
 
     public SharedScheduleManager() {
-        SharedSchedule mySharedSchedule = new SharedSchedule(-1, App.getContext().getString(R.string.my_schedule));
+        SharedSchedule mySharedSchedule = new SharedSchedule(PreferencesManager.getInstance().getMyScheduleCode(), App.getContext().getString(R.string.my_schedule));
         this.sharedScheduleDao = new SharedScheduleDao();
+        if (PreferencesManager.getInstance().getMyScheduleCode() != -1) {
+            this.sharedScheduleDao.deleteDataSafe(-1l);
+        }
         this.mFriendsDao = new FriendsFavoriteDao();
-        this.sharedScheduleDao.saveDataSafe(new SharedSchedule(-1, App.getContext().getString(R.string.my_schedule)));
+        this.sharedScheduleDao.saveDataSafe(mySharedSchedule);
         this.list.addAll(this.sharedScheduleDao.getAllSafe());
         this.currentSchedule = mySharedSchedule;
     }
@@ -164,15 +166,10 @@ public class SharedScheduleManager {
             public void onResponseReceived(ResponseData data, Object tag) {
                 PostResponse response = (PostResponse) data.getData();
                 L.e("Schedule Code  = " + response.getCode() + " Tag = " + tag);
-//                if (instance.getMyScheduleCode() == -1) {
-//                    instance.saveMyScheduleCode(response.getCode());
-//                }
                 Long code = response.getCode();
                 updateCurrentSchedule(code);
                 preferencesManager.saveMyScheduleCode(code);
-//                codeList.add(response.getCode());
                 friendsFavoriteManager.saveFavoriteSafe(new FriendsFavoriteItem(eventId, code));
-//                getTest();
             }
 
             @Override
@@ -236,7 +233,7 @@ public class SharedScheduleManager {
                 List<Schedule> schedules = holder.getSchedules();
                 for (Schedule schedule : schedules) {
                     for (Long eventId : schedule.getEvents()) {
-                        sharedSchedules.add(new FriendsFavoriteItem(schedule.getCode(), eventId));
+                        sharedSchedules.add(new FriendsFavoriteItem(eventId, schedule.getCode()));
                     }
                 }
                 friendsFavoriteManager.saveFavoritesSafe(sharedSchedules);

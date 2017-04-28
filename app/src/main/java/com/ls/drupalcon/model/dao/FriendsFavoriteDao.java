@@ -10,7 +10,7 @@ public class FriendsFavoriteDao extends AbstractEntityDAO<FriendsFavoriteItem, L
 
     @Override
     protected String getSearchCondition() {
-        return "_id=?";
+        return "_event_id=?";
     }
 
     @Override

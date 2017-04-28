@@ -19,7 +19,7 @@ public class FriendsFavoriteManager {
         mFriendsDao = new FriendsFavoriteDao();
     }
 
-    public List<FriendsFavoriteItem> getAllFriendsFavorite() {
+    private List<FriendsFavoriteItem> getAllFriendsFavorite() {
         List<FriendsFavoriteItem> allSafe = mFriendsDao.getAllSafe();
         return allSafe;
     }
@@ -59,7 +59,12 @@ public class FriendsFavoriteManager {
         mFriendsDao.saveDataSafe(new FriendsFavoriteItem(id, currentScheduleId));
     }
 
+    public void deleteFavorite(long id) {
+        mFriendsDao.deleteDataSafe(id);
+    }
+
     public void saveFavoritesSafe(ArrayList<FriendsFavoriteItem> items) {
+        L.e("saveFavoritesSafe = " + items.toString());
         mFriendsDao.saveDataSafe(items);
     }
 
