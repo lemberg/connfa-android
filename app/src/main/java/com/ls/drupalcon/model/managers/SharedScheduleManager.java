@@ -48,10 +48,12 @@ public class SharedScheduleManager {
     private ArrayList<Long> codeList = new ArrayList<>();
 
     public SharedScheduleManager() {
+        SharedSchedule mySharedSchedule = new SharedSchedule(-1, App.getContext().getString(R.string.my_schedule));
         this.sharedScheduleDao = new SharedScheduleDao();
         this.mFriendsDao = new FriendsFavoriteDao();
         this.sharedScheduleDao.saveDataSafe(new SharedSchedule(-1, App.getContext().getString(R.string.my_schedule)));
         this.list.addAll(this.sharedScheduleDao.getAllSafe());
+        this.currentSchedule = mySharedSchedule;
     }
 
     public SharedScheduleDao getSharedScheduleDao() {
@@ -69,6 +71,10 @@ public class SharedScheduleManager {
 
     public void setCurrentSchedule(int scheduleOrder) {
         this.currentSchedule = list.get(scheduleOrder);
+    }
+
+    public void updateCurrentSchedule(Long id) {
+        this.currentSchedule.setScheduleCode(id);
     }
 
     public SharedSchedule getCurrentSchedule() {
@@ -138,20 +144,19 @@ public class SharedScheduleManager {
 //        timer.cancel();
     }
 
-    public void postData() {
+    public void postData(final Long eventId) {
         RequestConfig requestConfig = new RequestConfig();
         requestConfig.setResponseFormat(BaseRequest.ResponseFormat.JSON);
         requestConfig.setRequestFormat(BaseRequest.RequestFormat.JSON);
         requestConfig.setResponseClassSpecifier(PostResponse.class);
-        ArrayList<Integer> ids = new ArrayList<>();
-        ids.add(19);
-        ids.add(32);
-        Map<String, ArrayList<Integer>> objectToPost = new HashMap<>();
-        objectToPost.put("data", ids);
+        final FriendsFavoriteManager friendsFavoriteManager = Model.instance().getFriendsFavoriteManager();
 
-        final PreferencesManager instance = PreferencesManager.getInstance();
-        BaseRequest request = new BaseRequest(BaseRequest.RequestMethod.POST, App.getContext().getString(R.string.api_value_base_url) + "createSchedule", requestConfig);
-        request.setObjectToPost(objectToPost);
+        ArrayList<Long> favoriteEventIds = new ArrayList<>();
+        favoriteEventIds.add(eventId);
+
+        final PreferencesManager preferencesManager = PreferencesManager.getInstance();
+        final BaseRequest request = new BaseRequest(BaseRequest.RequestMethod.POST, App.getContext().getString(R.string.api_value_base_url) + "createSchedule", requestConfig);
+        request.setObjectToPost(getObjectToPost(favoriteEventIds));
 
         DrupalClient client = Model.instance().getClient();
         client.performRequest(request, "post", new DrupalClient.OnResponseListener() {
@@ -159,10 +164,15 @@ public class SharedScheduleManager {
             public void onResponseReceived(ResponseData data, Object tag) {
                 PostResponse response = (PostResponse) data.getData();
                 L.e("Schedule Code  = " + response.getCode() + " Tag = " + tag);
-                if (instance.getMyScheduleCode() != -1) {
-                    instance.saveMyScheduleCode(response.getCode());
-                }
-                codeList.add(response.getCode());
+//                if (instance.getMyScheduleCode() == -1) {
+//                    instance.saveMyScheduleCode(response.getCode());
+//                }
+                Long code = response.getCode();
+                updateCurrentSchedule(code);
+                preferencesManager.saveMyScheduleCode(code);
+//                codeList.add(response.getCode());
+                friendsFavoriteManager.saveFavoriteSafe(new FriendsFavoriteItem(eventId, code));
+//                getTest();
             }
 
             @Override
@@ -213,9 +223,8 @@ public class SharedScheduleManager {
 
     public void getTest() {
         final PreferencesManager instance = PreferencesManager.getInstance();
-        final String url = "http://connfa-integration.uat.link/api/v2/euna-mcdermott-dds/getSchedules?codes[]=6964&codes[]=" + instance.getMyScheduleCode();
-        FriendsFavoriteManager friendsFavoriteManager = Model.instance().getFriendsFavoriteManager();
-        final FriendsFavoriteDao friendsFavoriteDao = friendsFavoriteManager.getFriendsDao();
+        final String url = "http://connfa-integration.uat.link/api/v2/euna-mcdermott-dds/getSchedules?codes[]=" + instance.getMyScheduleCode();
+        final FriendsFavoriteManager friendsFavoriteManager = Model.instance().getFriendsFavoriteManager();
 
         Response.Listener<JSONObject> listener = new Response.Listener<JSONObject>() {
             @Override
@@ -230,7 +239,7 @@ public class SharedScheduleManager {
                         sharedSchedules.add(new FriendsFavoriteItem(schedule.getCode(), eventId));
                     }
                 }
-                friendsFavoriteDao.saveDataSafe(sharedSchedules);
+                friendsFavoriteManager.saveFavoritesSafe(sharedSchedules);
                 L.e("Schedule.Holder.class = " + holder.toString());
             }
         };
@@ -253,33 +262,47 @@ public class SharedScheduleManager {
         requestConfig.setResponseFormat(BaseRequest.ResponseFormat.JSON);
         requestConfig.setRequestFormat(BaseRequest.RequestFormat.JSON);
         requestConfig.setResponseClassSpecifier(PostResponse.class);
-        ArrayList<Integer> ids = new ArrayList<>();
-        ids.add(22);
-        ids.add(23);
-        Map<String, ArrayList<Integer>> objectToPost = new HashMap<>();
-        objectToPost.put("data", ids);
+        final PreferencesManager instance = PreferencesManager.getInstance();
 
-        BaseRequest request = new BaseRequest(BaseRequest.RequestMethod.PUT, App.getContext().getString(R.string.api_value_base_url) + "updateSchedule/8498", requestConfig);
-        request.setObjectToPost(objectToPost);
+        FriendsFavoriteManager friendsFavoriteManager = Model.instance().getFriendsFavoriteManager();
+
+        BaseRequest request = new BaseRequest(BaseRequest.RequestMethod.PUT, App.getContext().getString(R.string.api_value_base_url) + "updateSchedule/" + instance.getMyScheduleCode(), requestConfig);
+        request.setObjectToPost(getObjectToPost(friendsFavoriteManager.getMyEventIds()));
 
         DrupalClient client = Model.instance().getClient();
         client.performRequest(request, "update", new DrupalClient.OnResponseListener() {
             @Override
             public void onResponseReceived(ResponseData data, Object tag) {
                 PostResponse response = (PostResponse) data.getData();
-                L.e("update ResponseData = " + response.toString() + " Tag = " + tag);
+                L.e("Update = " + response.toString() + " Tag = " + tag);
             }
 
             @Override
             public void onError(ResponseData data, Object tag) {
-                L.e("ResponseData = " + data);
+                L.e("Update Error = " + data);
             }
 
             @Override
             public void onCancel(Object tag) {
-                L.e("Object = " + tag);
+                L.e("Update Cancel = " + tag);
             }
         }, false);
+    }
+
+    public void postScheduleData(Long eventId) {
+        PreferencesManager instance = PreferencesManager.getInstance();
+        if (instance.getMyScheduleCode() == -1) {
+            postData(eventId);
+        } else {
+            updateData();
+        }
+    }
+
+    private Map<String, ArrayList<Long>> getObjectToPost(ArrayList<Long> ids) {
+        Map<String, ArrayList<Long>> objectToPost = new HashMap<>();
+        objectToPost.put("data", ids);
+        L.e("Object to post = " + objectToPost.toString());
+        return objectToPost;
     }
 
 }

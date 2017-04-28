@@ -1,5 +1,7 @@
 package com.ls.drupalcon.model.managers;
+
 import com.ls.drupalcon.model.Model;
+import com.ls.drupalcon.model.PreferencesManager;
 import com.ls.drupalcon.model.dao.EventDao;
 import com.ls.drupalcon.model.dao.FriendsFavoriteDao;
 import com.ls.drupalcon.model.data.Event;
@@ -22,13 +24,25 @@ public class FriendsFavoriteManager {
         return allSafe;
     }
 
-    public List<Long> getFavoriteEventIds() {
+    public ArrayList<Long> getFavoriteEventIds() {
 
-        List<Long> favoriteEventIds = new ArrayList<>();
+        ArrayList<Long> favoriteEventIds = new ArrayList<>();
         for (FriendsFavoriteItem favorite : getAllFriendsFavorite()) {
             if (favorite.getSharedScheduleCode() == (Model.instance().getSharedScheduleManager().getCurrentScheduleId()))
                 favoriteEventIds.add(favorite.getEventId());
         }
+        L.e("getFavoriteEventIds = " + favoriteEventIds);
+        return favoriteEventIds;
+    }
+
+    public ArrayList<Long> getMyEventIds() {
+
+        ArrayList<Long> favoriteEventIds = new ArrayList<>();
+        for (FriendsFavoriteItem favorite : getAllFriendsFavorite()) {
+            if (favorite.getSharedScheduleCode() == (PreferencesManager.getInstance().getMyScheduleCode()))
+                favoriteEventIds.add(favorite.getEventId());
+        }
+        L.e("getMyEventIds = " + favoriteEventIds);
         return favoriteEventIds;
     }
 
@@ -45,7 +59,21 @@ public class FriendsFavoriteManager {
         mFriendsDao.saveDataSafe(new FriendsFavoriteItem(id, currentScheduleId));
     }
 
-    public FriendsFavoriteDao getFriendsDao() {
-        return mFriendsDao;
+    public void saveFavoritesSafe(ArrayList<FriendsFavoriteItem> items) {
+        mFriendsDao.saveDataSafe(items);
     }
+
+    public void saveFavoriteSafe(FriendsFavoriteItem item) {
+        L.e("saveFavoriteSafe = " + item);
+        mFriendsDao.saveDataSafe(item);
+    }
+
+
+    public List<FriendsFavoriteItem> getAllFavoritesSafe() {
+        return mFriendsDao.getAllSafe();
+    }
+
+//    public FriendsFavoriteDao getFriendsDao() {
+//        return mFriendsDao;
+//    }
 }

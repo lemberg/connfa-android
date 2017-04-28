@@ -14,7 +14,7 @@ public class LocationRequest extends BaseSafeConsumeContainerRequest<Location.Ho
 
     @Override
     protected String getPath() {
-        return "getSchedules";
+        return "getLocations";
     }
 
     @Override

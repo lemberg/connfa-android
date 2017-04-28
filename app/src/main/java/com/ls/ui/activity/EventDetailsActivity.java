@@ -6,11 +6,13 @@ import com.ls.drupalcon.model.PreferencesManager;
 import com.ls.drupalcon.model.UpdateRequest;
 import com.ls.drupalcon.model.UpdatesManager;
 import com.ls.drupalcon.model.data.EventDetailsEvent;
+import com.ls.drupalcon.model.data.FriendsFavoriteItem;
 import com.ls.drupalcon.model.data.Level;
 import com.ls.drupalcon.model.data.Speaker;
 import com.ls.drupalcon.model.managers.EventManager;
 import com.ls.drupalcon.model.managers.FavoriteManager;
 import com.ls.drupalcon.model.managers.FriendsFavoriteManager;
+import com.ls.drupalcon.model.managers.SharedScheduleManager;
 import com.ls.drupalcon.model.managers.SpeakerManager;
 import com.ls.sponsors.GoldSponsors;
 import com.ls.sponsors.SponsorItem;
@@ -20,6 +22,7 @@ import com.ls.ui.view.CircleImageView;
 import com.ls.ui.view.NotifyingScrollView;
 import com.ls.utils.AnalyticsManager;
 import com.ls.utils.DateUtils;
+import com.ls.utils.L;
 import com.ls.utils.ScheduleManager;
 import com.ls.utils.WebviewUtils;
 
@@ -40,6 +43,7 @@ import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -300,9 +304,16 @@ public class EventDetailsActivity extends StackKeeperActivity {
 
     private void fillFavoriteState(@NonNull EventDetailsEvent event) {
         mIsFavorite = event.isFavorite();
-
+        final SharedScheduleManager sharedScheduleManager = Model.instance().getSharedScheduleManager();
         final CheckBox checkBoxFavorite = (CheckBox) findViewById(R.id.checkBoxFavorite);
         checkBoxFavorite.setChecked(mIsFavorite);
+        checkBoxFavorite.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                L.e("onCheckedChanged = " + isChecked);
+//                sharedScheduleManager.postScheduleData();
+            }
+        });
 
         RelativeLayout layoutFavorite = (RelativeLayout) findViewById(R.id.layoutFavorite);
         layoutFavorite.setOnClickListener(new View.OnClickListener() {
@@ -362,6 +373,7 @@ public class EventDetailsActivity extends StackKeeperActivity {
     }
 
     private void setFavorite() {
+        final SharedScheduleManager sharedScheduleManager = Model.instance().getSharedScheduleManager();
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -370,6 +382,8 @@ public class EventDetailsActivity extends StackKeeperActivity {
 
                 FriendsFavoriteManager favoriteManager = new FriendsFavoriteManager();
                 favoriteManager.saveFavorite(mEventId);
+
+                sharedScheduleManager.postScheduleData(mEventId);
 
             }
         }).start();

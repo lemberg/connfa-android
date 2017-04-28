@@ -2,10 +2,8 @@ package com.ls.ui.fragment;
 
 import com.ls.drupalcon.R;
 import com.ls.drupalcon.model.Model;
-import com.ls.drupalcon.model.UpdateCallback;
 import com.ls.drupalcon.model.UpdateRequest;
 import com.ls.drupalcon.model.UpdatesManager;
-import com.ls.drupalcon.model.dao.FriendsFavoriteDao;
 import com.ls.drupalcon.model.dao.SharedScheduleDao;
 import com.ls.drupalcon.model.data.InfoItem;
 import com.ls.drupalcon.model.managers.FriendsFavoriteManager;
@@ -13,7 +11,6 @@ import com.ls.drupalcon.model.managers.ScheduleManager;
 import com.ls.drupalcon.model.managers.SharedScheduleManager;
 import com.ls.drupalcon.model.managers.InfoManager;
 import com.ls.ui.activity.AboutDetailsActivity;
-import com.ls.util.ObserverHolder;
 import com.ls.utils.L;
 
 import android.app.Activity;
@@ -30,6 +27,7 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,16 +56,13 @@ public class AboutFragment extends Fragment {
         SharedScheduleManager sharedScheduleManager = Model.instance().getSharedScheduleManager();
         FriendsFavoriteManager friendsFavoriteManager = Model.instance().getFriendsFavoriteManager();
         SharedScheduleDao sharedScheduleDao = sharedScheduleManager.getSharedScheduleDao();
-        FriendsFavoriteDao FriendsFavoriteDao = friendsFavoriteManager.getFriendsDao();
         L.e("SharedScheduleDao = " + sharedScheduleDao.getAllSafe().toString());
-        L.e("FriendsFavoriteDao = " + FriendsFavoriteDao.getAllSafe().toString());
-        sharedScheduleManager.postData();
+        L.e("FriendsFavoriteDao = " + friendsFavoriteManager.getAllFavoritesSafe());
 
-        sharedScheduleManager.getTest();
-        sharedScheduleManager.updateData();
 
         //test
 //        sharedScheduleManager.getAllSharedSchedule();
+//        sharedScheduleManager.getTest();
 
 
         new AsyncTask<Void, Void, Boolean>() {
@@ -83,7 +78,6 @@ public class AboutFragment extends Fragment {
 
             @Override
             protected void onPostExecute(Boolean aBoolean) {
-                L.e("Weeeeeeeee= " + aBoolean);
                 super.onPostExecute(aBoolean);
             }
         }.execute();
