@@ -4,11 +4,9 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
 import com.ls.drupal.DrupalClient;
 import com.ls.drupalcon.R;
 import com.ls.drupalcon.app.App;
@@ -151,7 +149,7 @@ public class SharedScheduleManager {
         requestConfig.setResponseFormat(BaseRequest.ResponseFormat.JSON);
         requestConfig.setRequestFormat(BaseRequest.RequestFormat.JSON);
         requestConfig.setResponseClassSpecifier(PostResponse.class);
-        final FriendsFavoriteManager friendsFavoriteManager = Model.instance().getFriendsFavoriteManager();
+        final SharedFavoriteManager sharedFavoriteManager = Model.instance().getSharedFavoriteManager();
 
         ArrayList<Long> favoriteEventIds = new ArrayList<>();
         favoriteEventIds.add(eventId);
@@ -169,7 +167,7 @@ public class SharedScheduleManager {
                 Long code = response.getCode();
                 updateCurrentSchedule(code);
                 preferencesManager.saveMyScheduleCode(code);
-                friendsFavoriteManager.saveFavoriteSafe(new FriendsFavoriteItem(eventId, code));
+                sharedFavoriteManager.saveFavoriteSafe(new FriendsFavoriteItem(eventId, code));
             }
 
             @Override
@@ -184,44 +182,41 @@ public class SharedScheduleManager {
         }, false);
     }
 
-    public void getAllSharedSchedule() {
-        RequestConfig requestConfig = new RequestConfig();
-        requestConfig.setResponseFormat(BaseRequest.ResponseFormat.JSON);
-        requestConfig.setRequestFormat(BaseRequest.RequestFormat.JSON);
-        requestConfig.setResponseClassSpecifier(Schedule.Holder.class);
+//    public void getAllSharedSchedule() {
+//        RequestConfig requestConfig = new RequestConfig();
+//        requestConfig.setResponseFormat(BaseRequest.ResponseFormat.JSON);
+//        requestConfig.setRequestFormat(BaseRequest.RequestFormat.JSON);
+//        requestConfig.setResponseClassSpecifier(Schedule.Holder.class);
+//
+//        BaseRequest request = new BaseRequest(BaseRequest.RequestMethod.GET, "http://connfa-integration.uat.link/api/v2/euna-mcdermott-dds/getSchedules?codes[]=3320", requestConfig);
+//        String lastDate = PreferencesManager.getInstance().getLastUpdateDate();
+//        request.addRequestHeader(UpdatesManager.IF_MODIFIED_SINCE_HEADER, lastDate);
+//
+//        DrupalClient client = Model.instance().getClient();
+//        ResponseData schedule = client.performRequest(request, "Schedule", new DrupalClient.OnResponseListener() {
+//            @Override
+//            public void onResponseReceived(ResponseData data, Object tag) {
+//                L.e("Object = " + tag);
+//            }
+//
+//            @Override
+//            public void onError(ResponseData data, Object tag) {
+//                L.e("ResponseData = " + data);
+//            }
+//
+//            @Override
+//            public void onCancel(Object tag) {
+//                L.e("Object = " + tag);
+//            }
+//        }, false);
+//
+//        L.e("ResponseData getAllSharedSchedule = " + schedule.toString());
+//    }
 
-        BaseRequest request = new BaseRequest(BaseRequest.RequestMethod.GET, "http://connfa-integration.uat.link/api/v2/euna-mcdermott-dds/getSchedules?codes[]=3320", requestConfig);
-        String lastDate = PreferencesManager.getInstance().getLastUpdateDate();
-        request.addRequestHeader(UpdatesManager.IF_MODIFIED_SINCE_HEADER, lastDate);
-
-        DrupalClient client = Model.instance().getClient();
-        ResponseData schedule = client.performRequest(request, "Schedule", new DrupalClient.OnResponseListener() {
-            @Override
-            public void onResponseReceived(ResponseData data, Object tag) {
-//                Schedule.Holder response = (Schedule.Holder) data.getData();
-//                L.e("getAllSharedSchedule = " + data.toString()+  " Tag = " + tag);
-                L.e("Object = " + tag);
-//                L.e("getAllSharedSchedule = " + data.getData().toString());
-            }
-
-            @Override
-            public void onError(ResponseData data, Object tag) {
-                L.e("ResponseData = " + data);
-            }
-
-            @Override
-            public void onCancel(Object tag) {
-                L.e("Object = " + tag);
-            }
-        }, false);
-
-        L.e("ResponseData getAllSharedSchedule = " + schedule.toString());
-    }
-
-    public void getTest() {
+    public void getMySharedSchedule() {
         final PreferencesManager instance = PreferencesManager.getInstance();
         final String url = "http://connfa-integration.uat.link/api/v2/euna-mcdermott-dds/getSchedules?codes[]=" + instance.getMyScheduleCode();
-        final FriendsFavoriteManager friendsFavoriteManager = Model.instance().getFriendsFavoriteManager();
+        final SharedFavoriteManager sharedFavoriteManager = Model.instance().getSharedFavoriteManager();
 
         Response.Listener<JSONObject> listener = new Response.Listener<JSONObject>() {
             @Override
@@ -236,7 +231,7 @@ public class SharedScheduleManager {
                         sharedSchedules.add(new FriendsFavoriteItem(eventId, schedule.getCode()));
                     }
                 }
-                friendsFavoriteManager.saveFavoritesSafe(sharedSchedules);
+                sharedFavoriteManager.saveFavoritesSafe(sharedSchedules);
                 L.e("Schedule.Holder.class = " + holder.toString());
             }
         };
@@ -254,17 +249,53 @@ public class SharedScheduleManager {
         Model.instance().getQueue().add(getRequest);
     }
 
-    public void updateData() {
+    public void getSharedSchedule(long scheduleId) {
+        final PreferencesManager instance = PreferencesManager.getInstance();
+        final String url = "http://connfa-integration.uat.link/api/v2/euna-mcdermott-dds/getSchedules?codes[]=" + scheduleId;
+        final SharedFavoriteManager sharedFavoriteManager = Model.instance().getSharedFavoriteManager();
+
+        Response.Listener<JSONObject> listener = new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                // display response
+                Schedule.Holder holder = SharedGson.getGson().fromJson(response.toString(), Schedule.Holder.class);
+
+                ArrayList<FriendsFavoriteItem> sharedSchedules = new ArrayList<>();
+                List<Schedule> schedules = holder.getSchedules();
+                for (Schedule schedule : schedules) {
+                    for (Long eventId : schedule.getEvents()) {
+                        sharedSchedules.add(new FriendsFavoriteItem(eventId, schedule.getCode()));
+                    }
+                }
+                sharedFavoriteManager.saveFavoritesSafe(sharedSchedules);
+                L.e("Schedule.Holder.class = " + holder.toString());
+            }
+        };
+
+        Response.ErrorListener errorListener = new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d("Error.Response", error.getMessage());
+            }
+        };
+
+        JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, url, listener, errorListener);
+
+// add it to the RequestQueue
+        Model.instance().getQueue().add(getRequest);
+    }
+
+    private void updateData() {
         RequestConfig requestConfig = new RequestConfig();
         requestConfig.setResponseFormat(BaseRequest.ResponseFormat.JSON);
         requestConfig.setRequestFormat(BaseRequest.RequestFormat.JSON);
         requestConfig.setResponseClassSpecifier(PostResponse.class);
         final PreferencesManager instance = PreferencesManager.getInstance();
 
-        FriendsFavoriteManager friendsFavoriteManager = Model.instance().getFriendsFavoriteManager();
+        SharedFavoriteManager sharedFavoriteManager = Model.instance().getSharedFavoriteManager();
 
         BaseRequest request = new BaseRequest(BaseRequest.RequestMethod.PUT, App.getContext().getString(R.string.api_value_base_url) + "updateSchedule/" + instance.getMyScheduleCode(), requestConfig);
-        request.setObjectToPost(getObjectToPost(friendsFavoriteManager.getMyEventIds()));
+        request.setObjectToPost(getObjectToPost(sharedFavoriteManager.getMyEventIds()));
 
         DrupalClient client = Model.instance().getClient();
         client.performRequest(request, "update", new DrupalClient.OnResponseListener() {

@@ -6,7 +6,7 @@ import com.ls.drupalcon.model.UpdateRequest;
 import com.ls.drupalcon.model.UpdatesManager;
 import com.ls.drupalcon.model.dao.SharedScheduleDao;
 import com.ls.drupalcon.model.data.InfoItem;
-import com.ls.drupalcon.model.managers.FriendsFavoriteManager;
+import com.ls.drupalcon.model.managers.SharedFavoriteManager;
 import com.ls.drupalcon.model.managers.ScheduleManager;
 import com.ls.drupalcon.model.managers.SharedScheduleManager;
 import com.ls.drupalcon.model.managers.InfoManager;
@@ -54,33 +54,33 @@ public class AboutFragment extends Fragment {
         super.onCreate(savedInstanceState);
         Model.instance().getUpdatesManager().registerUpdateListener(updateListener);
         SharedScheduleManager sharedScheduleManager = Model.instance().getSharedScheduleManager();
-        FriendsFavoriteManager friendsFavoriteManager = Model.instance().getFriendsFavoriteManager();
+        SharedFavoriteManager sharedFavoriteManager = Model.instance().getSharedFavoriteManager();
         SharedScheduleDao sharedScheduleDao = sharedScheduleManager.getSharedScheduleDao();
         L.e("SharedScheduleDao = " + sharedScheduleDao.getAllSafe().toString());
-        L.e("FriendsFavoriteDao = " + friendsFavoriteManager.getAllFavoritesSafe());
+        L.e("FriendsFavoriteDao = " + sharedFavoriteManager.getAllFavoritesSafe());
 
 
         //test
 //        sharedScheduleManager.getAllSharedSchedule();
-        sharedScheduleManager.getTest();
+//        sharedScheduleManager.getMySharedSchedule();
 
 
-        new AsyncTask<Void, Void, Boolean>() {
-
-            @Override
-            protected Boolean doInBackground(Void... params) {
-                Model.instance().getFloorPlansManager().fetchData();
-                ScheduleManager scheduleManager = Model.instance().getScheduleManager();
-                boolean b = scheduleManager.fetchData();
-
-                return b;
-            }
-
-            @Override
-            protected void onPostExecute(Boolean aBoolean) {
-                super.onPostExecute(aBoolean);
-            }
-        }.execute();
+//        new AsyncTask<Void, Void, Boolean>() {
+//
+//            @Override
+//            protected Boolean doInBackground(Void... params) {
+//                Model.instance().getFloorPlansManager().fetchData();
+//                ScheduleManager scheduleManager = Model.instance().getScheduleManager();
+//                boolean b = scheduleManager.fetchData();
+//
+//                return b;
+//            }
+//
+//            @Override
+//            protected void onPostExecute(Boolean aBoolean) {
+//                super.onPostExecute(aBoolean);
+//            }
+//        }.execute();
 
     }
 

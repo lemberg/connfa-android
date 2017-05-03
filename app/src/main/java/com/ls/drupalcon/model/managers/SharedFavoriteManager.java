@@ -11,11 +11,11 @@ import com.ls.utils.L;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FriendsFavoriteManager {
+public class SharedFavoriteManager {
 
     private FriendsFavoriteDao mFriendsDao;
 
-    public FriendsFavoriteManager() {
+    public SharedFavoriteManager() {
         mFriendsDao = new FriendsFavoriteDao();
     }
 
@@ -70,7 +70,7 @@ public class FriendsFavoriteManager {
 
     public void saveFavoriteSafe(FriendsFavoriteItem item) {
         L.e("saveFavoriteSafe = " + item);
-        mFriendsDao.saveDataSafe(item);
+        mFriendsDao.saveOrUpdateSafe(item);
     }
 
 

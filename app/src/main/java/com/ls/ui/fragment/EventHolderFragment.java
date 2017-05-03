@@ -457,7 +457,11 @@ public class EventHolderFragment extends Fragment implements SwipeRefreshLayout.
                 switch (resultCode) {
                     case Activity.RESULT_OK:
                         long newScheduleCode = data.getLongExtra(AddScheduleDialog.EXTRA_SCHEDULE_CODE, -1);
-                        Model.instance().getSharedScheduleManager().setNewScheduleCode(newScheduleCode);
+                        SharedScheduleManager sharedScheduleManager = Model.instance().getSharedScheduleManager();
+                        sharedScheduleManager.setNewScheduleCode(newScheduleCode);
+                        sharedScheduleManager.getSharedSchedule(newScheduleCode);
+
+
                         showSetNameDialog();
                         break;
                     case Activity.RESULT_CANCELED:

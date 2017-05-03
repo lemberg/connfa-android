@@ -4,7 +4,7 @@ import com.ls.drupalcon.R;
 import com.ls.drupalcon.model.Model;
 import com.ls.drupalcon.model.UpdateRequest;
 import com.ls.drupalcon.model.data.Event;
-import com.ls.drupalcon.model.managers.FriendsFavoriteManager;
+import com.ls.drupalcon.model.managers.SharedFavoriteManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,8 +13,8 @@ public class FriendFavoritesStrategy implements EventHolderFragmentStrategy {
 
     @Override
     public List<Long> getDayList() {
-        FriendsFavoriteManager friendsFavoriteManager = Model.instance().getFriendsFavoriteManager();
-        List<Event> allFriendsFavoriteEvent = friendsFavoriteManager.getAllFriendsFavoriteEvent();
+        SharedFavoriteManager sharedFavoriteManager = Model.instance().getSharedFavoriteManager();
+        List<Event> allFriendsFavoriteEvent = sharedFavoriteManager.getAllFriendsFavoriteEvent();
         List<Long> dayList = new ArrayList<>();
 
         for (Event event : allFriendsFavoriteEvent) {

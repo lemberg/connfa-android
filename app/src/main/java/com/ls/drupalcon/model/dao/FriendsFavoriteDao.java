@@ -1,4 +1,5 @@
 package com.ls.drupalcon.model.dao;
+
 import com.ls.drupalcon.model.AppDatabaseInfo;
 import com.ls.drupalcon.model.data.FriendsFavoriteItem;
 import com.ls.drupalcon.model.database.AbstractEntityDAO;
@@ -10,7 +11,7 @@ public class FriendsFavoriteDao extends AbstractEntityDAO<FriendsFavoriteItem, L
 
     @Override
     protected String getSearchCondition() {
-        return "_event_id=?";
+        return "_id=?";
     }
 
     @Override

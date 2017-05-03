@@ -150,7 +150,7 @@
     <string name="create_table_friends_favorite_events" translatable="false">
         CREATE TABLE table_friends_favorite_events (
         _id                 	 INTEGER,
-        _event_id	             INTEGER
+        _id_schedule_code	     INTEGER
         )
     </string>
 
