@@ -10,7 +10,7 @@ import com.ls.drupalcon.model.data.Level;
 import com.ls.drupalcon.model.data.Speaker;
 import com.ls.drupalcon.model.managers.EventManager;
 import com.ls.drupalcon.model.managers.FavoriteManager;
-import com.ls.drupalcon.model.managers.SharedFavoriteManager;
+import com.ls.drupalcon.model.managers.SharedFavoritesManager;
 import com.ls.drupalcon.model.managers.SharedScheduleManager;
 import com.ls.drupalcon.model.managers.SpeakerManager;
 import com.ls.sponsors.GoldSponsors;
@@ -379,7 +379,7 @@ public class EventDetailsActivity extends StackKeeperActivity {
                 FavoriteManager manager = new FavoriteManager();
                 manager.setFavoriteEvent(mEventId, mIsFavorite);
 
-                SharedFavoriteManager favoriteManager = new SharedFavoriteManager();
+                SharedFavoritesManager favoriteManager = new SharedFavoritesManager();
                 if(mIsFavorite){
                     favoriteManager.saveFavorite(mEventId);
                 }else {

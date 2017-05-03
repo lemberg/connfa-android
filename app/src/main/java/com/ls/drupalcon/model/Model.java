@@ -17,7 +17,7 @@ import com.ls.drupalcon.model.managers.BofsManager;
 import com.ls.drupalcon.model.managers.EventManager;
 import com.ls.drupalcon.model.managers.FavoriteManager;
 import com.ls.drupalcon.model.managers.FloorPlansManager;
-import com.ls.drupalcon.model.managers.SharedFavoriteManager;
+import com.ls.drupalcon.model.managers.SharedFavoritesManager;
 import com.ls.drupalcon.model.managers.ScheduleManager;
 import com.ls.drupalcon.model.managers.SharedScheduleManager;
 import com.ls.drupalcon.model.managers.InfoManager;
@@ -95,7 +95,7 @@ public class Model {
     private FavoriteManager favoriteManager;
     private SettingsManager settingsManager;
     private FloorPlansManager floorPlansManager;
-    private SharedFavoriteManager sharedFavoriteManager;
+    private SharedFavoritesManager sharedFavoritesManager;
     private SharedScheduleManager sharedScheduleManager;
     private ScheduleManager scheduleManager;
 
@@ -181,8 +181,8 @@ public class Model {
         return floorPlansManager;
     }
 
-    public SharedFavoriteManager getSharedFavoriteManager() {
-        return sharedFavoriteManager;
+    public SharedFavoritesManager getSharedFavoritesManager() {
+        return sharedFavoritesManager;
     }
 
     public void setSettingsManager(SettingsManager settingsManager) {
@@ -231,7 +231,7 @@ public class Model {
         updatesManager = new UpdatesManager(client);
         settingsManager = new SettingsManager(client);
         floorPlansManager = new FloorPlansManager(client);
-        sharedFavoriteManager =  new SharedFavoriteManager();
+        sharedFavoritesManager =  new SharedFavoritesManager();
         sharedScheduleManager =  new SharedScheduleManager();
         scheduleManager = new ScheduleManager(client);
     }

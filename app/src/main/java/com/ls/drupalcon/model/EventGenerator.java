@@ -7,7 +7,7 @@ import com.ls.drupalcon.model.data.Track;
 import com.ls.drupalcon.model.managers.BofsManager;
 import com.ls.drupalcon.model.managers.EventManager;
 import com.ls.drupalcon.model.managers.FavoriteManager;
-import com.ls.drupalcon.model.managers.SharedFavoriteManager;
+import com.ls.drupalcon.model.managers.SharedFavoritesManager;
 import com.ls.drupalcon.model.managers.ProgramManager;
 import com.ls.drupalcon.model.managers.SocialManager;
 import com.ls.drupalcon.model.managers.SpeakerManager;
@@ -105,7 +105,7 @@ public class EventGenerator {
 
     public List<EventListItem> generateForFriendsFavorites(long day, @NotNull EventItemCreator eventItemCreator) {
 
-        SharedFavoriteManager favoriteManager = new SharedFavoriteManager();
+        SharedFavoritesManager favoriteManager = new SharedFavoritesManager();
         List<Long> favoriteEventIds = favoriteManager.getFavoriteEventIds();
 
         List<EventListItem> eventListItems = mProgramManager.getFavoriteProgramItemsSafe(favoriteEventIds, day);

@@ -6,8 +6,7 @@ import com.ls.drupalcon.model.UpdateRequest;
 import com.ls.drupalcon.model.UpdatesManager;
 import com.ls.drupalcon.model.dao.SharedScheduleDao;
 import com.ls.drupalcon.model.data.InfoItem;
-import com.ls.drupalcon.model.managers.SharedFavoriteManager;
-import com.ls.drupalcon.model.managers.ScheduleManager;
+import com.ls.drupalcon.model.managers.SharedFavoritesManager;
 import com.ls.drupalcon.model.managers.SharedScheduleManager;
 import com.ls.drupalcon.model.managers.InfoManager;
 import com.ls.ui.activity.AboutDetailsActivity;
@@ -16,7 +15,6 @@ import com.ls.utils.L;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -54,10 +52,10 @@ public class AboutFragment extends Fragment {
         super.onCreate(savedInstanceState);
         Model.instance().getUpdatesManager().registerUpdateListener(updateListener);
         SharedScheduleManager sharedScheduleManager = Model.instance().getSharedScheduleManager();
-        SharedFavoriteManager sharedFavoriteManager = Model.instance().getSharedFavoriteManager();
+        SharedFavoritesManager sharedFavoritesManager = Model.instance().getSharedFavoritesManager();
         SharedScheduleDao sharedScheduleDao = sharedScheduleManager.getSharedScheduleDao();
         L.e("SharedScheduleDao = " + sharedScheduleDao.getAllSafe().toString());
-        L.e("FriendsFavoriteDao = " + sharedFavoriteManager.getAllFavoritesSafe());
+        L.e("SharedFavoritesDao = " + sharedFavoritesManager.getAllFavoritesSafe());
 
 
         //test

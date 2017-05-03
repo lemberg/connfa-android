@@ -5,7 +5,7 @@ import com.ls.drupalcon.model.data.FriendsFavoriteItem;
 import com.ls.drupalcon.model.database.AbstractEntityDAO;
 
 
-public class FriendsFavoriteDao extends AbstractEntityDAO<FriendsFavoriteItem, Long> {
+public class SharedFavoritesDao extends AbstractEntityDAO<FriendsFavoriteItem, Long> {
 
     public static final String TABLE_NAME = "table_friends_favorite_events";
 

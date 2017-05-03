@@ -3,7 +3,7 @@ package com.ls.drupalcon.model.managers;
 import com.ls.drupalcon.model.Model;
 import com.ls.drupalcon.model.PreferencesManager;
 import com.ls.drupalcon.model.dao.EventDao;
-import com.ls.drupalcon.model.dao.FriendsFavoriteDao;
+import com.ls.drupalcon.model.dao.SharedFavoritesDao;
 import com.ls.drupalcon.model.data.Event;
 import com.ls.drupalcon.model.data.FriendsFavoriteItem;
 import com.ls.utils.L;
@@ -11,12 +11,12 @@ import com.ls.utils.L;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SharedFavoriteManager {
+public class SharedFavoritesManager {
 
-    private FriendsFavoriteDao mFriendsDao;
+    private SharedFavoritesDao mFriendsDao;
 
-    public SharedFavoriteManager() {
-        mFriendsDao = new FriendsFavoriteDao();
+    public SharedFavoritesManager() {
+        mFriendsDao = new SharedFavoritesDao();
     }
 
     private List<FriendsFavoriteItem> getAllFriendsFavorite() {
@@ -78,7 +78,7 @@ public class SharedFavoriteManager {
         return mFriendsDao.getAllSafe();
     }
 
-//    public FriendsFavoriteDao getFriendsDao() {
+//    public SharedFavoritesDao getFriendsDao() {
 //        return mFriendsDao;
 //    }
 }
