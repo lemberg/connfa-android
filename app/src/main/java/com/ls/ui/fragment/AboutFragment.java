@@ -59,7 +59,8 @@ public class AboutFragment extends Fragment {
 
 
         //test
-//        sharedScheduleManager.getAllSharedSchedule();
+        sharedFavoritesManager.deleteAll();
+        sharedScheduleManager.getSharedSchedule(8981);
 //        sharedScheduleManager.getMySharedSchedule();
 
 

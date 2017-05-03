@@ -4,6 +4,7 @@ import com.ls.drupalcon.model.Model;
 import com.ls.drupalcon.model.PreferencesManager;
 import com.ls.drupalcon.model.dao.EventDao;
 import com.ls.drupalcon.model.dao.SharedFavoritesDao;
+import com.ls.drupalcon.model.dao.SharedScheduleDao;
 import com.ls.drupalcon.model.data.Event;
 import com.ls.drupalcon.model.data.FriendsFavoriteItem;
 import com.ls.utils.L;
@@ -12,15 +13,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SharedFavoritesManager {
-
-    private SharedFavoritesDao mFriendsDao;
+    private SharedScheduleDao sharedScheduleDao;
+    private SharedFavoritesDao sharedFavoritesDao;
 
     public SharedFavoritesManager() {
-        mFriendsDao = new SharedFavoritesDao();
+        sharedFavoritesDao = new SharedFavoritesDao();
+        sharedScheduleDao = new SharedScheduleDao();
     }
 
     private List<FriendsFavoriteItem> getAllFriendsFavorite() {
-        List<FriendsFavoriteItem> allSafe = mFriendsDao.getAllSafe();
+        List<FriendsFavoriteItem> allSafe = sharedFavoritesDao.getAllSafe();
         return allSafe;
     }
 
@@ -56,29 +58,38 @@ public class SharedFavoritesManager {
     public void saveFavorite(long id) {
         SharedScheduleManager sharedScheduleManager = Model.instance().getSharedScheduleManager();
         long currentScheduleId = sharedScheduleManager.getCurrentScheduleId();
-        mFriendsDao.saveDataSafe(new FriendsFavoriteItem(id, currentScheduleId));
+        sharedFavoritesDao.saveDataSafe(new FriendsFavoriteItem(id, currentScheduleId));
     }
 
     public void deleteFavorite(long id) {
-        mFriendsDao.deleteDataSafe(id);
+        sharedFavoritesDao.deleteDataSafe(id);
     }
 
     public void saveFavoritesSafe(ArrayList<FriendsFavoriteItem> items) {
         L.e("saveFavoritesSafe = " + items.toString());
-        mFriendsDao.saveDataSafe(items);
+        sharedFavoritesDao.saveDataSafe(items);
+    }
+
+    public void saveFavoritesSafe1(ArrayList<FriendsFavoriteItem> items) {
+        L.e("saveFavoritesSafe = " + items.toString());
+        sharedFavoritesDao.saveOrUpdateDataSafe(items);
     }
 
     public void saveFavoriteSafe(FriendsFavoriteItem item) {
         L.e("saveFavoriteSafe = " + item);
-        mFriendsDao.saveOrUpdateSafe(item);
+        sharedFavoritesDao.saveOrUpdateSafe(item);
+    }
+
+    public void deleteAll(){
+        sharedFavoritesDao.deleteAllSafe();
     }
 
 
     public List<FriendsFavoriteItem> getAllFavoritesSafe() {
-        return mFriendsDao.getAllSafe();
+        return sharedFavoritesDao.getAllSafe();
     }
 
 //    public SharedFavoritesDao getFriendsDao() {
-//        return mFriendsDao;
+//        return sharedFavoritesDao;
 //    }
 }

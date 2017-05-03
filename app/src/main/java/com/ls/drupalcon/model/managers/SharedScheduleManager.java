@@ -118,19 +118,21 @@ public class SharedScheduleManager {
     public void deleteSharedSchedule() {
         schedulesTemp = new ArrayList<>(schedules);
         scheduleTemp = currentSchedule;
-        L.e("Temp = " + schedulesTemp);
+        L.e("Temp = " + scheduleTemp);
         L.e("currentSchedule = " + currentSchedule.toString());
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                sharedScheduleDao.deleteDataSafe(currentSchedule.getId());
-                sharedFavoritesDao.deleteDataSafe(currentSchedule.getId());
+                sharedScheduleDao.deleteDataSafe(scheduleTemp.getId());
+                sharedFavoritesDao.deleteDataSafe(scheduleTemp.getId());
+//
             }
         }, 2000);
 
-
+//        sharedScheduleDao.deleteDataSafe(currentSchedule.getId());
+//        sharedFavoritesDao.deleteDataSafe(currentSchedule.getId());
         schedules.remove(currentSchedule);
-        this.currentSchedule = schedules.get(0);
+        currentSchedule = schedules.get(0);
 
     }
 
@@ -167,7 +169,7 @@ public class SharedScheduleManager {
                 Long code = response.getCode();
                 updateCurrentSchedule(code);
                 preferencesManager.saveMyScheduleCode(code);
-                sharedFavoritesManager.saveFavoriteSafe(new FriendsFavoriteItem(eventId, code));
+//                sharedFavoritesManager.saveFavoriteSafe(new FriendsFavoriteItem(eventId, code));
             }
 
             @Override
@@ -266,7 +268,7 @@ public class SharedScheduleManager {
                         sharedSchedules.add(new FriendsFavoriteItem(eventId, schedule.getCode()));
                     }
                 }
-                sharedFavoritesManager.saveFavoritesSafe(sharedSchedules);
+                sharedFavoritesManager.saveFavoritesSafe1(sharedSchedules);
                 L.e("Schedule.Holder.class = " + holder.toString());
             }
         };

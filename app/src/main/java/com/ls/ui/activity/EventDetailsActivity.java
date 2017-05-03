@@ -379,12 +379,12 @@ public class EventDetailsActivity extends StackKeeperActivity {
                 FavoriteManager manager = new FavoriteManager();
                 manager.setFavoriteEvent(mEventId, mIsFavorite);
 
-                SharedFavoritesManager favoriteManager = new SharedFavoritesManager();
-                if(mIsFavorite){
-                    favoriteManager.saveFavorite(mEventId);
-                }else {
-                    favoriteManager.deleteFavorite(mEventId);
-                }
+//                SharedFavoritesManager favoriteManager = new SharedFavoritesManager();
+//                if(mIsFavorite){
+//                    favoriteManager.saveFavorite(mEventId);
+//                }else {
+//                    favoriteManager.deleteFavorite(mEventId);
+//                }
 
                 sharedScheduleManager.postScheduleData(mEventId);
 

@@ -12,6 +12,7 @@ import com.ls.http.base.ResponseData;
 import com.ls.ui.drawer.DrawerMenu;
 import com.ls.ui.drawer.EventMode;
 import com.ls.util.ObserverHolder;
+import com.ls.utils.L;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -120,6 +121,7 @@ public class UpdatesManager {
             facade.beginTransactions();
             boolean success = true;
             List<UpdateRequest> updateList = updateDate.getIdsForUpdate();
+            L.e("UpdateRequest = " + updateList.toString());
             for (UpdateRequest update : updateList) {
                 success = sendRequestById(update);
                 if (!success) {

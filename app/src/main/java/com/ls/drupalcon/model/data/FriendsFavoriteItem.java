@@ -12,12 +12,12 @@ import org.jetbrains.annotations.NotNull;
 
 public class FriendsFavoriteItem extends AbstractEntity<Long> implements Comparable<FriendsFavoriteItem> {
     private final static String COLUMN_ID = "_id";
-    private final static String COLUMN_SCHEDULE_CODE_ID = "_id_schedule_code";
-
-    @SerializedName("_id_schedule_code")
-    private long sharedScheduleCode;
+    private final static String COLUMN_EVENT_ID= "_event_id";
 
     @SerializedName("_id")
+    private long sharedScheduleCode;
+
+    @SerializedName("_event_id")
     private long eventId;
 
 
@@ -29,8 +29,8 @@ public class FriendsFavoriteItem extends AbstractEntity<Long> implements Compara
     @Override
     public ContentValues getContentValues() {
         ContentValues result = new ContentValues();
-        result.put(COLUMN_ID, eventId);
-        result.put(COLUMN_SCHEDULE_CODE_ID, sharedScheduleCode);
+        result.put(COLUMN_ID, sharedScheduleCode);
+        result.put(COLUMN_EVENT_ID, eventId);
 
         return result;
     }
@@ -38,8 +38,8 @@ public class FriendsFavoriteItem extends AbstractEntity<Long> implements Compara
     @Override
     public void initialize(Cursor cursor) {
         CursorStringParser parser = new CursorStringParser(cursor);
-        eventId = parser.readLong(COLUMN_ID);
-        sharedScheduleCode = parser.readLong(COLUMN_SCHEDULE_CODE_ID);
+        eventId = parser.readLong(COLUMN_EVENT_ID);
+        sharedScheduleCode = parser.readLong(COLUMN_ID);
     }
 
     @Override
