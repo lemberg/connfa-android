@@ -303,16 +303,8 @@ public class EventDetailsActivity extends StackKeeperActivity {
 
     private void fillFavoriteState(@NonNull EventDetailsEvent event) {
         mIsFavorite = event.isFavorite();
-        final SharedScheduleManager sharedScheduleManager = Model.instance().getSharedScheduleManager();
         final CheckBox checkBoxFavorite = (CheckBox) findViewById(R.id.checkBoxFavorite);
         checkBoxFavorite.setChecked(mIsFavorite);
-        checkBoxFavorite.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                L.e("onCheckedChanged = " + isChecked);
-//                sharedScheduleManager.postScheduleData();
-            }
-        });
 
         RelativeLayout layoutFavorite = (RelativeLayout) findViewById(R.id.layoutFavorite);
         layoutFavorite.setOnClickListener(new View.OnClickListener() {
@@ -378,14 +370,6 @@ public class EventDetailsActivity extends StackKeeperActivity {
             public void run() {
                 FavoriteManager manager = new FavoriteManager();
                 manager.setFavoriteEvent(mEventId, mIsFavorite);
-
-//                SharedFavoritesManager favoriteManager = new SharedFavoritesManager();
-//                if(mIsFavorite){
-//                    favoriteManager.saveFavorite(mEventId);
-//                }else {
-//                    favoriteManager.deleteFavorite(mEventId);
-//                }
-
                 sharedScheduleManager.postScheduleData(mEventId);
 
             }

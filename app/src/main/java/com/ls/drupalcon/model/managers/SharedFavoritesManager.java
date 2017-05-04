@@ -13,12 +13,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SharedFavoritesManager {
-    private SharedScheduleDao sharedScheduleDao;
     private SharedFavoritesDao sharedFavoritesDao;
 
     public SharedFavoritesManager() {
         sharedFavoritesDao = new SharedFavoritesDao();
-        sharedScheduleDao = new SharedScheduleDao();
     }
 
     private List<FriendsFavoriteItem> getAllFriendsFavorite() {
@@ -37,15 +35,14 @@ public class SharedFavoritesManager {
         return favoriteEventIds;
     }
 
-    public ArrayList<Long> getMyEventIds() {
+    public List<Long> getMyEventIds() {
 
-        ArrayList<Long> favoriteEventIds = new ArrayList<>();
-        for (FriendsFavoriteItem favorite : getAllFriendsFavorite()) {
-            if (favorite.getSharedScheduleCode() == (PreferencesManager.getInstance().getMyScheduleCode()))
-                favoriteEventIds.add(favorite.getEventId());
-        }
-        L.e("getMyEventIds = " + favoriteEventIds);
-        return favoriteEventIds;
+//        ArrayList<Long> favoriteEventIds = new ArrayList<>();
+//        for (Long id : Model.instance().getFavoriteManager().getFavoriteEventsSafe()) {
+//            favoriteEventIds.add(id);
+//        }
+//        L.e("getMyEventIds = " + favoriteEventIds);
+        return Model.instance().getFavoriteManager().getFavoriteEventsSafe();
     }
 
     public List<Event> getAllFriendsFavoriteEvent() {
@@ -55,32 +52,15 @@ public class SharedFavoritesManager {
         return events;
     }
 
-    public void saveFavorite(long id) {
-        SharedScheduleManager sharedScheduleManager = Model.instance().getSharedScheduleManager();
-        long currentScheduleId = sharedScheduleManager.getCurrentScheduleId();
-        sharedFavoritesDao.saveDataSafe(new FriendsFavoriteItem(id, currentScheduleId));
-    }
-
-    public void deleteFavorite(long id) {
-        sharedFavoritesDao.deleteDataSafe(id);
-    }
-
     public void saveFavoritesSafe(ArrayList<FriendsFavoriteItem> items) {
-        L.e("saveFavoritesSafe = " + items.toString());
         sharedFavoritesDao.saveDataSafe(items);
     }
 
     public void saveFavoritesSafe1(ArrayList<FriendsFavoriteItem> items) {
-        L.e("saveFavoritesSafe = " + items.toString());
         sharedFavoritesDao.saveOrUpdateDataSafe(items);
     }
 
-    public void saveFavoriteSafe(FriendsFavoriteItem item) {
-        L.e("saveFavoriteSafe = " + item);
-        sharedFavoritesDao.saveOrUpdateSafe(item);
-    }
-
-    public void deleteAll(){
+    public void deleteAll() {
         sharedFavoritesDao.deleteAllSafe();
     }
 
@@ -88,8 +68,4 @@ public class SharedFavoritesManager {
     public List<FriendsFavoriteItem> getAllFavoritesSafe() {
         return sharedFavoritesDao.getAllSafe();
     }
-
-//    public SharedFavoritesDao getFriendsDao() {
-//        return sharedFavoritesDao;
-//    }
 }

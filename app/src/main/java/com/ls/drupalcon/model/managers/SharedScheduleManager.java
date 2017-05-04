@@ -44,15 +44,15 @@ public class SharedScheduleManager {
     private Timer timer = new Timer();
 
     public SharedScheduleManager() {
-        SharedSchedule mySharedSchedule = new SharedSchedule(PreferencesManager.getInstance().getMyScheduleCode(), App.getContext().getString(R.string.my_schedule));
+        SharedSchedule schedule = new SharedSchedule(-1, App.getContext().getString(R.string.my_schedule));
         this.sharedScheduleDao = new SharedScheduleDao();
-        if (PreferencesManager.getInstance().getMyScheduleCode() != -1) {
-            this.sharedScheduleDao.deleteDataSafe(-1l);
-        }
+//        if (PreferencesManager.getInstance().getMyScheduleCode() != -1) {
+//            this.sharedScheduleDao.deleteDataSafe(-1l);
+//        }
         this.sharedFavoritesDao = new SharedFavoritesDao();
-        this.sharedScheduleDao.saveDataSafe(mySharedSchedule);
+        this.sharedScheduleDao.saveOrUpdateSafe(schedule);
         this.schedules.addAll(this.sharedScheduleDao.getAllSafe());
-        this.currentSchedule = mySharedSchedule;
+        this.currentSchedule = schedule;
     }
 
     public SharedScheduleDao getSharedScheduleDao() {
@@ -128,9 +128,6 @@ public class SharedScheduleManager {
 //
             }
         }, 2000);
-
-//        sharedScheduleDao.deleteDataSafe(currentSchedule.getId());
-//        sharedFavoritesDao.deleteDataSafe(currentSchedule.getId());
         schedules.remove(currentSchedule);
         currentSchedule = schedules.get(0);
 
@@ -141,9 +138,6 @@ public class SharedScheduleManager {
         currentSchedule = scheduleTemp;
         timer.cancel();
         timer = new Timer();
-//        schedules.clear();
-//        schedules.addAll(schedulesTemp);
-//        timer.cancel();
     }
 
     public void postData(final Long eventId) {
@@ -151,7 +145,6 @@ public class SharedScheduleManager {
         requestConfig.setResponseFormat(BaseRequest.ResponseFormat.JSON);
         requestConfig.setRequestFormat(BaseRequest.RequestFormat.JSON);
         requestConfig.setResponseClassSpecifier(PostResponse.class);
-        final SharedFavoritesManager sharedFavoritesManager = Model.instance().getSharedFavoritesManager();
 
         ArrayList<Long> favoriteEventIds = new ArrayList<>();
         favoriteEventIds.add(eventId);
@@ -167,9 +160,8 @@ public class SharedScheduleManager {
                 PostResponse response = (PostResponse) data.getData();
                 L.e("Schedule Code  = " + response.getCode() + " Tag = " + tag);
                 Long code = response.getCode();
-                updateCurrentSchedule(code);
+//                updateCurrentSchedule(code);
                 preferencesManager.saveMyScheduleCode(code);
-//                sharedFavoritesManager.saveFavoriteSafe(new FriendsFavoriteItem(eventId, code));
             }
 
             @Override
@@ -215,9 +207,9 @@ public class SharedScheduleManager {
 //        L.e("ResponseData getAllSharedSchedule = " + schedule.toString());
 //    }
 
-    public void getMySharedSchedule() {
+    public void getAllSharedSchedule() {
         final PreferencesManager instance = PreferencesManager.getInstance();
-        final String url = "http://connfa-integration.uat.link/api/v2/euna-mcdermott-dds/getSchedules?codes[]=" + instance.getMyScheduleCode();
+//        final String url = "http://connfa-integration.uat.link/api/v2/euna-mcdermott-dds/getSchedules?codes[]=" + instance.getMyScheduleCode();
         final SharedFavoritesManager sharedFavoritesManager = Model.instance().getSharedFavoritesManager();
 
         Response.Listener<JSONObject> listener = new Response.Listener<JSONObject>() {
@@ -241,13 +233,12 @@ public class SharedScheduleManager {
         Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d("Error.Response", error.getMessage());
+                Log.d("Error.Response", error.toString());
             }
         };
 
-        JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, url, listener, errorListener);
+        JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, getURL(), listener, errorListener);
 
-// add it to the RequestQueue
         Model.instance().getQueue().add(getRequest);
     }
 
@@ -258,7 +249,6 @@ public class SharedScheduleManager {
         Response.Listener<JSONObject> listener = new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                // display response
                 Schedule.Holder holder = SharedGson.getGson().fromJson(response.toString(), Schedule.Holder.class);
 
                 ArrayList<FriendsFavoriteItem> sharedSchedules = new ArrayList<>();
@@ -268,7 +258,7 @@ public class SharedScheduleManager {
                         sharedSchedules.add(new FriendsFavoriteItem(eventId, schedule.getCode()));
                     }
                 }
-                sharedFavoritesManager.saveFavoritesSafe1(sharedSchedules);
+                sharedFavoritesManager.saveFavoritesSafe(sharedSchedules);
                 L.e("Schedule.Holder.class = " + holder.toString());
             }
         };
@@ -282,7 +272,6 @@ public class SharedScheduleManager {
 
         JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, url, listener, errorListener);
 
-// add it to the RequestQueue
         Model.instance().getQueue().add(getRequest);
     }
 
@@ -327,11 +316,42 @@ public class SharedScheduleManager {
         }
     }
 
-    private Map<String, ArrayList<Long>> getObjectToPost(ArrayList<Long> ids) {
-        Map<String, ArrayList<Long>> objectToPost = new HashMap<>();
+    private Map<String, List<Long>> getObjectToPost(List<Long> ids) {
+        Map<String, List<Long>> objectToPost = new HashMap<>();
         objectToPost.put("data", ids);
         L.e("Object to post = " + objectToPost.toString());
         return objectToPost;
+    }
+
+    private String getURL() {
+        List<SharedSchedule> schedules = sharedScheduleDao.getAllSafe();
+        L.e("All schedules = " + schedules);
+        
+        StringBuilder url = new StringBuilder();
+        url.append(App.getContext().getString(R.string.api_value_base_url));
+        String requestParameter = "codes[]=";
+        url.append("getSchedules?");
+
+        int counter = 0;
+        for (SharedSchedule schedule : schedules) {
+            Long id = schedule.getId();
+            if (id != -1) {
+                if (counter == 0) {
+                    url.append(requestParameter);
+                } else {
+                    url.append("&");
+                    url.append(requestParameter);
+                }
+                url.append(schedule.getId());
+                counter++;
+            }
+
+
+        }
+
+        L.e("Get URL = " + url.toString());
+        return url.toString();
+
     }
 
 }
