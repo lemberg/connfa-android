@@ -6,7 +6,6 @@ import com.ls.drupalcon.model.UpdateRequest;
 import com.ls.drupalcon.model.UpdatesManager;
 import com.ls.drupalcon.model.dao.SharedScheduleDao;
 import com.ls.drupalcon.model.data.InfoItem;
-import com.ls.drupalcon.model.managers.SharedFavoritesManager;
 import com.ls.drupalcon.model.managers.SharedScheduleManager;
 import com.ls.drupalcon.model.managers.InfoManager;
 import com.ls.ui.activity.AboutDetailsActivity;
@@ -52,10 +51,9 @@ public class AboutFragment extends Fragment {
         super.onCreate(savedInstanceState);
         Model.instance().getUpdatesManager().registerUpdateListener(updateListener);
         SharedScheduleManager sharedScheduleManager = Model.instance().getSharedScheduleManager();
-        SharedFavoritesManager sharedFavoritesManager = Model.instance().getSharedFavoritesManager();
         SharedScheduleDao sharedScheduleDao = sharedScheduleManager.getSharedScheduleDao();
         L.e("SharedScheduleDao = " + sharedScheduleDao.getAllSafe().toString());
-        L.e("SharedFavoritesDao = " + sharedFavoritesManager.getAllFavoritesSafe());
+        L.e("SharedFavoritesDao = " + sharedScheduleManager.getAllFavoritesSafe());
 
 
         //test
@@ -63,7 +61,9 @@ public class AboutFragment extends Fragment {
 //        sharedScheduleManager.getSharedSchedule(8981);
         sharedScheduleManager.getAllSharedSchedule();
 
-
+//        ScheduleManager scheduleManager = Model.instance().getScheduleManager();
+//
+//        scheduleManager.fetchData();
 //        new AsyncTask<Void, Void, Boolean>() {
 //
 //            @Override

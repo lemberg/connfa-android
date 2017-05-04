@@ -29,7 +29,7 @@ public class ScheduleManager extends SynchronousItemManager<Schedule.Holder, Obj
 
     @Override
     protected boolean storeResponse(Schedule.Holder requestResponse, String tag) {
-        L.e("Schedule.Holder = " + requestResponse.toString());
+        L.e("ScheduleManager Schedule.Holder = " + requestResponse.toString());
         return true;
     }
 
