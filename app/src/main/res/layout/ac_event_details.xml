@@ -118,6 +118,35 @@
                         android:layout_marginLeft="72dp"
                         android:background="@color/white_200"/>
 
+                <Button
+                    android:id="@+id/testButton"
+                    android:text="Expand"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp" />
+
+                <com.ls.ui.view.expandablelayout.ExpandableRelativeLayout
+                    android:id="@+id/expandableLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:background="@color/primary"
+                    app:ael_duration="500"
+                    app:ael_expanded="true"
+                    app:ael_interpolator="linear"
+                    app:ael_orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="sample" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/text"
+                        android:text="sample2" />
+                </com.ls.ui.view.expandablelayout.ExpandableRelativeLayout>
+
                 <LinearLayout
                     android:id="@+id/imgEmptyView"
                     android:layout_gravity="center"
