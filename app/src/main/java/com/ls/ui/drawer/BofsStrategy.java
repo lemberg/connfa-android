@@ -22,12 +22,12 @@ public class BofsStrategy implements EventHolderFragmentStrategy {
 
     @Override
     public int getTextResId() {
-        return R.string.placeholder_sessions;
+        return R.string.placeholder_bofs;
     }
 
     @Override
     public int getImageResId() {
-        return R.drawable.ic_no_session;
+        return R.drawable.ic_no_bofs;
     }
 
     @Override

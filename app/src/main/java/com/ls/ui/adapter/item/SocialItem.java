@@ -6,4 +6,5 @@ public class SocialItem extends EventListItem {
     public int getAdapterType() {
         return TYPE_SOCIAL;
     }
+
 }

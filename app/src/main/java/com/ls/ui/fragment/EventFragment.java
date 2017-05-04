@@ -72,7 +72,7 @@ public class EventFragment extends Fragment implements EventsAdapter.Listener {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fr_event, null);
+        return inflater.inflate(R.layout.fr_event, container, false);
     }
 
     @Override

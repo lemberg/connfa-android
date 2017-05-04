@@ -1,4 +1,4 @@
-apply plugin: 'com.android.application'
+ apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
 apply plugin: 'com.google.gms.google-services'
 
@@ -31,12 +31,8 @@ android {
 
         connfa {
             applicationId "com.ls.connfa"
-            versionName "connfa"
-
-            defaultConfig {
-                versionCode 1
-                versionName "1.0.0"
-            }
+            versionCode 1
+            versionName "1.0.0"
         }
 
     }

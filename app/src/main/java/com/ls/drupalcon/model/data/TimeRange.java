@@ -70,4 +70,13 @@ public class TimeRange {
         result = 31 * result + (mToTime != null ? mToTime.hashCode() : 0);
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "TimeRange{" +
+                "mDate=" + mDate +
+                ", mFromTime=" + mFromTime +
+                ", mToTime=" + mToTime +
+                '}';
+    }
 }

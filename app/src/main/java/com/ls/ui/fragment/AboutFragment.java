@@ -15,13 +15,18 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
+import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,8 +34,7 @@ import java.util.List;
 /**
  * Created on 24.06.2016.
  */
-public class AboutFragment  extends Fragment
-{
+public class AboutFragment extends Fragment {
     private ListView mListMenu;
     private View mLayoutPlaceholder;
 
@@ -39,31 +43,28 @@ public class AboutFragment  extends Fragment
 
     private UpdatesManager.DataUpdatedListener updateListener = new UpdatesManager.DataUpdatedListener() {
         @Override
-        public void onDataUpdated( List<UpdateRequest> requests) {
+        public void onDataUpdated(List<UpdateRequest> requests) {
             L.d("AboutFragment");
             reloadData();
         }
     };
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState)
-    {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Model.instance().getUpdatesManager().registerUpdateListener(updateListener);
     }
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-    {
-        View result = inflater.inflate(R.layout.ac_about,container,false);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View result = inflater.inflate(R.layout.ac_about, container, false);
         initViews(result);
         return result;
     }
 
     @Override
-    public void onDestroy()
-    {
+    public void onDestroy() {
         Model.instance().getUpdatesManager().unregisterUpdateListener(updateListener);
         super.onDestroy();
     }
@@ -72,11 +73,9 @@ public class AboutFragment  extends Fragment
 
         mLayoutPlaceholder = root.findViewById(R.id.layout_placeholder);
         mListMenu = (ListView) root.findViewById(R.id.listView);
-        mListMenu.setOnItemClickListener(new AdapterView.OnItemClickListener()
-        {
+        mListMenu.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l)
-            {
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 onItemClicked(position);
             }
         });
@@ -87,10 +86,10 @@ public class AboutFragment  extends Fragment
         }
 
         reloadData();
+
     }
 
-    private void reloadData()
-    {
+    private void reloadData() {
         InfoManager infoManager = Model.instance().getInfoManager();
         infoItems = infoManager.getInfo();
 
@@ -107,7 +106,7 @@ public class AboutFragment  extends Fragment
 
     private void onItemClicked(int position) {
         Activity root = getActivity();
-        if(root == null){
+        if (root == null) {
             return;
         }
 
@@ -119,21 +118,20 @@ public class AboutFragment  extends Fragment
         startActivity(intent);
     }
 
-    private class AboutListAdapter extends BaseAdapter
-    {
+    private class AboutListAdapter extends BaseAdapter {
 
         List<InfoItem> mItems = new ArrayList<>();
         LayoutInflater inflatter;
 
-        public AboutListAdapter(List<InfoItem> items,Context context) {
+        public AboutListAdapter(List<InfoItem> items, Context context) {
             inflatter = LayoutInflater.from(context);
             setData(items);
         }
 
         public void setData(List<InfoItem> items) {
-            if(items != null && !items.isEmpty()) {
+            if (items != null && !items.isEmpty()) {
                 mItems = new ArrayList<>(items);
-            }else{
+            } else {
                 mItems = new ArrayList<>();
             }
         }
