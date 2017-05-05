@@ -15,9 +15,11 @@ import com.ls.drupalcon.model.managers.SpeakerManager;
 import com.ls.sponsors.GoldSponsors;
 import com.ls.sponsors.SponsorItem;
 import com.ls.sponsors.SponsorManager;
+import com.ls.ui.adapter.item.FriendsAdapter;
 import com.ls.ui.receiver.ReceiverManager;
 import com.ls.ui.view.CircleImageView;
 import com.ls.ui.view.NotifyingScrollView;
+import com.ls.ui.view.expandablelayout.ExpandableRelativeLayout;
 import com.ls.utils.AnalyticsManager;
 import com.ls.utils.DateUtils;
 import com.ls.utils.L;
@@ -38,12 +40,14 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -104,6 +108,40 @@ public class EventDetailsActivity extends StackKeeperActivity {
         initToolbar();
         initViews();
         setHeaderView();
+
+        SharedScheduleManager sharedScheduleManager = Model.instance().getSharedScheduleManager();
+        sharedScheduleManager.getSchedulesNameByCode(mEventId);
+        sharedScheduleManager.getFavoritesById(mEventId);
+
+
+        ArrayList<String> data = new ArrayList<>();
+        data.add("Test 1");
+        data.add("Test 2");
+        data.add("Test 3");
+        data.add("Test 4");
+        FriendsAdapter adapter = new FriendsAdapter(this, data);
+
+        ListView listView = (ListView) findViewById(R.id.listView);
+        ViewGroup.LayoutParams params = listView.getLayoutParams();
+        params.height = 200;
+        listView.setLayoutParams(params);
+        listView.requestLayout();
+        listView.setAdapter(adapter);
+
+//// toggle expand, collapse
+//        expandableLayout.toggle();
+//// expand
+//        expandableLayout.expand();
+//// collapse
+//        expandableLayout.collapse();
+//
+//// move position of child view
+//        expandableLayout.moveChild(0);
+//// move optional position
+//        expandableLayout.move(500);
+//
+//// set base position which is close position
+//        expandableLayout.setClosePosition(500);
     }
 
     @Override
@@ -205,6 +243,7 @@ public class EventDetailsActivity extends StackKeeperActivity {
         fillSpeakers(mEvent);
         fillDescription(mEvent);
         updatePlaceholderVisibility(mEvent);
+        fillFriends();
     }
 
     private void fillToolbar(@NonNull EventDetailsEvent event) {
@@ -312,6 +351,41 @@ public class EventDetailsActivity extends StackKeeperActivity {
                 checkBoxFavorite.setChecked(!checkBoxFavorite.isChecked());
                 mIsFavorite = checkBoxFavorite.isChecked();
                 setFavorite();
+            }
+        });
+    }
+    private void fillFriends() {
+        ArrayList<String> data = new ArrayList<>();
+        data.add("Test 1");
+        data.add("Test 2");
+        data.add("Test 3");
+        data.add("Test 4");
+
+        LayoutInflater inflater = LayoutInflater.from(EventDetailsActivity.this);
+        LinearLayout holderSpeakers = (LinearLayout) findViewById(R.id.holderFriends);
+//        holderSpeakers.removeAllViewsInLayout();
+
+        if (!data.isEmpty()) {
+            for (String friend : data) {
+                View speakerView = inflater.inflate(R.layout.item_speaker_no_letter, null);
+                TextView txtName = (TextView) speakerView.findViewById(R.id.txtName);
+                txtName.setText(friend);
+                holderSpeakers.addView(speakerView);
+            }
+//            findViewById(R.id.botDivider).setVisibility(View.VISIBLE);
+        } else {
+//            findViewById(R.id.botDivider).setVisibility(View.GONE);
+        }
+
+        final ExpandableRelativeLayout expandableLayout = (ExpandableRelativeLayout) findViewById(R.id.expandableLayout);
+        findViewById(R.id.testButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (expandableLayout.isExpanded()) {
+                    expandableLayout.collapse();
+                } else {
+                    expandableLayout.expand();
+                }
             }
         });
     }

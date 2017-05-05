@@ -51,8 +51,8 @@ public class AboutFragment extends Fragment {
         super.onCreate(savedInstanceState);
         Model.instance().getUpdatesManager().registerUpdateListener(updateListener);
         SharedScheduleManager sharedScheduleManager = Model.instance().getSharedScheduleManager();
-        SharedScheduleDao sharedScheduleDao = sharedScheduleManager.getSharedScheduleDao();
-        L.e("SharedScheduleDao = " + sharedScheduleDao.getAllSafe().toString());
+
+        L.e("SharedScheduleDao = " + sharedScheduleManager.getAllSchedules());
         L.e("SharedFavoritesDao = " + sharedScheduleManager.getAllFavoritesSafe());
 
 

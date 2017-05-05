@@ -90,9 +90,9 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="bottom"
                             android:layout_marginRight="8dp"
-                            app:custom_font="@string/regular_font"
                             android:textColor="@color/grey_500"
                             android:textSize="@dimen/text_size_15"
+                            app:custom_font="@string/regular_font"
                             tools:text="@string/lorem_ipsum" />
 
                         <ImageView
@@ -106,55 +106,61 @@
                 </LinearLayout>
 
                 <LinearLayout
-                        android:id="@+id/holderSpeakers"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"/>
+                    android:id="@+id/holderSpeakers"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
 
                 <View
-                        android:id="@+id/botDivider"
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginLeft="72dp"
-                        android:background="@color/white_200"/>
-
-                <Button
-                    android:id="@+id/testButton"
-                    android:text="Expand"
+                    android:id="@+id/botDivider"
                     android:layout_width="match_parent"
-                    android:layout_height="100dp" />
+                    android:layout_height="1dp"
+                    android:layout_marginLeft="72dp"
+                    android:background="@color/white_200" />
+
+                <com.ls.ui.view.FontTextView
+                    android:id="@+id/testButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp"
+                    android:text="Who is going?"
+                    android:textColor="@color/item_selection" />
+
 
                 <com.ls.ui.view.expandablelayout.ExpandableRelativeLayout
                     android:id="@+id/expandableLayout"
                     android:layout_width="match_parent"
-                    android:layout_height="100dp"
-                    android:background="@color/primary"
-                    app:ael_duration="500"
-                    app:ael_expanded="true"
+                    android:layout_height="wrap_content"
+                    app:ael_duration="200"
+                    app:ael_expanded="false"
                     app:ael_interpolator="linear"
                     app:ael_orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/text"
+                    <LinearLayout
+                        android:id="@+id/holderFriends"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="sample" />
+                        android:orientation="vertical" />
+                    <ListView
+                        android:id="@+id/listView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/divider"
+                        android:divider="@android:color/transparent"
+                        android:dividerHeight="0dp"
+                        android:listSelector="@drawable/selector_light"/>
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/text"
-                        android:text="sample2" />
                 </com.ls.ui.view.expandablelayout.ExpandableRelativeLayout>
 
                 <LinearLayout
                     android:id="@+id/imgEmptyView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginTop="60dp"
                     android:orientation="vertical"
-                    android:visibility="gone"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                    android:visibility="gone">
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -163,15 +169,15 @@
                         android:src="@drawable/ic_no_details" />
 
                     <com.ls.ui.view.FontTextView
-                        android:layout_gravity="center"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center"
                         android:layout_marginTop="5dp"
-                        app:custom_font="@string/regular_font"
                         android:clickable="false"
+                        android:text="No Details"
                         android:textColor="#bbbbbb"
                         android:textSize="@dimen/text_size_medium"
-                        android:text="No Details" />
+                        app:custom_font="@string/regular_font" />
 
                 </LinearLayout>
 
@@ -179,12 +185,12 @@
                     android:id="@+id/webView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:visibility="gone"
-                    tools:visibility="visible"
-                    android:layout_marginTop="20dp"
                     android:layout_marginBottom="16dp"
                     android:layout_marginLeft="16dp"
-                    android:layout_marginRight="16dp"/>
+                    android:layout_marginRight="16dp"
+                    android:layout_marginTop="20dp"
+                    android:visibility="gone"
+                    tools:visibility="visible" />
 
             </LinearLayout>
 
@@ -226,7 +232,7 @@
         android:id="@+id/viewShadow"
         android:layout_width="match_parent"
         android:layout_height="56dp"
-        android:background="@drawable/shape_shadow"/>
+        android:background="@drawable/shape_shadow" />
 
     <View
         android:id="@+id/viewToolbar"

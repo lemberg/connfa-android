@@ -2,7 +2,10 @@ package com.ls.drupalcon.model.dao;
 
 import com.ls.drupalcon.model.AppDatabaseInfo;
 import com.ls.drupalcon.model.data.FriendsFavoriteItem;
+import com.ls.drupalcon.model.data.Speaker;
 import com.ls.drupalcon.model.database.AbstractEntityDAO;
+
+import java.util.List;
 
 
 public class SharedFavoritesDao extends AbstractEntityDAO<FriendsFavoriteItem, Long> {
@@ -37,6 +40,12 @@ public class SharedFavoritesDao extends AbstractEntityDAO<FriendsFavoriteItem, L
     @Override
     protected String[] getKeyColumns() {
         return new String[0];
+    }
+
+    public List<FriendsFavoriteItem> getFavoritesById(long eventId) {
+        String query = "SELECT * FROM table_friends_favorite_events WHERE _event_id =" + eventId;
+
+        return getDataBySqlQuerySafe(query, null);
     }
 
 

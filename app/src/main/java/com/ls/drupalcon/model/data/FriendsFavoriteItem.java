@@ -23,7 +23,7 @@ public class FriendsFavoriteItem extends AbstractEntity<Long> implements Compara
 
     @Override
     public Long getId() {
-        return eventId;
+        return sharedScheduleCode;
     }
 
     @Override
