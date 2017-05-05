@@ -15,14 +15,11 @@ import com.ls.drupalcon.model.managers.SpeakerManager;
 import com.ls.sponsors.GoldSponsors;
 import com.ls.sponsors.SponsorItem;
 import com.ls.sponsors.SponsorManager;
-import com.ls.ui.adapter.item.FriendsAdapter;
 import com.ls.ui.receiver.ReceiverManager;
 import com.ls.ui.view.CircleImageView;
 import com.ls.ui.view.NotifyingScrollView;
-import com.ls.ui.view.expandablelayout.ExpandableRelativeLayout;
 import com.ls.utils.AnalyticsManager;
 import com.ls.utils.DateUtils;
-import com.ls.utils.L;
 import com.ls.utils.ScheduleManager;
 import com.ls.utils.WebviewUtils;
 
@@ -40,14 +37,11 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -60,7 +54,7 @@ public class EventDetailsActivity extends StackKeeperActivity {
     public static final String EXTRA_EVENT_ID = "EXTRA_EVENT_ID";
     public static final String EXTRA_DAY = "EXTRA_DAY";
     public static final String EXTRA_HEADER = "EXTRA_HEADER";
-    private static boolean Show = true;
+    private static boolean showFriendsContainer = true;
 
     private TextView mToolbarTitle;
     private View mViewToolbar;
@@ -336,12 +330,12 @@ public class EventDetailsActivity extends StackKeeperActivity {
 
         final LayoutInflater inflater = LayoutInflater.from(EventDetailsActivity.this);
         final LinearLayout holderSpeakers = (LinearLayout) findViewById(R.id.holderFriends);
-//        holderSpeakers.removeAllViewsInLayout();
+        holderSpeakers.removeAllViewsInLayout();
 
         if (!data.isEmpty()) {
             for (String friend : data) {
-                View speakerView = inflater.inflate(R.layout.item_speaker_no_letter, null);
-                TextView txtName = (TextView) speakerView.findViewById(R.id.txtName);
+                View speakerView = inflater.inflate(R.layout.item_friend, null);
+                TextView txtName = (TextView) speakerView.findViewById(R.id.idFriendName);
                 txtName.setText(friend);
                 holderSpeakers.addView(speakerView);
             }
@@ -353,11 +347,11 @@ public class EventDetailsActivity extends StackKeeperActivity {
         findViewById(R.id.testButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (Show) {
-                    Show = false;
+                if (showFriendsContainer) {
+                    showFriendsContainer = false;
                     holderSpeakers.setVisibility(View.GONE);
                 } else {
-                    Show = true;
+                    showFriendsContainer = true;
                     holderSpeakers.setVisibility(View.VISIBLE);
                 }
             }

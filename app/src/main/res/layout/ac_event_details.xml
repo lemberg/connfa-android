@@ -132,16 +132,9 @@
                     android:id="@+id/holderFriends"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp"
                     android:orientation="vertical" />
-
-                <!--<ListView-->
-                    <!--android:id="@+id/listView"-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_below="@+id/divider"-->
-                    <!--android:divider="@android:color/transparent"-->
-                    <!--android:dividerHeight="0dp"-->
-                    <!--android:listSelector="@drawable/selector_light" />-->
 
 
                 <LinearLayout

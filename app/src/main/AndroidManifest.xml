@@ -60,13 +60,6 @@
             android:name="io.fabric.ApiKey"
             android:value="e92185b02a2fa31062b797232c3d5cccf9867952" />
 
-        <activity android:name="com.ls.ui.activity.TestActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
     </application>
 
 </manifest>
