@@ -128,30 +128,21 @@
                     android:textColor="@color/item_selection" />
 
 
-                <com.ls.ui.view.expandablelayout.ExpandableRelativeLayout
-                    android:id="@+id/expandableLayout"
+                <LinearLayout
+                    android:id="@+id/holderFriends"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:ael_duration="200"
-                    app:ael_expanded="false"
-                    app:ael_interpolator="linear"
-                    app:ael_orientation="vertical">
+                    android:orientation="vertical" />
 
-                    <LinearLayout
-                        android:id="@+id/holderFriends"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical" />
-                    <ListView
-                        android:id="@+id/listView"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/divider"
-                        android:divider="@android:color/transparent"
-                        android:dividerHeight="0dp"
-                        android:listSelector="@drawable/selector_light"/>
+                <!--<ListView-->
+                    <!--android:id="@+id/listView"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_below="@+id/divider"-->
+                    <!--android:divider="@android:color/transparent"-->
+                    <!--android:dividerHeight="0dp"-->
+                    <!--android:listSelector="@drawable/selector_light" />-->
 
-                </com.ls.ui.view.expandablelayout.ExpandableRelativeLayout>
 
                 <LinearLayout
                     android:id="@+id/imgEmptyView"

@@ -60,6 +60,7 @@ public class EventDetailsActivity extends StackKeeperActivity {
     public static final String EXTRA_EVENT_ID = "EXTRA_EVENT_ID";
     public static final String EXTRA_DAY = "EXTRA_DAY";
     public static final String EXTRA_HEADER = "EXTRA_HEADER";
+    private static boolean Show = true;
 
     private TextView mToolbarTitle;
     private View mViewToolbar;
@@ -113,35 +114,6 @@ public class EventDetailsActivity extends StackKeeperActivity {
         sharedScheduleManager.getSchedulesNameByCode(mEventId);
         sharedScheduleManager.getFavoritesById(mEventId);
 
-
-        ArrayList<String> data = new ArrayList<>();
-        data.add("Test 1");
-        data.add("Test 2");
-        data.add("Test 3");
-        data.add("Test 4");
-        FriendsAdapter adapter = new FriendsAdapter(this, data);
-
-        ListView listView = (ListView) findViewById(R.id.listView);
-        ViewGroup.LayoutParams params = listView.getLayoutParams();
-        params.height = 200;
-        listView.setLayoutParams(params);
-        listView.requestLayout();
-        listView.setAdapter(adapter);
-
-//// toggle expand, collapse
-//        expandableLayout.toggle();
-//// expand
-//        expandableLayout.expand();
-//// collapse
-//        expandableLayout.collapse();
-//
-//// move position of child view
-//        expandableLayout.moveChild(0);
-//// move optional position
-//        expandableLayout.move(500);
-//
-//// set base position which is close position
-//        expandableLayout.setClosePosition(500);
     }
 
     @Override
@@ -354,15 +326,16 @@ public class EventDetailsActivity extends StackKeeperActivity {
             }
         });
     }
+
     private void fillFriends() {
-        ArrayList<String> data = new ArrayList<>();
+        final ArrayList<String> data = new ArrayList<>();
         data.add("Test 1");
         data.add("Test 2");
         data.add("Test 3");
         data.add("Test 4");
 
-        LayoutInflater inflater = LayoutInflater.from(EventDetailsActivity.this);
-        LinearLayout holderSpeakers = (LinearLayout) findViewById(R.id.holderFriends);
+        final LayoutInflater inflater = LayoutInflater.from(EventDetailsActivity.this);
+        final LinearLayout holderSpeakers = (LinearLayout) findViewById(R.id.holderFriends);
 //        holderSpeakers.removeAllViewsInLayout();
 
         if (!data.isEmpty()) {
@@ -377,14 +350,15 @@ public class EventDetailsActivity extends StackKeeperActivity {
 //            findViewById(R.id.botDivider).setVisibility(View.GONE);
         }
 
-        final ExpandableRelativeLayout expandableLayout = (ExpandableRelativeLayout) findViewById(R.id.expandableLayout);
         findViewById(R.id.testButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (expandableLayout.isExpanded()) {
-                    expandableLayout.collapse();
+                if (Show) {
+                    Show = false;
+                    holderSpeakers.setVisibility(View.GONE);
                 } else {
-                    expandableLayout.expand();
+                    Show = true;
+                    holderSpeakers.setVisibility(View.VISIBLE);
                 }
             }
         });
