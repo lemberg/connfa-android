@@ -48,9 +48,6 @@ public class SharedScheduleManager {
     public SharedScheduleManager() {
         SharedSchedule schedule = new SharedSchedule(-1, App.getContext().getString(R.string.my_schedule));
         this.sharedScheduleDao = new SharedScheduleDao();
-//        if (PreferencesManager.getInstance().getMyScheduleCode() != -1) {
-//            this.sharedScheduleDao.deleteDataSafe(-1l);
-//        }
         this.sharedFavoritesDao = new SharedFavoritesDao();
         this.sharedScheduleDao.saveOrUpdateSafe(schedule);
         this.schedules.addAll(this.sharedScheduleDao.getAllSafe());
@@ -111,9 +108,10 @@ public class SharedScheduleManager {
     }
 
     public void renameSchedule(String newScheduleName) {
-        SharedSchedule sharedSchedule = new SharedSchedule(getCurrentScheduleId(), "Schedule " + newScheduleName);
-        schedules.set(schedules.indexOf(currentSchedule), sharedSchedule);
-        this.sharedScheduleDao.saveOrUpdateSafe(sharedSchedule);
+        SharedSchedule schedule = schedules.get(schedules.indexOf(currentSchedule));
+        schedule.setScheduleName(newScheduleName);
+        currentSchedule.setScheduleName(newScheduleName);
+        this.sharedScheduleDao.saveOrUpdateSafe(currentSchedule);
 
     }
 

@@ -122,10 +122,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="horizontal"
-                    android:paddingLeft="@dimen/padding"
-                    android:paddingRight="@dimen/padding"
-                    android:paddingTop="@dimen/padding"
-                    >
+                    android:padding="@dimen/padding">
 
                     <com.ls.ui.view.FontTextView
                         android:layout_width="0dp"

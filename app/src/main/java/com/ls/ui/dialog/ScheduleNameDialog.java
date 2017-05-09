@@ -14,20 +14,25 @@ import android.widget.EditText;
 
 import com.ls.drupalcon.R;
 import com.ls.drupalcon.model.managers.ToastManager;
-import com.ls.utils.L;
 
 public class ScheduleNameDialog extends DialogFragment {
 
     public static final String TAG = ScheduleNameDialog.class.getName();
+    public static final String EXTRA_SCHEDULE_NAME = "extra_schedule_name";
     public static final String EXTRA_SCHEDULE_CODE = "extra_schedule_code";
+    private static final long defaultCode = -1;
 
-    public static ScheduleNameDialog newInstance() {
-
-        Bundle args = new Bundle();
+    public static ScheduleNameDialog newInstance(long code) {
+        Bundle bundle = new Bundle();
+        bundle.putLong(EXTRA_SCHEDULE_CODE, code);
 
         ScheduleNameDialog fragment = new ScheduleNameDialog();
-        fragment.setArguments(args);
+        fragment.setArguments(bundle);
         return fragment;
+    }
+
+    public static ScheduleNameDialog newInstance() {
+        return new ScheduleNameDialog();
     }
 
 
@@ -38,6 +43,8 @@ public class ScheduleNameDialog extends DialogFragment {
         ViewGroup contentView = (ViewGroup) LayoutInflater.from(getActivity()).inflate(R.layout.dialog_shedule_name, null);
         final EditText editTextId = (EditText) contentView.findViewById(R.id.scheduleName);
 
+        editTextId.setText(getScheduleCode());
+
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
         alertDialogBuilder.setTitle(R.string.add_a_schedule);
         alertDialogBuilder.setView(contentView);
@@ -45,11 +52,7 @@ public class ScheduleNameDialog extends DialogFragment {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 String text = editTextId.getText().toString();
-                if (TextUtils.isEmpty(text)) {
-                    ToastManager.message(getContext(), "Please enter schedule name");
-                }else {
-                    getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, getActivity().getIntent().putExtra(EXTRA_SCHEDULE_CODE, text));
-                }
+                getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, getActivity().getIntent().putExtra(EXTRA_SCHEDULE_NAME, text));
             }
         });
 
@@ -64,6 +67,14 @@ public class ScheduleNameDialog extends DialogFragment {
 //        dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.primary));
 //        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.primary));
         return dialog;
+    }
+
+    private String getScheduleCode() {
+        if (getArguments() != null) {
+            return getString(R.string.schedule) + " " + getArguments().getLong(EXTRA_SCHEDULE_CODE, defaultCode);
+        } else {
+            return "";
+        }
     }
 
 }
