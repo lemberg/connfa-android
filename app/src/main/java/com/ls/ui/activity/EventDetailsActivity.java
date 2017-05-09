@@ -18,6 +18,7 @@ import com.ls.sponsors.SponsorManager;
 import com.ls.ui.receiver.ReceiverManager;
 import com.ls.ui.view.CircleImageView;
 import com.ls.ui.view.NotifyingScrollView;
+import com.ls.util.L;
 import com.ls.utils.AnalyticsManager;
 import com.ls.utils.DateUtils;
 import com.ls.utils.ScheduleManager;
@@ -327,7 +328,7 @@ public class EventDetailsActivity extends StackKeeperActivity {
         ArrayList<String> data = sharedScheduleManager.getSharedSchedulesNamesById(mEventId);
 
         final LayoutInflater inflater = LayoutInflater.from(EventDetailsActivity.this);
-        final LinearLayout holder = (LinearLayout) findViewById(R.id.holderFriends);
+        final LinearLayout holder = (LinearLayout) findViewById(R.id.friendsHolder);
         holder.removeAllViewsInLayout();
 
         if (!data.isEmpty()) {
@@ -337,23 +338,29 @@ public class EventDetailsActivity extends StackKeeperActivity {
                 txtName.setText(friend);
                 holder.addView(speakerView);
             }
+            final ImageView indicator = (ImageView) findViewById(R.id.expandIndicator);
             findViewById(R.id.botFriendsDivider).setVisibility(View.VISIBLE);
+            findViewById(R.id.whoIsGoingButton).setVisibility(View.VISIBLE);
+            findViewById(R.id.whoIsGoingButton).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(holder.isShown()){
+                        holder.setVisibility(View.GONE);
+                        indicator.setImageResource(R.drawable.ic_group_arrow_down);
+                    }else {
+                        holder.setVisibility(View.VISIBLE);
+                        indicator.setImageResource(R.drawable.ic_group_arrow_up);
+                    }
+
+                }
+            });
+
         } else {
             findViewById(R.id.botFriendsDivider).setVisibility(View.GONE);
+            findViewById(R.id.whoIsGoingButton).setVisibility(View.GONE);
         }
 
-        findViewById(R.id.testButton).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (showFriendsContainer) {
-                    showFriendsContainer = false;
-                    holder.setVisibility(View.GONE);
-                } else {
-                    showFriendsContainer = true;
-                    holder.setVisibility(View.VISIBLE);
-                }
-            }
-        });
+
     }
 
     private void fillSpeakers(@NonNull EventDetailsEvent event) {
@@ -372,6 +379,7 @@ public class EventDetailsActivity extends StackKeeperActivity {
             }
             findViewById(R.id.botSpeakersDivider).setVisibility(View.VISIBLE);
         } else {
+
             findViewById(R.id.botSpeakersDivider).setVisibility(View.GONE);
         }
     }

@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.ls.ui.view.FontTextView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/idFriendName"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
     android:orientation="vertical"
-    android:textColor="@color/black_100" />
+    android:padding="@dimen/padding"
+    android:drawableLeft="@drawable/friend_schedule"
+    android:drawablePadding="@dimen/padding"
+    android:textColor="@color/black_100"
+    tools:text="test" />

@@ -117,23 +117,39 @@
                     android:layout_height="1dp"
                     android:background="@color/white_200" />
 
-                <com.ls.ui.view.FontTextView
-                    android:id="@+id/testButton"
+                <LinearLayout
+                    android:id="@+id/whoIsGoingButton"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingLeft="16dp"
-                    android:paddingRight="16dp"
-                    android:text="Who is going?"
-                    android:textColor="@color/item_selection" />
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:paddingLeft="@dimen/padding"
+                    android:paddingRight="@dimen/padding"
+                    android:paddingTop="@dimen/padding"
+                    >
+
+                    <com.ls.ui.view.FontTextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Who is going?"
+                        android:textColor="@color/item_selection" />
+
+                    <ImageView
+                        android:id="@+id/expandIndicator"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_group_arrow_up"/>
+                </LinearLayout>
 
 
                 <LinearLayout
-                    android:id="@+id/holderFriends"
+                    android:id="@+id/friendsHolder"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:orientation="vertical"
                     android:paddingLeft="16dp"
-                    android:paddingRight="16dp"
-                    android:orientation="vertical" />
+                    android:paddingRight="16dp" />
+
                 <View
                     android:id="@+id/botFriendsDivider"
                     android:layout_width="match_parent"
