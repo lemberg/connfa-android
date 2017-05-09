@@ -112,10 +112,9 @@
                     android:orientation="vertical" />
 
                 <View
-                    android:id="@+id/botDivider"
+                    android:id="@+id/botSpeakersDivider"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:layout_marginLeft="72dp"
                     android:background="@color/white_200" />
 
                 <com.ls.ui.view.FontTextView
@@ -135,7 +134,11 @@
                     android:paddingLeft="16dp"
                     android:paddingRight="16dp"
                     android:orientation="vertical" />
-
+                <View
+                    android:id="@+id/botFriendsDivider"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/white_200" />
 
                 <LinearLayout
                     android:id="@+id/imgEmptyView"

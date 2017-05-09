@@ -223,10 +223,21 @@ public class SharedScheduleManager {
         return allSchedules;
     }
 
-    public void getFavoritesById(long eventId) {
+    public  List<SharedSchedule> getFavoritesById(long eventId) {
 //        List<FriendsFavoriteItem> favoritesById = sharedFavoritesDao.getFavoritesById(eventId);
-        List<SharedSchedule> scheduleNameId = sharedScheduleDao.getScheduleNameId(eventId);
-        L.e("getFavoritesById = " + scheduleNameId.toString());
+        List<SharedSchedule> list = sharedScheduleDao.getScheduleNameId(eventId);
+        L.e("getFavoritesById = " + list.toString());
+        return list;
+    }
+
+    public ArrayList<String> getSharedSchedulesNamesById(long eventId) {
+        List<SharedSchedule> list = getFavoritesById(eventId);
+        ArrayList<String> namesList = new ArrayList<>();
+        for(SharedSchedule schedule: list){
+            namesList.add(schedule.getScheduleName());
+        }
+        L.e("getSharedSchedulesNamesById = " + namesList.toString());
+        return namesList;
     }
 
     public void postData(final Long eventId) {

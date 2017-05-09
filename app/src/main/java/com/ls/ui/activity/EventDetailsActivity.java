@@ -107,6 +107,7 @@ public class EventDetailsActivity extends StackKeeperActivity {
         SharedScheduleManager sharedScheduleManager = Model.instance().getSharedScheduleManager();
         sharedScheduleManager.getSchedulesNameByCode(mEventId);
         sharedScheduleManager.getFavoritesById(mEventId);
+        sharedScheduleManager.getSharedSchedulesNamesById(mEventId);
 
     }
 
@@ -322,26 +323,23 @@ public class EventDetailsActivity extends StackKeeperActivity {
     }
 
     private void fillFriends() {
-        final ArrayList<String> data = new ArrayList<>();
-        data.add("Test 1");
-        data.add("Test 2");
-        data.add("Test 3");
-        data.add("Test 4");
+        SharedScheduleManager sharedScheduleManager = Model.instance().getSharedScheduleManager();
+        ArrayList<String> data = sharedScheduleManager.getSharedSchedulesNamesById(mEventId);
 
         final LayoutInflater inflater = LayoutInflater.from(EventDetailsActivity.this);
-        final LinearLayout holderSpeakers = (LinearLayout) findViewById(R.id.holderFriends);
-        holderSpeakers.removeAllViewsInLayout();
+        final LinearLayout holder = (LinearLayout) findViewById(R.id.holderFriends);
+        holder.removeAllViewsInLayout();
 
         if (!data.isEmpty()) {
             for (String friend : data) {
                 View speakerView = inflater.inflate(R.layout.item_friend, null);
                 TextView txtName = (TextView) speakerView.findViewById(R.id.idFriendName);
                 txtName.setText(friend);
-                holderSpeakers.addView(speakerView);
+                holder.addView(speakerView);
             }
-//            findViewById(R.id.botDivider).setVisibility(View.VISIBLE);
+            findViewById(R.id.botFriendsDivider).setVisibility(View.VISIBLE);
         } else {
-//            findViewById(R.id.botDivider).setVisibility(View.GONE);
+            findViewById(R.id.botFriendsDivider).setVisibility(View.GONE);
         }
 
         findViewById(R.id.testButton).setOnClickListener(new View.OnClickListener() {
@@ -349,10 +347,10 @@ public class EventDetailsActivity extends StackKeeperActivity {
             public void onClick(View v) {
                 if (showFriendsContainer) {
                     showFriendsContainer = false;
-                    holderSpeakers.setVisibility(View.GONE);
+                    holder.setVisibility(View.GONE);
                 } else {
                     showFriendsContainer = true;
-                    holderSpeakers.setVisibility(View.VISIBLE);
+                    holder.setVisibility(View.VISIBLE);
                 }
             }
         });
@@ -372,9 +370,9 @@ public class EventDetailsActivity extends StackKeeperActivity {
                 fillSpeakerView(speaker, speakerView);
                 holderSpeakers.addView(speakerView);
             }
-            findViewById(R.id.botDivider).setVisibility(View.VISIBLE);
+            findViewById(R.id.botSpeakersDivider).setVisibility(View.VISIBLE);
         } else {
-            findViewById(R.id.botDivider).setVisibility(View.GONE);
+            findViewById(R.id.botSpeakersDivider).setVisibility(View.GONE);
         }
     }
 
