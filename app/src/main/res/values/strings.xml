@@ -69,4 +69,5 @@
         <item>Pablo Mar 4</item>
         <item>Database Test</item>
     </string-array>
+    <string name="title_activity_test">TestActivity</string>
 </resources>

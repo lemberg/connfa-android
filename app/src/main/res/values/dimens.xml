@@ -28,5 +28,6 @@
     <dimen name="margin_top_placeholder_text">20dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="padding">16dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
 
 </resources>

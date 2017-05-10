@@ -35,6 +35,25 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <intent-filter>
+                <data
+                    android:host="connfa-integration.uat.link"
+                    android:scheme="http" />
+
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+            </intent-filter>
+            <intent-filter>
+                <data
+                    android:host="schedule"
+                    android:scheme="connfa.scheme" />
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+            </intent-filter>
         </activity>
         <activity
             android:name="com.ls.ui.activity.HomeActivity"
@@ -60,6 +79,39 @@
             android:name="io.fabric.ApiKey"
             android:value="e92185b02a2fa31062b797232c3d5cccf9867952" />
 
+        <activity
+            android:name="com.ls.ui.activity.TestActivity"
+            android:label="@string/title_activity_test"
+            android:theme="@style/Theme.DrupalCon.Home">
+            <action android:name="android.intent.action.VIEW" />
+        </activity>
+
+        <receiver
+            android:name="com.ls.receiver.ScheduleReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <data
+                    android:host="connfa-integration.uat.link"
+                    android:scheme="http" />
+
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+            </intent-filter>
+            <intent-filter>
+
+                <data
+                    android:host="schedule"
+                    android:scheme="connfa.scheme" />
+
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+            </intent-filter>
+
+        </receiver>
     </application>
 
 </manifest>

@@ -54,10 +54,6 @@ public class SharedScheduleManager {
         this.currentSchedule = schedule;
     }
 
-    public SharedScheduleDao getSharedScheduleDao() {
-        return sharedScheduleDao;
-    }
-
     public List<String> getAllSchedulesNameList() {
         List<String> result = new ArrayList<>();
         for (SharedSchedule item : schedules) {
@@ -69,10 +65,6 @@ public class SharedScheduleManager {
 
     public void setCurrentSchedule(int scheduleOrder) {
         this.currentSchedule = schedules.get(scheduleOrder);
-    }
-
-    public void updateCurrentSchedule(Long id) {
-        this.currentSchedule.setScheduleCode(id);
     }
 
     public SharedSchedule getCurrentSchedule() {
@@ -185,6 +177,10 @@ public class SharedScheduleManager {
 
     public List<FriendsFavoriteItem> getAllFavoritesSafe() {
         return sharedFavoritesDao.getAllSafe();
+    }
+
+    public SharedFavoritesDao getSharedFavoritesDao() {
+        return sharedFavoritesDao;
     }
 
     private List<Long> getWhoIsGoing(long eventId) {

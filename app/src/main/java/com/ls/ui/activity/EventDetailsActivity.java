@@ -5,7 +5,9 @@ import com.ls.drupalcon.model.Model;
 import com.ls.drupalcon.model.PreferencesManager;
 import com.ls.drupalcon.model.UpdateRequest;
 import com.ls.drupalcon.model.UpdatesManager;
+import com.ls.drupalcon.model.dao.SharedFavoritesDao;
 import com.ls.drupalcon.model.data.EventDetailsEvent;
+import com.ls.drupalcon.model.data.FriendsFavoriteItem;
 import com.ls.drupalcon.model.data.Level;
 import com.ls.drupalcon.model.data.Speaker;
 import com.ls.drupalcon.model.managers.EventManager;
@@ -109,6 +111,10 @@ public class EventDetailsActivity extends StackKeeperActivity {
         sharedScheduleManager.getSchedulesNameByCode(mEventId);
         sharedScheduleManager.getFavoritesById(mEventId);
         sharedScheduleManager.getSharedSchedulesNamesById(mEventId);
+
+        SharedFavoritesDao sharedFavoritesDao = sharedScheduleManager.getSharedFavoritesDao();
+        List<FriendsFavoriteItem> favoritesById = sharedFavoritesDao.getFavoritesById(mEventId);
+        L.e("favoritesById = " + favoritesById.toString());
 
     }
 
@@ -344,10 +350,10 @@ public class EventDetailsActivity extends StackKeeperActivity {
             findViewById(R.id.whoIsGoingButton).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(holder.isShown()){
+                    if (holder.isShown()) {
                         holder.setVisibility(View.GONE);
                         indicator.setImageResource(R.drawable.ic_group_arrow_down);
-                    }else {
+                    } else {
                         holder.setVisibility(View.VISIBLE);
                         indicator.setImageResource(R.drawable.ic_group_arrow_up);
                     }

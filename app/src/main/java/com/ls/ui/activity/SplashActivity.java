@@ -10,6 +10,7 @@ import com.ls.util.L;
 import com.ls.utils.AnalyticsManager;
 import com.ls.utils.NetworkUtils;
 
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -34,6 +35,12 @@ public class SplashActivity extends AppCompatActivity {
                 startSplash();
             }
         }, SPLASH_DURATION);
+
+        Uri data = this.getIntent().getData();
+        if (data != null && data.isHierarchical()) {
+            String uri = this.getIntent().getDataString();
+            L.e("Deep link clicked " + uri);
+        }
     }
 
     @Override

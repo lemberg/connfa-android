@@ -41,13 +41,17 @@
         <item name="android:textColor">@color/black</item>
     </style>
 
+    <style name="Theme.DrupalCon.Home.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="Theme.DrupalCon.Home.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
 
     <!--<style name="SpinnerItem" parent="@android:style/Widget.TextView.SpinnerItem">-->
-        <!--<item name="android:textColor">#00FF00</item>-->
+    <!--<item name="android:textColor">#00FF00</item>-->
     <!--</style>-->
 
     <!--<style name="SpinnerItem.DropDownItem" parent="@android:style/Widget.DropDownItem.Spinner">-->
-        <!--<item name="android:textColor">#FF0000</item>-->
+    <!--<item name="android:textColor">#FF0000</item>-->
     <!--</style>-->
 
 </resources>

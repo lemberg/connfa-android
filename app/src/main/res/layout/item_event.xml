@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:tools="http://schemas.android.com/tools" xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/layoutRoot"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -29,11 +28,11 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:textColor="@color/grey_400"
+                app:custom_font="@string/regular_font"
                 android:textSize="@dimen/text_size_13_74"
                 android:visibility="gone"
-                app:custom_font="@string/regular_font"
-                tools:text="03:30"
-                tools:visibility="visible" />
+                tools:visibility="visible"
+                tools:text="03:30" />
 
             <com.ls.ui.view.FontTextView
                 android:id="@+id/txtTo"
@@ -41,11 +40,11 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:textColor="@color/grey_200"
+                app:custom_font="@string/regular_font"
                 android:textSize="@dimen/text_size_11_24"
                 android:visibility="gone"
-                app:custom_font="@string/regular_font"
-                tools:text="to 04:30"
-                tools:visibility="visible" />
+                tools:visibility="visible"
+                tools:text="to 04:30" />
 
             <ImageView
                 android:id="@+id/imgEventIcon"
@@ -59,142 +58,127 @@
 
         </LinearLayout>
 
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            >
+            android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
+                android:layout_height="0dp"
+                android:layout_weight="1.0"
+                android:orientation="vertical"
+                android:paddingBottom="12dp"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
                 android:paddingTop="12dp">
 
-                <com.ls.ui.view.FontTextView
-                    android:id="@+id/txtTitle"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="8dp"
-                    android:layout_weight="1"
-                    android:clickable="false"
-                    android:textColor="@color/black_100"
-                    android:textSize="@dimen/text_size_medium"
-                    app:custom_font="@string/regular_font"
-                    tools:text="Dinner with Drupal" />
-
-                <ImageView
-                    android:id="@+id/imgExperience"
-                    android:layout_width="15dp"
-                    android:layout_height="15dp"
-                    android:layout_gravity="center"
-                    tools:src="@drawable/ic_launcher" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingBottom="12dp"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp">
-
                 <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
 
                     <com.ls.ui.view.FontTextView
-                        android:id="@+id/txtTrack"
-                        android:layout_width="wrap_content"
+                        android:id="@+id/txtTitle"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="4dp"
-                        android:ellipsize="end"
+                        android:layout_marginRight="8dp"
+                        android:layout_weight="1.0"
+                        app:custom_font="@string/regular_font"
+                        android:clickable="false"
+                        android:textColor="@color/black_100"
+                        android:textSize="@dimen/text_size_medium"
+                        tools:text="Dinner with Drupal" />
+
+                    <ImageView
+                        android:id="@+id/imgExperience"
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:layout_gravity="center"
+                        tools:src="@drawable/ic_launcher" />
+
+                </LinearLayout>
+
+                <com.ls.ui.view.FontTextView
+                    android:id="@+id/txtTrack"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="4dp"
+                    android:singleLine="true"
+                    android:ellipsize="end"
+                    app:custom_font="@string/regular_font"
+                    android:textColor="@color/grey_200"
+                    android:textSize="@dimen/text_size_micro"
+                    android:visibility="gone"
+                    tools:text="Coding and development"
+                    tools:visibility="visible" />
+
+                <LinearLayout
+                    android:id="@+id/layout_speakers"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="4dp"
+                    android:visibility="gone"
+                    tools:visibility="visible">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:alpha="0.7"
+                        android:src="@drawable/ic_speakers" />
+
+                    <com.ls.ui.view.FontTextView
+                        android:id="@+id/txtSpeakers"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="6dp"
+                        app:custom_font="@string/regular_font"
                         android:singleLine="true"
+                        android:ellipsize="end"
                         android:textColor="@color/grey_200"
                         android:textSize="@dimen/text_size_micro"
-                        android:visibility="gone"
-                        app:custom_font="@string/regular_font"
-                        tools:text="Coding and development"
-                        tools:visibility="visible" />
-
-                    <LinearLayout
-                        android:id="@+id/layout_speakers"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="4dp"
-                        android:visibility="gone"
-                        tools:visibility="visible">
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:alpha="0.7"
-                            android:src="@drawable/ic_speakers" />
-
-                        <com.ls.ui.view.FontTextView
-                            android:id="@+id/txtSpeakers"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_marginLeft="6dp"
-                            android:ellipsize="end"
-                            android:singleLine="true"
-                            android:textColor="@color/grey_200"
-                            android:textSize="@dimen/text_size_micro"
-                            app:custom_font="@string/regular_font"
-                            tools:text="Jane Doe, John Doe" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/layout_place"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="3dp"
-                        android:visibility="gone"
-                        tools:visibility="visible">
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="2dp"
-                            android:alpha="0.7"
-                            android:src="@drawable/ic_place" />
-
-                        <com.ls.ui.view.FontTextView
-                            android:id="@+id/txtPlace"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_marginLeft="6dp"
-                            android:textColor="@color/grey_200"
-                            android:textSize="@dimen/text_size_micro"
-                            app:custom_font="@string/regular_font"
-                            tools:text="Onyx Lounge" />
-                    </LinearLayout>
-
-
+                        tools:text="Jane Doe, John Doe" />
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:gravity="bottom"
-                    android:orientation="vertical">
+                    android:id="@+id/layout_place"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="3dp"
+                    android:visibility="gone"
+                    tools:visibility="visible">
 
                     <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:visibility="gone"
-                        android:src="@drawable/friend_schedule" />
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:alpha="0.7"
+                        android:src="@drawable/ic_place" />
 
+                    <com.ls.ui.view.FontTextView
+                        android:id="@+id/txtPlace"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.0"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="6dp"
+                        app:custom_font="@string/regular_font"
+                        android:textColor="@color/grey_200"
+                        android:textSize="@dimen/text_size_micro"
+                        tools:text="Onyx Lounge" />
+
+                    <!--<ImageView-->
+                        <!--android:id="@+id/iconFriend"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_marginTop="2dp"-->
+                        <!--android:src="@drawable/ic_friend_schedule" />-->
                 </LinearLayout>
+
             </LinearLayout>
 
             <View
