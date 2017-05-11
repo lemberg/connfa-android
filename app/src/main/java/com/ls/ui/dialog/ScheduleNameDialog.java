@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 
 import com.ls.drupalcon.R;
+import com.ls.drupalcon.model.managers.SharedScheduleManager;
 import com.ls.drupalcon.model.managers.ToastManager;
 
 public class ScheduleNameDialog extends DialogFragment {
@@ -20,7 +21,6 @@ public class ScheduleNameDialog extends DialogFragment {
     public static final String TAG = ScheduleNameDialog.class.getName();
     public static final String EXTRA_SCHEDULE_NAME = "extra_schedule_name";
     public static final String EXTRA_SCHEDULE_CODE = "extra_schedule_code";
-    private static final long defaultCode = -1;
 
     public static ScheduleNameDialog newInstance(long code) {
         Bundle bundle = new Bundle();
@@ -71,7 +71,7 @@ public class ScheduleNameDialog extends DialogFragment {
 
     private String getScheduleCode() {
         if (getArguments() != null) {
-            return getString(R.string.schedule) + " " + getArguments().getLong(EXTRA_SCHEDULE_CODE, defaultCode);
+            return getString(R.string.schedule) + " " + getArguments().getLong(EXTRA_SCHEDULE_CODE, SharedScheduleManager.MY_DEFAULT_SCHEDULE_CODE);
         } else {
             return "";
         }

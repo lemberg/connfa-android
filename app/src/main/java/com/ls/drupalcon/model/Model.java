@@ -191,6 +191,10 @@ public class Model {
         return scheduleManager;
     }
 
+    public PreferencesManager getPreferencesManager() {
+        return PreferencesManager.getInstance();
+    }
+
     /**
      * NOTE: login is performed in synchroneus way so you must never call it from UI thread.
      * @param userName
@@ -227,6 +231,7 @@ public class Model {
         floorPlansManager = new FloorPlansManager(client);
         sharedScheduleManager =  new SharedScheduleManager();
         scheduleManager = new ScheduleManager(client);
+        PreferencesManager.initializeInstance(context);
     }
 
 

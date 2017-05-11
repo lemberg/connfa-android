@@ -36,6 +36,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class SharedScheduleManager {
+    public static final long MY_DEFAULT_SCHEDULE_CODE = -1;
     private SharedScheduleDao sharedScheduleDao;
     private SharedFavoritesDao sharedFavoritesDao;
     private List<SharedSchedule> schedules = new ArrayList<>();
@@ -46,9 +47,10 @@ public class SharedScheduleManager {
     private Timer timer = new Timer();
 
     public SharedScheduleManager() {
-        SharedSchedule schedule = new SharedSchedule(-1, App.getContext().getString(R.string.my_schedule));
         this.sharedScheduleDao = new SharedScheduleDao();
         this.sharedFavoritesDao = new SharedFavoritesDao();
+
+        SharedSchedule schedule = new SharedSchedule(MY_DEFAULT_SCHEDULE_CODE, App.getContext().getString(R.string.my_schedule));
         this.sharedScheduleDao.saveOrUpdateSafe(schedule);
         this.schedules.addAll(this.sharedScheduleDao.getAllSafe());
         this.currentSchedule = schedule;
@@ -197,10 +199,9 @@ public class SharedScheduleManager {
 
 
     public List<String> getSchedulesNameByCode(long eventId) {
-        List<SharedSchedule> allSchedules = getAllSchedules();
         List<String> results = new ArrayList<>();
 
-        for (SharedSchedule schedule : allSchedules) {
+        for (SharedSchedule schedule : getAllSchedules()) {
             for (Long code : getWhoIsGoing(eventId)) {
                 if (code.equals(schedule.getId())) {
                     results.add(schedule.getScheduleName());
@@ -218,7 +219,6 @@ public class SharedScheduleManager {
     }
 
     public  List<SharedSchedule> getFavoritesById(long eventId) {
-//        List<FriendsFavoriteItem> favoritesById = sharedFavoritesDao.getFavoritesById(eventId);
         List<SharedSchedule> list = sharedScheduleDao.getScheduleNameId(eventId);
         L.e("getFavoritesById = " + list.toString());
         return list;
@@ -302,7 +302,7 @@ public class SharedScheduleManager {
 //    }
 
     public void getAllSharedSchedule() {
-        sharedFavoritesDao.deleteAllSafe();
+//        sharedFavoritesDao.deleteAllSafe();
         Response.Listener<JSONObject> listener = new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -335,7 +335,7 @@ public class SharedScheduleManager {
 
     public void getSharedSchedule(final long scheduleCode) {
         sharedFavoritesDao.deleteDataSafe(scheduleCode);
-        final String url = "http://connfa-integration.uat.link/api/v2/euna-mcdermott-dds/getSchedules?codes[]=" + scheduleCode;
+        final String url = App.getContext().getString(R.string.api_value_base_url) + "/getSchedules?codes[]=" + scheduleCode;
 
         Response.Listener<JSONObject> listener = new Response.Listener<JSONObject>() {
             @Override
@@ -398,7 +398,7 @@ public class SharedScheduleManager {
 
     public void postScheduleData(Long eventId) {
         PreferencesManager instance = PreferencesManager.getInstance();
-        if (instance.getMyScheduleCode() == -1) {
+        if (instance.getMyScheduleCode() == MY_DEFAULT_SCHEDULE_CODE) {
             postData(eventId);
         } else {
             updateData();
@@ -424,7 +424,7 @@ public class SharedScheduleManager {
         int counter = 0;
         for (SharedSchedule schedule : schedules) {
             Long id = schedule.getId();
-            if (id != -1) {
+            if (id != MY_DEFAULT_SCHEDULE_CODE) {
                 if (counter == 0) {
                     url.append(requestParameter);
                 } else {
@@ -441,6 +441,10 @@ public class SharedScheduleManager {
         L.e("Get URL = " + url.toString());
         return url.toString();
 
+    }
+
+    public Long getMyScheduleCode() {
+        return Model.instance().getPreferencesManager().getMyScheduleCode();
     }
 
 }

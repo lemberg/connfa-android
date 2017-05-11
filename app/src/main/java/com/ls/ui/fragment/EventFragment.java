@@ -86,12 +86,6 @@ public class EventFragment extends Fragment implements EventsAdapter.Listener {
         receiverManager.register(getActivity());
     }
 
-//    @Override
-//    public void onCreate(@Nullable Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        setHasOptionsMenu(true);
-//    }
-
     @Override
     public void onClick(int position) {
         onItemClick(position);

@@ -77,6 +77,7 @@ public class EventHolderFragment extends Fragment implements SwipeRefreshLayout.
     private SwipeRefreshLayout refreshLayout;
     private ArrayAdapter<String> spinnerAdapter;
     private Spinner navigationSpinner;
+    private SharedScheduleManager scheduleManager =  Model.instance().getSharedScheduleManager();
 
     public interface OnUndoClickListener {
         void onUndoClick();
@@ -241,6 +242,29 @@ public class EventHolderFragment extends Fragment implements SwipeRefreshLayout.
 
         refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefresh);
         refreshLayout.setOnRefreshListener(this);
+
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+                enableDisableSwipeRefresh(state == ViewPager.SCROLL_STATE_IDLE);
+            }
+        });
+    }
+
+    private void enableDisableSwipeRefresh(boolean enable) {
+        if (refreshLayout != null) {
+            refreshLayout.setEnabled(enable);
+        }
     }
 
     @Override
@@ -427,7 +451,7 @@ public class EventHolderFragment extends Fragment implements SwipeRefreshLayout.
     private void shareSchedule() {
         Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND);
-        sendIntent.putExtra(Intent.EXTRA_TEXT, "Test share intent");
+        sendIntent.putExtra(Intent.EXTRA_TEXT, "Test share intent" + scheduleManager.getMyScheduleCode());
         sendIntent.setType("text/plain");
         startActivity(sendIntent);
     }
