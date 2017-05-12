@@ -40,7 +40,7 @@ public class UpdatesManager {
         new AsyncTask<Void, Void, List<UpdateRequest>>() {
 
             @Override
-            protected  List<UpdateRequest> doInBackground(Void... params) {
+            protected List<UpdateRequest> doInBackground(Void... params) {
                 return doPerformLoading();
             }
 
@@ -86,7 +86,7 @@ public class UpdatesManager {
      * @return return updated request id's list in case of success or null in case of failure
      */
 
-    private  List<UpdateRequest> doPerformLoading() {
+    private List<UpdateRequest> doPerformLoading() {
         RequestConfig config = new RequestConfig();
         config.setResponseFormat(BaseRequest.ResponseFormat.JSON);
         config.setRequestFormat(BaseRequest.RequestFormat.JSON);
@@ -193,6 +193,10 @@ public class UpdatesManager {
 
             case FLOOR_PLANS:
                 manager = Model.instance().getFloorPlansManager();
+                break;
+
+            case SCHEDULES:
+                manager = Model.instance().getScheduleManager();
                 break;
 
             default:

@@ -2,13 +2,12 @@ package com.ls.drupalcon.model.managers;
 
 import com.ls.drupal.AbstractBaseDrupalEntity;
 import com.ls.drupal.DrupalClient;
-import com.ls.drupalcon.model.dao.TypeDao;
+import com.ls.drupalcon.model.Model;
+import com.ls.drupalcon.model.data.FriendsFavoriteItem;
 import com.ls.drupalcon.model.data.Schedule;
-import com.ls.drupalcon.model.data.Type;
 import com.ls.drupalcon.model.requests.ScheduleRequest;
-import com.ls.drupalcon.model.requests.TypesRequest;
-import com.ls.utils.L;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ScheduleManager extends SynchronousItemManager<Schedule.Holder, Object, String> {
@@ -29,7 +28,15 @@ public class ScheduleManager extends SynchronousItemManager<Schedule.Holder, Obj
 
     @Override
     protected boolean storeResponse(Schedule.Holder requestResponse, String tag) {
-        L.e("ScheduleManager Schedule.Holder = " + requestResponse.toString());
+
+        ArrayList<FriendsFavoriteItem> sharedSchedules = new ArrayList<>();
+        List<Schedule> schedules = requestResponse.getSchedules();
+        for (Schedule schedule : schedules) {
+            for (Long eventId : schedule.getEvents()) {
+                sharedSchedules.add(new FriendsFavoriteItem(eventId, schedule.getCode()));
+            }
+        }
+        Model.instance().getSharedScheduleManager().saveFavoritesDeleteAndSafe(sharedSchedules);
         return true;
     }
 

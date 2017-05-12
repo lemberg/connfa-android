@@ -1,19 +1,24 @@
 package com.ls.ui.fragment;
 
+import com.ls.drupal.AbstractBaseDrupalEntity;
 import com.ls.drupalcon.R;
 import com.ls.drupalcon.model.Model;
 import com.ls.drupalcon.model.UpdateRequest;
 import com.ls.drupalcon.model.UpdatesManager;
 import com.ls.drupalcon.model.dao.SharedScheduleDao;
 import com.ls.drupalcon.model.data.InfoItem;
+import com.ls.drupalcon.model.managers.ScheduleManager;
 import com.ls.drupalcon.model.managers.SharedScheduleManager;
 import com.ls.drupalcon.model.managers.InfoManager;
+import com.ls.drupalcon.model.requests.ScheduleRequest;
+import com.ls.http.base.ResponseData;
 import com.ls.ui.activity.AboutDetailsActivity;
 import com.ls.utils.L;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -62,24 +67,44 @@ public class AboutFragment extends Fragment {
         sharedScheduleManager.getAllSharedSchedule();
 
 //        ScheduleManager scheduleManager = Model.instance().getScheduleManager();
-//
 //        scheduleManager.fetchData();
-//        new AsyncTask<Void, Void, Boolean>() {
-//
-//            @Override
-//            protected Boolean doInBackground(Void... params) {
-//                Model.instance().getFloorPlansManager().fetchData();
-//                ScheduleManager scheduleManager = Model.instance().getScheduleManager();
 //                boolean b = scheduleManager.fetchData();
-//
-//                return b;
+
+//        ScheduleManager scheduleManager = Model.instance().getScheduleManager();
+
+//        scheduleManager.fetchData();
+//        new ScheduleRequest(Model.instance().getClient()).pullFromServer(true, "Tag", new AbstractBaseDrupalEntity.OnEntityRequestListener() {
+//            @Override
+//            public void onRequestCompleted(AbstractBaseDrupalEntity entity, Object tag, ResponseData data) {
+//                L.e("weee = " + data.getData());
 //            }
 //
 //            @Override
-//            protected void onPostExecute(Boolean aBoolean) {
-//                super.onPostExecute(aBoolean);
+//            public void onRequestFailed(AbstractBaseDrupalEntity entity, Object tag, ResponseData data) {
+//                L.e("onRequestFailed");
 //            }
-//        }.execute();
+//
+//            @Override
+//            public void onRequestCanceled(AbstractBaseDrupalEntity entity, Object tag) {
+//                L.e("onRequestCanceled");
+//            }
+//        });
+        new AsyncTask<Void, Void, Boolean>() {
+
+            @Override
+            protected Boolean doInBackground(Void... params) {
+                Model.instance().getFloorPlansManager().fetchData();
+                ScheduleManager scheduleManager = Model.instance().getScheduleManager();
+                boolean b = scheduleManager.fetchData();
+
+                return b;
+            }
+
+            @Override
+            protected void onPostExecute(Boolean aBoolean) {
+                super.onPostExecute(aBoolean);
+            }
+        }.execute();
 
     }
 
