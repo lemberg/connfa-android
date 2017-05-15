@@ -37,9 +37,6 @@ import java.util.TimerTask;
 
 public class SharedScheduleManager {
     public static final long MY_DEFAULT_SCHEDULE_CODE = -1;
-    public static final String GET_SCHEDULES_PARAM = "getSchedules?";
-    public static final String CREATE_SCHEDULE_PARAM = "createSchedule";
-    public static final String CODES = "codes[]=";
     private SharedScheduleDao sharedScheduleDao;
     private SharedFavoritesDao sharedFavoritesDao;
     private List<SharedSchedule> schedules = new ArrayList<>();
@@ -424,14 +421,7 @@ public class SharedScheduleManager {
         for (SharedSchedule schedule : schedules) {
             Long id = schedule.getId();
             if (id != MY_DEFAULT_SCHEDULE_CODE) {
-//                if (counter == 0) {
-//                    url.append("codes[]=");
-//                } else {
-//                    url.append("&");
-//                    url.append("codes[]=");
-//                }
                 url.append(schedule.getId());
-//                counter++;
                 url.append("&codes[]=");
             }
 

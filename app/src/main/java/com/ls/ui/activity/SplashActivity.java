@@ -5,6 +5,7 @@ import com.ls.drupalcon.model.Model;
 import com.ls.drupalcon.model.PreferencesManager;
 import com.ls.drupalcon.model.UpdateCallback;
 import com.ls.drupalcon.model.UpdatesManager;
+import com.ls.drupalcon.model.managers.SharedScheduleManager;
 import com.ls.ui.dialog.NoConnectionDialog;
 import com.ls.util.L;
 import com.ls.utils.AnalyticsManager;
@@ -36,11 +37,7 @@ public class SplashActivity extends AppCompatActivity {
             }
         }, SPLASH_DURATION);
 
-        Uri data = this.getIntent().getData();
-        if (data != null && data.isHierarchical()) {
-            String uri = this.getIntent().getDataString();
-            L.e("Deep link clicked " + uri);
-        }
+
     }
 
     @Override
@@ -96,7 +93,21 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     private void startMainActivity() {
-        HomeActivity.startThisActivity(this);
+        Uri data = this.getIntent().getData();
+        if (data != null && data.isHierarchical()) {
+            String uri = this.getIntent().getDataString();
+            String substring = uri.substring(uri.length() - 4, uri.length());
+            L.e("Deep link clicked " + uri);
+            L.e("Deep link clicked code " + Long.valueOf(substring));
+            HomeActivity.startThisActivity(this, Long.valueOf(substring));
+            SharedScheduleManager sharedScheduleManager = Model.instance().getSharedScheduleManager();
+            sharedScheduleManager.setNewScheduleCode(Long.valueOf(substring));
+            sharedScheduleManager.createSchedule(getString(R.string.schedule) + Long.valueOf(substring));
+        }else {
+            L.e("Deep link clicked code -1" );
+            HomeActivity.startThisActivity(this, SharedScheduleManager.MY_DEFAULT_SCHEDULE_CODE);
+        }
+
         finish();
     }
 

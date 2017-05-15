@@ -116,6 +116,8 @@ public class EventHolderFragment extends Fragment implements SwipeRefreshLayout.
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        SharedScheduleManager sharedScheduleManager = Model.instance().getSharedScheduleManager();
+//        sharedScheduleManager.getAllSharedSchedule();
     }
 
     @Override
@@ -451,7 +453,7 @@ public class EventHolderFragment extends Fragment implements SwipeRefreshLayout.
     private void shareSchedule() {
         Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND);
-        sendIntent.putExtra(Intent.EXTRA_TEXT, "Test share intent" + scheduleManager.getMyScheduleCode());
+        sendIntent.putExtra(Intent.EXTRA_TEXT, getContext().getString(R.string.api_value_base_url) + "schedule/share/insert?code=" + scheduleManager.getMyScheduleCode());
         sendIntent.setType("text/plain");
         startActivity(sendIntent);
     }
