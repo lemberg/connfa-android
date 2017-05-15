@@ -7,32 +7,30 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
 import com.ls.drupalcon.R;
 import com.ls.drupalcon.model.managers.SharedScheduleManager;
-import com.ls.drupalcon.model.managers.ToastManager;
 
-public class ScheduleNameDialog extends DialogFragment {
+public class CreateScheduleDialog extends DialogFragment {
 
-    public static final String TAG = ScheduleNameDialog.class.getName();
-    public static final String EXTRA_SCHEDULE_NAME = "extra_schedule_name";
+    public static final String TAG = CreateScheduleDialog.class.getName();
     public static final String EXTRA_SCHEDULE_CODE = "extra_schedule_code";
 
-    public static ScheduleNameDialog newInstance(long code) {
+
+    public static CreateScheduleDialog newInstance(long code) {
         Bundle bundle = new Bundle();
         bundle.putLong(EXTRA_SCHEDULE_CODE, code);
 
-        ScheduleNameDialog fragment = new ScheduleNameDialog();
+        CreateScheduleDialog fragment = new CreateScheduleDialog();
         fragment.setArguments(bundle);
         return fragment;
     }
 
-    public static ScheduleNameDialog newInstance() {
-        return new ScheduleNameDialog();
+    public static CreateScheduleDialog newInstance() {
+        return new CreateScheduleDialog();
     }
 
 
@@ -43,7 +41,7 @@ public class ScheduleNameDialog extends DialogFragment {
         ViewGroup contentView = (ViewGroup) LayoutInflater.from(getActivity()).inflate(R.layout.dialog_shedule_name, null);
         final EditText editTextId = (EditText) contentView.findViewById(R.id.scheduleName);
 
-        editTextId.setText(getScheduleCode());
+        editTextId.setText(getScheduleName());
 
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
         alertDialogBuilder.setTitle(R.string.add_a_schedule);
@@ -51,8 +49,7 @@ public class ScheduleNameDialog extends DialogFragment {
         alertDialogBuilder.setPositiveButton(getActivity().getString(android.R.string.ok), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                String text = editTextId.getText().toString();
-                getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, getActivity().getIntent().putExtra(EXTRA_SCHEDULE_NAME, text));
+                getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, getActivity().getIntent().putExtra(EXTRA_SCHEDULE_CODE, getScheduleCode()));
             }
         });
 
@@ -69,12 +66,16 @@ public class ScheduleNameDialog extends DialogFragment {
         return dialog;
     }
 
-    private String getScheduleCode() {
+    private String getScheduleName() {
         if (getArguments() != null) {
             return getString(R.string.schedule) + " " + getArguments().getLong(EXTRA_SCHEDULE_CODE, SharedScheduleManager.MY_DEFAULT_SCHEDULE_CODE);
         } else {
             return "";
         }
+    }
+
+    private long getScheduleCode() {
+            return  getArguments().getLong(EXTRA_SCHEDULE_CODE, SharedScheduleManager.MY_DEFAULT_SCHEDULE_CODE);
     }
 
 }

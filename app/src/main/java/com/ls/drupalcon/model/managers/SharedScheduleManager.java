@@ -94,6 +94,7 @@ public class SharedScheduleManager {
             schedules.add(schedule);
             this.sharedScheduleDao.saveDataSafe(schedule);
         }
+        currentSchedule = schedule;
     }
 
     public void renameSchedule(String newScheduleName) {
@@ -429,7 +430,8 @@ public class SharedScheduleManager {
     }
 
     public Long getMyScheduleCode() {
-        return Model.instance().getPreferencesManager().getMyScheduleCode();
+        L.e("My Schedule = " + currentSchedule.getId());
+        return currentSchedule.getId();
     }
 
 }

@@ -3,6 +3,7 @@ package com.ls.ui.fragment;
 import com.astuetz.PagerSlidingTabStrip;
 import com.ls.drupalcon.model.managers.SharedScheduleManager;
 import com.ls.ui.dialog.AddScheduleDialog;
+import com.ls.ui.dialog.CreateScheduleDialog;
 import com.ls.ui.dialog.ScheduleNameDialog;
 import com.ls.ui.drawer.FriendFavoritesStrategy;
 import com.ls.ui.view.MaterialTapTargetPrompt;
@@ -77,7 +78,7 @@ public class EventHolderFragment extends Fragment implements SwipeRefreshLayout.
     private SwipeRefreshLayout refreshLayout;
     private ArrayAdapter<String> spinnerAdapter;
     private Spinner navigationSpinner;
-    private SharedScheduleManager scheduleManager =  Model.instance().getSharedScheduleManager();
+    private SharedScheduleManager scheduleManager = Model.instance().getSharedScheduleManager();
 
     public interface OnUndoClickListener {
         void onUndoClick();
@@ -117,7 +118,7 @@ public class EventHolderFragment extends Fragment implements SwipeRefreshLayout.
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         SharedScheduleManager sharedScheduleManager = Model.instance().getSharedScheduleManager();
-//        sharedScheduleManager.getAllSharedSchedule();
+        sharedScheduleManager.getAllSharedSchedule();
     }
 
     @Override
@@ -165,13 +166,14 @@ public class EventHolderFragment extends Fragment implements SwipeRefreshLayout.
                 shareSchedule();
                 break;
             case R.id.actionEditSchedule:
-                showChangeScheduleNameDialog();
+                showChangeScheduleNameDialog(Model.instance().getSharedScheduleManager().getMyScheduleCode());
+//                showChangeScheduleNameDialog();
                 break;
             case R.id.actionRemoveSchedule:
                 undo(Model.instance().getSharedScheduleManager().getCurrentFriendScheduleName() + " is removed");
                 Model.instance().getSharedScheduleManager().deleteSharedSchedule();
                 refreshSpinner();
-                setSpinnerPosition(0);
+//                setSpinnerPosition(0);
                 new LoadData().execute();
                 break;
         }
@@ -427,7 +429,7 @@ public class EventHolderFragment extends Fragment implements SwipeRefreshLayout.
             }
         });
 
-        setSpinnerPosition(Model.instance().getSharedScheduleManager().getAllSchedulesNameList().size() - 1);
+//        setSpinnerPosition(Model.instance().getSharedScheduleManager().getAllSchedulesNameList().size() - 1);
 
     }
 
@@ -466,22 +468,22 @@ public class EventHolderFragment extends Fragment implements SwipeRefreshLayout.
         newFragment.show(getChildFragmentManager(), AddScheduleDialog.TAG);
     }
 
-    void showChangeScheduleNameDialog() {
-        DialogFragment newFragment = ScheduleNameDialog.newInstance();
+    void showChangeScheduleNameDialog(long code) {
+        DialogFragment newFragment = ScheduleNameDialog.newInstance(code);
         newFragment.setTargetFragment(this, CHANGE_SCHEDULE_NAME_DIALOG_REQUEST_CODE);
-        newFragment.show(getChildFragmentManager(), ScheduleNameDialog.TAG);
+        newFragment.show(getChildFragmentManager(), CreateScheduleDialog.TAG);
     }
 
     void showSetNameDialog() {
-        DialogFragment newFragment = ScheduleNameDialog.newInstance();
+        DialogFragment newFragment = CreateScheduleDialog.newInstance();
         newFragment.setTargetFragment(this, SET_SCHEDULE_NAME_DIALOG_REQUEST_CODE);
-        newFragment.show(getChildFragmentManager(), ScheduleNameDialog.TAG);
+        newFragment.show(getChildFragmentManager(), CreateScheduleDialog.TAG);
     }
 
     void showSetNameDialog(long code) {
-        DialogFragment newFragment = ScheduleNameDialog.newInstance(code);
+        DialogFragment newFragment = CreateScheduleDialog.newInstance(code);
         newFragment.setTargetFragment(this, SET_SCHEDULE_NAME_DIALOG_REQUEST_CODE);
-        newFragment.show(getChildFragmentManager(), ScheduleNameDialog.TAG);
+        newFragment.show(getChildFragmentManager(), CreateScheduleDialog.TAG);
     }
 
     @Override
@@ -505,14 +507,15 @@ public class EventHolderFragment extends Fragment implements SwipeRefreshLayout.
             case SET_SCHEDULE_NAME_DIALOG_REQUEST_CODE:
                 switch (resultCode) {
                     case Activity.RESULT_OK:
-                        long code = data.getLongExtra(ScheduleNameDialog.EXTRA_SCHEDULE_CODE, SharedScheduleManager.MY_DEFAULT_SCHEDULE_CODE);
+                        long code = data.getLongExtra(CreateScheduleDialog.EXTRA_SCHEDULE_CODE, SharedScheduleManager.MY_DEFAULT_SCHEDULE_CODE);
                         Model.instance().getSharedScheduleManager().createSchedule(code);
-                        if (spinnerAdapter == null) {
-                            setCustomToolBar();
-                        } else {
-                            refreshSpinner();
-                        }
-                        setSpinnerPosition(Model.instance().getSharedScheduleManager().getAllSchedulesNameList().size() - 1);
+//                        if (spinnerAdapter == null) {
+//                            setCustomToolBar();
+//                        } else {
+//                            refreshSpinner();
+//                        }
+                        refreshSpinner();
+//                        setSpinnerPosition(Model.instance().getSharedScheduleManager().getAllSchedulesNameList().size() - 1);
                         break;
                     case Activity.RESULT_CANCELED:
 //                        undo("Schedule name is removed");
@@ -544,7 +547,7 @@ public class EventHolderFragment extends Fragment implements SwipeRefreshLayout.
                 SharedScheduleManager manager = Model.instance().getSharedScheduleManager();
                 manager.restoreSchedule();
                 refreshSpinner();
-                setSpinnerPosition(Model.instance().getSharedScheduleManager().getItemPosition());
+//                setSpinnerPosition(Model.instance().getSharedScheduleManager().getItemPosition());
             }
         });
         snack.setActionTextColor(Color.RED);
@@ -558,6 +561,7 @@ public class EventHolderFragment extends Fragment implements SwipeRefreshLayout.
             disableCustomToolBar();
             setToolbarTitle();
             isMySchedule = true;
+            setSpinnerPosition(0);
             strategy = new FavoritesStrategy();
         } else {
             isMySchedule = false;
@@ -572,10 +576,6 @@ public class EventHolderFragment extends Fragment implements SwipeRefreshLayout.
 
     private void setSpinnerPosition(int position) {
         navigationSpinner.setSelection(position);
-    }
-
-    private void setSpinnerStartPosition(){
-
     }
 
 
