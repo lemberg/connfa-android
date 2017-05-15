@@ -427,6 +427,8 @@ public class EventHolderFragment extends Fragment implements SwipeRefreshLayout.
             }
         });
 
+        setSpinnerPosition(Model.instance().getSharedScheduleManager().getAllSchedulesNameList().size() - 1);
+
     }
 
     private void disableCustomToolBar() {
@@ -488,9 +490,9 @@ public class EventHolderFragment extends Fragment implements SwipeRefreshLayout.
             case ADD_SCHEDULE_DIALOG_REQUEST_CODE:
                 switch (resultCode) {
                     case Activity.RESULT_OK:
-                        long newScheduleCode = data.getLongExtra(AddScheduleDialog.EXTRA_SCHEDULE_CODE, -1);
+                        long newScheduleCode = data.getLongExtra(AddScheduleDialog.EXTRA_SCHEDULE_CODE, SharedScheduleManager.MY_DEFAULT_SCHEDULE_CODE);
                         SharedScheduleManager sharedScheduleManager = Model.instance().getSharedScheduleManager();
-                        sharedScheduleManager.setNewScheduleCode(newScheduleCode);
+//                        sharedScheduleManager.setNewScheduleCode(newScheduleCode);
                         sharedScheduleManager.getSharedSchedule(newScheduleCode);
 
                         showSetNameDialog(newScheduleCode);
@@ -503,8 +505,8 @@ public class EventHolderFragment extends Fragment implements SwipeRefreshLayout.
             case SET_SCHEDULE_NAME_DIALOG_REQUEST_CODE:
                 switch (resultCode) {
                     case Activity.RESULT_OK:
-                        String newScheduleName = data.getStringExtra(ScheduleNameDialog.EXTRA_SCHEDULE_NAME);
-                        Model.instance().getSharedScheduleManager().createSchedule(newScheduleName);
+                        long code = data.getLongExtra(ScheduleNameDialog.EXTRA_SCHEDULE_CODE, SharedScheduleManager.MY_DEFAULT_SCHEDULE_CODE);
+                        Model.instance().getSharedScheduleManager().createSchedule(code);
                         if (spinnerAdapter == null) {
                             setCustomToolBar();
                         } else {
@@ -570,6 +572,10 @@ public class EventHolderFragment extends Fragment implements SwipeRefreshLayout.
 
     private void setSpinnerPosition(int position) {
         navigationSpinner.setSelection(position);
+    }
+
+    private void setSpinnerStartPosition(){
+
     }
 
 

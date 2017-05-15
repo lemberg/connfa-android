@@ -97,14 +97,10 @@ public class SplashActivity extends AppCompatActivity {
         if (data != null && data.isHierarchical()) {
             String uri = this.getIntent().getDataString();
             String substring = uri.substring(uri.length() - 4, uri.length());
-            L.e("Deep link clicked " + uri);
-            L.e("Deep link clicked code " + Long.valueOf(substring));
             HomeActivity.startThisActivity(this, Long.valueOf(substring));
             SharedScheduleManager sharedScheduleManager = Model.instance().getSharedScheduleManager();
-            sharedScheduleManager.setNewScheduleCode(Long.valueOf(substring));
-            sharedScheduleManager.createSchedule(getString(R.string.schedule) + Long.valueOf(substring));
+            sharedScheduleManager.createSchedule(Long.valueOf(substring));
         }else {
-            L.e("Deep link clicked code -1" );
             HomeActivity.startThisActivity(this, SharedScheduleManager.MY_DEFAULT_SCHEDULE_CODE);
         }
 

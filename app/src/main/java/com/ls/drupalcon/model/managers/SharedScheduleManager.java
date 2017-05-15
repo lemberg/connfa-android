@@ -41,7 +41,6 @@ public class SharedScheduleManager {
     private SharedFavoritesDao sharedFavoritesDao;
     private List<SharedSchedule> schedules = new ArrayList<>();
     private SharedSchedule currentSchedule;
-    private SharedSchedule newSchedule;
     private List<SharedSchedule> schedulesTemp;
     private SharedSchedule scheduleTemp;
     private Timer timer = new Timer();
@@ -81,23 +80,19 @@ public class SharedScheduleManager {
         return getCurrentSchedule().getScheduleName();
     }
 
-
-    public void setNewScheduleCode(long scheduleCode) {
-        this.newSchedule = new SharedSchedule();
-        this.newSchedule.setScheduleCode(scheduleCode);
-    }
-
     public int getItemPosition() {
         return schedules.indexOf(currentSchedule);
     }
 
-    public void createSchedule(String scheduleName) {
-        this.newSchedule.setScheduleName(scheduleName);
-        if (schedules.contains(newSchedule)) {
+    public void createSchedule(long scheduleCode) {
+        SharedSchedule schedule = new SharedSchedule();
+        schedule.setScheduleName(App.getContext().getString(R.string.schedule) + scheduleCode);
+        schedule.setScheduleCode(scheduleCode);
+        if (schedules.contains(schedule)) {
             Toast.makeText(App.getContext(), "This schedule already exist", Toast.LENGTH_LONG).show();
         } else {
-            schedules.add(newSchedule);
-            this.sharedScheduleDao.saveDataSafe(newSchedule);
+            schedules.add(schedule);
+            this.sharedScheduleDao.saveDataSafe(schedule);
         }
     }
 
