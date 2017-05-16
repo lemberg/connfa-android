@@ -253,12 +253,19 @@ public class HomeActivity extends StateActivity implements FilterDialog.OnFilter
             if (mFrManager != null) {
                 mFrManager.setFragment(DrawerMenu.getNavigationDrawerItems().get(mSelectedItem).getEventMode());
                 mPresentTitle = DrawerMenu.getNavigationDrawerItems().get(mSelectedItem).getName();
-                mToolbar.setTitle(mPresentTitle);
+
+                ActionBar supportActionBar = getSupportActionBar();
+                if (supportActionBar != null) {
+                    supportActionBar.setTitle(mPresentTitle);
+                }
+//                    mToolbar.setTitle(mPresentTitle);
 
                 mAdapter.setSelectedPos(mSelectedItem);
                 mAdapter.notifyDataSetChanged();
 
                 AnalyticsManager.drawerFragmentTracker(this, mPresentTitle);
+                L.e("changeFragment, mPresentTitle = " + getString(mPresentTitle));
+                L.e("changeFragment, mSelectedItem = " + mSelectedItem);
             }
         }
     }
@@ -285,6 +292,7 @@ public class HomeActivity extends StateActivity implements FilterDialog.OnFilter
             drawerMenuItem = DrawerMenu.getNavigationDrawerItems().get(mSelectedItem);
             mFrManager.setFragment(drawerMenuItem.getEventMode());
             AnalyticsManager.drawerFragmentTracker(this, drawerMenuItem.getName());
+            mSelectedItem = 0;
         } else {
             mSelectedItem = 4;
             drawerMenuItem = DrawerMenu.getNavigationDrawerItems().get(mSelectedItem);
@@ -293,7 +301,7 @@ public class HomeActivity extends StateActivity implements FilterDialog.OnFilter
             AnalyticsManager.drawerFragmentTracker(this, drawerMenuItem.getName());
         }
         mPresentTitle = drawerMenuItem.getName();
-        L.e("mPresentTitle = " + getString(mPresentTitle));
+        L.e("setDefaultFragment mPresentTitle = " + getString(mPresentTitle));
         ActionBar supportActionBar = getSupportActionBar();
         if (supportActionBar != null) {
             supportActionBar.setTitle(mPresentTitle);

@@ -117,8 +117,8 @@ public class EventHolderFragment extends Fragment implements SwipeRefreshLayout.
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        SharedScheduleManager sharedScheduleManager = Model.instance().getSharedScheduleManager();
-        sharedScheduleManager.getAllSharedSchedule();
+//        SharedScheduleManager sharedScheduleManager = Model.instance().getSharedScheduleManager();
+//        sharedScheduleManager.getAllSharedSchedule();
     }
 
     @Override

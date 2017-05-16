@@ -28,6 +28,14 @@ public class SplashActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ac_splash);
+            Uri data = this.getIntent().getData();
+            if (data != null && data.isHierarchical()) {
+                String uri = this.getIntent().getDataString();
+                String substring = uri.substring(uri.length() - 4, uri.length());
+                L.e("New schedule code = " + substring);
+                SharedScheduleManager sharedScheduleManager = Model.instance().getSharedScheduleManager();
+                sharedScheduleManager.createSchedule(Long.valueOf(substring));
+            }
 
         mHandler = new Handler();
         mHandler.postDelayed(new Runnable() {
@@ -98,8 +106,8 @@ public class SplashActivity extends AppCompatActivity {
             String uri = this.getIntent().getDataString();
             String substring = uri.substring(uri.length() - 4, uri.length());
             HomeActivity.startThisActivity(this, Long.valueOf(substring));
-            SharedScheduleManager sharedScheduleManager = Model.instance().getSharedScheduleManager();
-            sharedScheduleManager.createSchedule(Long.valueOf(substring));
+//            SharedScheduleManager sharedScheduleManager = Model.instance().getSharedScheduleManager();
+//            sharedScheduleManager.createSchedule(Long.valueOf(substring));
         }else {
             HomeActivity.startThisActivity(this, SharedScheduleManager.MY_DEFAULT_SCHEDULE_CODE);
         }
