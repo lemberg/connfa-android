@@ -4,10 +4,12 @@ import com.ls.drupalcon.R;
 import com.ls.drupalcon.model.Model;
 import com.ls.drupalcon.model.PreferencesManager;
 import com.ls.drupalcon.model.UpdateCallback;
+import com.ls.drupalcon.model.UpdateRequest;
 import com.ls.drupalcon.model.UpdatesManager;
 import com.ls.drupalcon.model.managers.SharedScheduleManager;
 import com.ls.ui.dialog.NoConnectionDialog;
 import com.ls.util.L;
+import com.ls.util.ObserverHolder;
 import com.ls.utils.AnalyticsManager;
 import com.ls.utils.NetworkUtils;
 
@@ -19,6 +21,8 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 
+import java.util.List;
+
 public class SplashActivity extends AppCompatActivity {
 
     private static final int SPLASH_DURATION = 1500;
@@ -28,14 +32,16 @@ public class SplashActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ac_splash);
-            Uri data = this.getIntent().getData();
-            if (data != null && data.isHierarchical()) {
-                String uri = this.getIntent().getDataString();
-                String substring = uri.substring(uri.length() - 4, uri.length());
-                L.e("New schedule code = " + substring);
-                SharedScheduleManager sharedScheduleManager = Model.instance().getSharedScheduleManager();
-                sharedScheduleManager.createSchedule(Long.valueOf(substring));
-            }
+        Uri data = this.getIntent().getData();
+        if (data != null && data.isHierarchical()) {
+            String uri = this.getIntent().getDataString();
+            String substring = uri.substring(uri.length() - 4, uri.length());
+            L.e("New schedule code = " + substring);
+            SharedScheduleManager sharedScheduleManager = Model.instance().getSharedScheduleManager();
+            sharedScheduleManager.createSchedule(Long.valueOf(substring));
+
+            sharedScheduleManager.getSharedSchedule(Long.valueOf(substring));
+        }
 
         mHandler = new Handler();
         mHandler.postDelayed(new Runnable() {
@@ -108,7 +114,7 @@ public class SplashActivity extends AppCompatActivity {
             HomeActivity.startThisActivity(this, Long.valueOf(substring));
 //            SharedScheduleManager sharedScheduleManager = Model.instance().getSharedScheduleManager();
 //            sharedScheduleManager.createSchedule(Long.valueOf(substring));
-        }else {
+        } else {
             HomeActivity.startThisActivity(this, SharedScheduleManager.MY_DEFAULT_SCHEDULE_CODE);
         }
 

@@ -235,19 +235,20 @@ public class EventsAdapter extends BaseAdapter {
         } else {
             holder.icon.setVisibility(View.GONE);
         }
-
-        SharedFavoritesDao sharedFavoritesDao = Model.instance().getSharedScheduleManager().getSharedFavoritesDao();
-        List<FriendsFavoriteItem> favoritesById = sharedFavoritesDao.getFavoritesById(event.getId());
-        if(favoritesById.isEmpty()){
-            holder.iconFriends.setVisibility(View.GONE);
-        }else {
-            holder.iconFriends.setVisibility(View.VISIBLE);
+        if (mEventMode != EventMode.SharedSchedules) {
+            SharedFavoritesDao sharedFavoritesDao = Model.instance().getSharedScheduleManager().getSharedFavoritesDao();
+            List<FriendsFavoriteItem> favoritesById = sharedFavoritesDao.getFavoritesById(event.getId());
+            if (favoritesById.isEmpty()) {
+                holder.iconFriends.setVisibility(View.GONE);
+            } else {
+                holder.iconFriends.setVisibility(View.VISIBLE);
+            }
         }
     }
 
     private void fillEventInfo(EventHolder holder, Event event, @Nullable String track, @Nullable List<String> speakerNameList) {
         setRoundedBackgroundSpan(event, holder);
-        if (event.isFavorite()) {
+        if (event.isFavorite() && mEventMode != EventMode.Favorites) {
             holder.txtTitle.setTextColor(mContext.getResources().getColor(R.color.link));
         } else {
             holder.txtTitle.setTextColor(mContext.getResources().getColor(R.color.black_100));

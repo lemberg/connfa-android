@@ -47,7 +47,6 @@ public class HomeActivity extends StateActivity implements FilterDialog.OnFilter
     private int mSelectedItem = 0;
     private boolean isIntentHandled = false;
 
-    private Toolbar mToolbar;
     private DrawerLayout mDrawerLayout;
 
     public FilterDialog mFilterDialog;
@@ -75,7 +74,7 @@ public class HomeActivity extends StateActivity implements FilterDialog.OnFilter
         long code = getIntent().getLongExtra(NAVIGATE_TO_SCHEDULE_EXTRA_KEY, SharedScheduleManager.MY_DEFAULT_SCHEDULE_CODE);
         L.e("Navigate code = " + code);
         initToolbar();
-        initNavigationDrawer();
+
         initNavigationDrawerList();
         initFilterDialog();
 
@@ -108,14 +107,15 @@ public class HomeActivity extends StateActivity implements FilterDialog.OnFilter
 
     private void initToolbar() {
 //        mPresentTitle = DrawerMenu.getNavigationDrawerItems().get(0).getName();
-        mToolbar = (Toolbar) findViewById(R.id.toolBar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolBar);
 //        mToolbar.setTitle(mPresentTitle);
-        setSupportActionBar(mToolbar);
+        setSupportActionBar(toolbar);
+        initNavigationDrawer(toolbar);
     }
 
-    private void initNavigationDrawer() {
+    private void initNavigationDrawer(Toolbar toolbar) {
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
-        ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar, R.string.app_name, R.string.app_name);
+        ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.app_name, R.string.app_name);
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
         mDrawerLayout.closeDrawers();
         mDrawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
@@ -251,14 +251,10 @@ public class HomeActivity extends StateActivity implements FilterDialog.OnFilter
 
         {
             if (mFrManager != null) {
-                mFrManager.setFragment(DrawerMenu.getNavigationDrawerItems().get(mSelectedItem).getEventMode());
+                mFrManager.setFragment(DrawerMenu.getNavigationDrawerItems().get(mSelectedItem).getEventMode(), SharedScheduleManager.MY_DEFAULT_SCHEDULE_CODE);
                 mPresentTitle = DrawerMenu.getNavigationDrawerItems().get(mSelectedItem).getName();
 
-                ActionBar supportActionBar = getSupportActionBar();
-                if (supportActionBar != null) {
-                    supportActionBar.setTitle(mPresentTitle);
-                }
-//                    mToolbar.setTitle(mPresentTitle);
+                setToolBarTitle(mPresentTitle);
 
                 mAdapter.setSelectedPos(mSelectedItem);
                 mAdapter.notifyDataSetChanged();
@@ -290,21 +286,25 @@ public class HomeActivity extends StateActivity implements FilterDialog.OnFilter
         DrawerMenuItem drawerMenuItem;
         if (code == SharedScheduleManager.MY_DEFAULT_SCHEDULE_CODE) {
             drawerMenuItem = DrawerMenu.getNavigationDrawerItems().get(mSelectedItem);
-            mFrManager.setFragment(drawerMenuItem.getEventMode());
+            mFrManager.setFragment(drawerMenuItem.getEventMode(), SharedScheduleManager.MY_DEFAULT_SCHEDULE_CODE);
             AnalyticsManager.drawerFragmentTracker(this, drawerMenuItem.getName());
             mSelectedItem = 0;
         } else {
             mSelectedItem = 4;
             drawerMenuItem = DrawerMenu.getNavigationDrawerItems().get(mSelectedItem);
             mAdapter.setSelectedPos(mSelectedItem);
-            mFrManager.setFragment(drawerMenuItem.getEventMode());
+            mFrManager.setFragment(drawerMenuItem.getEventMode(), code);
             AnalyticsManager.drawerFragmentTracker(this, drawerMenuItem.getName());
         }
         mPresentTitle = drawerMenuItem.getName();
         L.e("setDefaultFragment mPresentTitle = " + getString(mPresentTitle));
+        setToolBarTitle(mPresentTitle);
+    }
+
+    private void setToolBarTitle(int title){
         ActionBar supportActionBar = getSupportActionBar();
         if (supportActionBar != null) {
-            supportActionBar.setTitle(mPresentTitle);
+            supportActionBar.setTitle(title);
         }
     }
 }

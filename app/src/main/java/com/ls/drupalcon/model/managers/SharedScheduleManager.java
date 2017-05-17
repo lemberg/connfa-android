@@ -430,8 +430,8 @@ public class SharedScheduleManager {
     }
 
     public Long getMyScheduleCode() {
-        L.e("My Schedule = " + currentSchedule.getId());
-        return currentSchedule.getId();
+        return Model.instance().getPreferencesManager().getMyScheduleCode();
     }
+
 
 }

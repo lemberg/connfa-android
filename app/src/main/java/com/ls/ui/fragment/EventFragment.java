@@ -98,15 +98,6 @@ public class EventFragment extends Fragment implements EventsAdapter.Listener {
         super.onDestroy();
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-//        if (mEventMode == EventMode.Favorites) {
-//             inflater.inflate(R.menu.menu_my_schedule, menu);
-//        }
-
-
-    }
 
     private void initData() {
         Bundle bundle = getArguments();

@@ -6,6 +6,7 @@ import com.ls.drupalcon.model.Model;
 import com.ls.drupalcon.model.data.FriendsFavoriteItem;
 import com.ls.drupalcon.model.data.Schedule;
 import com.ls.drupalcon.model.requests.ScheduleRequest;
+import com.ls.utils.L;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +29,6 @@ public class ScheduleManager extends SynchronousItemManager<Schedule.Holder, Obj
 
     @Override
     protected boolean storeResponse(Schedule.Holder requestResponse, String tag) {
-
         ArrayList<FriendsFavoriteItem> sharedSchedules = new ArrayList<>();
         List<Schedule> schedules = requestResponse.getSchedules();
         for (Schedule schedule : schedules) {

@@ -55,57 +55,6 @@ public class AboutFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Model.instance().getUpdatesManager().registerUpdateListener(updateListener);
-        SharedScheduleManager sharedScheduleManager = Model.instance().getSharedScheduleManager();
-
-        L.e("SharedScheduleDao = " + sharedScheduleManager.getAllSchedules());
-        L.e("SharedFavoritesDao = " + sharedScheduleManager.getAllFavoritesSafe());
-
-
-        //test
-//        sharedFavoritesManager.deleteAll();
-//        sharedScheduleManager.getSharedSchedule(8981);
-        sharedScheduleManager.getAllSharedSchedule();
-
-//        ScheduleManager scheduleManager = Model.instance().getScheduleManager();
-//        scheduleManager.fetchData();
-//                boolean b = scheduleManager.fetchData();
-
-//        ScheduleManager scheduleManager = Model.instance().getScheduleManager();
-
-//        scheduleManager.fetchData();
-//        new ScheduleRequest(Model.instance().getClient()).pullFromServer(true, "Tag", new AbstractBaseDrupalEntity.OnEntityRequestListener() {
-//            @Override
-//            public void onRequestCompleted(AbstractBaseDrupalEntity entity, Object tag, ResponseData data) {
-//                L.e("weee = " + data.getData());
-//            }
-//
-//            @Override
-//            public void onRequestFailed(AbstractBaseDrupalEntity entity, Object tag, ResponseData data) {
-//                L.e("onRequestFailed");
-//            }
-//
-//            @Override
-//            public void onRequestCanceled(AbstractBaseDrupalEntity entity, Object tag) {
-//                L.e("onRequestCanceled");
-//            }
-//        });
-        new AsyncTask<Void, Void, Boolean>() {
-
-            @Override
-            protected Boolean doInBackground(Void... params) {
-                Model.instance().getFloorPlansManager().fetchData();
-                ScheduleManager scheduleManager = Model.instance().getScheduleManager();
-                boolean b = scheduleManager.fetchData();
-
-                return b;
-            }
-
-            @Override
-            protected void onPostExecute(Boolean aBoolean) {
-                super.onPostExecute(aBoolean);
-            }
-        }.execute();
-
     }
 
     @Nullable

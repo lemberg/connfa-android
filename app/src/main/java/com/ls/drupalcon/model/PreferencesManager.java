@@ -100,7 +100,9 @@ public class PreferencesManager {
     }
 
     public Long getMyScheduleCode() {
-       return mPref.getLong(MY_SCHEDULE_CODE, -1);
+        long aLong = mPref.getLong(MY_SCHEDULE_CODE, -1);
+        L.e("getCurrentScheduleCode = " + aLong);
+        return mPref.getLong(MY_SCHEDULE_CODE, -1);
     }
 
     public String getMinorInfoTitle() {
