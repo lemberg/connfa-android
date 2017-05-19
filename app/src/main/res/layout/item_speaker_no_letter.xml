@@ -5,8 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/selector_light"
-    android:paddingBottom="16dp"
-   >
+    android:paddingBottom="16dp">
 
     <com.ls.ui.view.CircleImageView
         android:id="@+id/imgPhoto"
@@ -47,9 +46,4 @@
             tools:text="Lorem ipsum" />
     </LinearLayout>
 
-    <View
-        android:id="@+id/botDivider"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/white_200" />
 </RelativeLayout>

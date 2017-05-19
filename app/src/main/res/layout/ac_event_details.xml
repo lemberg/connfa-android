@@ -7,10 +7,52 @@
     android:layout_height="match_parent"
     android:background="@color/white">
 
+    <View
+        android:id="@+id/viewShadow"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="@drawable/shape_shadow" />
+
+    <View
+        android:id="@+id/viewToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="@color/primary"
+        android:visibility="visible" />
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent">
+
+        <TextView
+            android:id="@+id/toolbarTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="8dp"
+            android:singleLine="true"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_20"
+            android:textStyle="bold"
+            tools:text="DrupalCon" />
+    </android.support.v7.widget.Toolbar>
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_gravity="center" />
+
     <com.ls.ui.view.NotifyingScrollView
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
         android:visibility="visible">
 
         <RelativeLayout
@@ -105,6 +147,24 @@
 
                 </LinearLayout>
 
+                <View
+                    android:id="@+id/topSpeakersDivider"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/white_200" />
+
+                <com.ls.ui.view.FontTextView
+                    android:id="@+id/holderHeader"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:paddingBottom="@dimen/padding_small"
+                    android:paddingTop="@dimen/padding_small"
+                    android:paddingLeft="@dimen/padding"
+                    android:paddingRight="@dimen/padding"
+                    android:text="Speakers"
+                    android:textColor="@color/item_selection" />
+
                 <LinearLayout
                     android:id="@+id/holderSpeakers"
                     android:layout_width="match_parent"
@@ -122,7 +182,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="horizontal"
-                    android:padding="@dimen/padding">
+                    android:paddingBottom="@dimen/padding_small"
+                    android:paddingTop="@dimen/padding_small"
+                    android:paddingLeft="@dimen/padding"
+                    android:paddingRight="@dimen/padding"
+                    >
 
                     <com.ls.ui.view.FontTextView
                         android:layout_width="0dp"
@@ -135,7 +199,7 @@
                         android:id="@+id/expandIndicator"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/ic_group_arrow_up"/>
+                        android:src="@drawable/ic_expand_less_black_24dp" />
                 </LinearLayout>
 
 
@@ -227,45 +291,6 @@
 
         </RelativeLayout>
     </com.ls.ui.view.NotifyingScrollView>
-
-    <View
-        android:id="@+id/viewShadow"
-        android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:background="@drawable/shape_shadow" />
-
-    <View
-        android:id="@+id/viewToolbar"
-        android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:background="@color/primary"
-        android:visibility="visible" />
-
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolBar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@android:color/transparent">
-
-        <TextView
-            android:id="@+id/toolbarTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginRight="8dp"
-            android:singleLine="true"
-            android:textColor="@color/white"
-            android:textSize="@dimen/text_size_20"
-            android:textStyle="bold"
-            tools:text="DrupalCon" />
-    </android.support.v7.widget.Toolbar>
-
-    <ProgressBar
-        android:id="@+id/progressBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:layout_gravity="center" />
 
 </RelativeLayout>
 

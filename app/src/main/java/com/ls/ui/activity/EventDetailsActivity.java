@@ -352,10 +352,10 @@ public class EventDetailsActivity extends StackKeeperActivity {
                 public void onClick(View v) {
                     if (holder.isShown()) {
                         holder.setVisibility(View.GONE);
-                        indicator.setImageResource(R.drawable.ic_group_arrow_down);
+                        indicator.setImageResource(R.drawable.ic_expand_more_black_24dp);
                     } else {
                         holder.setVisibility(View.VISIBLE);
-                        indicator.setImageResource(R.drawable.ic_group_arrow_up);
+                        indicator.setImageResource(R.drawable.ic_expand_less_black_24dp);
                     }
 
                 }
@@ -379,13 +379,14 @@ public class EventDetailsActivity extends StackKeeperActivity {
 
         if (!speakerList.isEmpty()) {
             for (Speaker speaker : speakerList) {
-                View speakerView = inflater.inflate(R.layout.item_speaker_no_letter, null);
+                View speakerView = inflater.inflate(R.layout.item_speaker_no_letter, null, false);
                 fillSpeakerView(speaker, speakerView);
                 holderSpeakers.addView(speakerView);
             }
+            findViewById(R.id.holderHeader).setVisibility(View.VISIBLE);
             findViewById(R.id.botSpeakersDivider).setVisibility(View.VISIBLE);
         } else {
-
+            findViewById(R.id.holderHeader).setVisibility(View.GONE);
             findViewById(R.id.botSpeakersDivider).setVisibility(View.GONE);
         }
     }
