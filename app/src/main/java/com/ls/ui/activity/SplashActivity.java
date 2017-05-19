@@ -112,6 +112,7 @@ public class SplashActivity extends AppCompatActivity {
             String uri = this.getIntent().getDataString();
             String substring = uri.substring(uri.length() - 4, uri.length());
             HomeActivity.startThisActivity(this, Long.valueOf(substring));
+            L.e("New task!!!");
 //            SharedScheduleManager sharedScheduleManager = Model.instance().getSharedScheduleManager();
 //            sharedScheduleManager.createSchedule(Long.valueOf(substring));
         } else {

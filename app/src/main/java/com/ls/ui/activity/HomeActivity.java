@@ -62,6 +62,8 @@ public class HomeActivity extends StateActivity implements FilterDialog.OnFilter
     public static void startThisActivity(Activity activity, long scheduleCode) {
         Intent intent = new Intent(activity, HomeActivity.class);
         intent.putExtra(NAVIGATE_TO_SCHEDULE_EXTRA_KEY, scheduleCode);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         activity.startActivity(intent);
     }
 

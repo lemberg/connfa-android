@@ -58,7 +58,6 @@
         </activity>
         <activity
             android:name="com.ls.ui.activity.HomeActivity"
-            android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.DrupalCon.Home" />
         <activity

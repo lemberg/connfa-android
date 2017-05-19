@@ -7,38 +7,6 @@
     android:layout_height="match_parent"
     android:background="@color/white">
 
-    <View
-        android:id="@+id/viewShadow"
-        android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:background="@drawable/shape_shadow" />
-
-    <View
-        android:id="@+id/viewToolbar"
-        android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:background="@color/primary"
-        android:visibility="visible" />
-
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolBar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@android:color/transparent">
-
-        <TextView
-            android:id="@+id/toolbarTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginRight="8dp"
-            android:singleLine="true"
-            android:textColor="@color/white"
-            android:textSize="@dimen/text_size_20"
-            android:textStyle="bold"
-            tools:text="DrupalCon" />
-    </android.support.v7.widget.Toolbar>
-
     <ProgressBar
         android:id="@+id/progressBar"
         android:layout_width="wrap_content"
@@ -159,9 +127,9 @@
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
                     android:paddingBottom="@dimen/padding_small"
-                    android:paddingTop="@dimen/padding_small"
                     android:paddingLeft="@dimen/padding"
                     android:paddingRight="@dimen/padding"
+                    android:paddingTop="@dimen/padding_small"
                     android:text="Speakers"
                     android:textColor="@color/item_selection" />
 
@@ -183,10 +151,9 @@
                     android:layout_height="match_parent"
                     android:orientation="horizontal"
                     android:paddingBottom="@dimen/padding_small"
-                    android:paddingTop="@dimen/padding_small"
                     android:paddingLeft="@dimen/padding"
                     android:paddingRight="@dimen/padding"
-                    >
+                    android:paddingTop="@dimen/padding_small">
 
                     <com.ls.ui.view.FontTextView
                         android:layout_width="0dp"
@@ -292,6 +259,37 @@
         </RelativeLayout>
     </com.ls.ui.view.NotifyingScrollView>
 
+    <View
+        android:id="@+id/viewShadow"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="@drawable/shape_shadow" />
+
+    <View
+        android:id="@+id/viewToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="@color/primary"
+        android:visibility="visible" />
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent">
+
+        <TextView
+            android:id="@+id/toolbarTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="8dp"
+            android:singleLine="true"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_20"
+            android:textStyle="bold"
+            tools:text="DrupalCon" />
+    </android.support.v7.widget.Toolbar>
 </RelativeLayout>
 
 
