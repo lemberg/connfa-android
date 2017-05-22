@@ -32,16 +32,24 @@ public class SplashActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ac_splash);
-        Uri data = this.getIntent().getData();
-        if (data != null && data.isHierarchical()) {
-            String uri = this.getIntent().getDataString();
-            String substring = uri.substring(uri.length() - 4, uri.length());
-            L.e("New schedule code = " + substring);
-            SharedScheduleManager sharedScheduleManager = Model.instance().getSharedScheduleManager();
-            sharedScheduleManager.createSchedule(Long.valueOf(substring));
-
-            sharedScheduleManager.getSharedSchedule(Long.valueOf(substring));
-        }
+//        Uri data = this.getIntent().getData();
+//        if (data != null && data.isHierarchical()) {
+//            String uri = this.getIntent().getDataString();
+//            String substring = uri.substring(uri.length() - 4, uri.length());
+//
+//            Long code = Long.valueOf(substring);
+//            SharedScheduleManager sharedScheduleManager = Model.instance().getSharedScheduleManager();
+//            sharedScheduleManager.createSchedule(code);
+//
+//            sharedScheduleManager.getSharedSchedule(code);
+//        }
+//
+//        new AsyncTask<Void, Void, Void>() {
+//            @Override
+//            protected Void doInBackground(Void... params) {
+//                return null;
+//            }
+//        }.execute();
 
         mHandler = new Handler();
         mHandler.postDelayed(new Runnable() {
@@ -77,6 +85,8 @@ public class SplashActivity extends AppCompatActivity {
         new AsyncTask<Void, Void, UpdatesManager>() {
             @Override
             protected UpdatesManager doInBackground(Void... params) {
+                Model.instance().getSharedScheduleManager().initialize();
+
                 UpdatesManager manager = Model.instance().getUpdatesManager();
                 manager.checkForDatabaseUpdate();
                 return manager;
@@ -111,10 +121,13 @@ public class SplashActivity extends AppCompatActivity {
         if (data != null && data.isHierarchical()) {
             String uri = this.getIntent().getDataString();
             String substring = uri.substring(uri.length() - 4, uri.length());
-            HomeActivity.startThisActivity(this, Long.valueOf(substring));
-            L.e("New task!!!");
-//            SharedScheduleManager sharedScheduleManager = Model.instance().getSharedScheduleManager();
-//            sharedScheduleManager.createSchedule(Long.valueOf(substring));
+            Long code = Long.valueOf(substring);
+            SharedScheduleManager sharedScheduleManager = Model.instance().getSharedScheduleManager();
+            sharedScheduleManager.createSchedule(code);
+
+            sharedScheduleManager.getSharedSchedule(code);
+
+            HomeActivity.startThisActivity(this, code);
         } else {
             HomeActivity.startThisActivity(this, SharedScheduleManager.MY_DEFAULT_SCHEDULE_CODE);
         }

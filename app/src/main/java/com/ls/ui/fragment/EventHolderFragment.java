@@ -83,12 +83,6 @@ public class EventHolderFragment extends Fragment implements SwipeRefreshLayout.
     private Spinner navigationSpinner;
     private SharedScheduleManager scheduleManager = Model.instance().getSharedScheduleManager();
 
-    public interface OnUndoClickListener {
-        void onUndoClick();
-    }
-
-    private OnUndoClickListener undoClickListener;
-
     private UpdatesManager.DataUpdatedListener updateReceiver = new UpdatesManager.DataUpdatedListener() {
         @Override
         public void onDataUpdated(List<UpdateRequest> requests) {

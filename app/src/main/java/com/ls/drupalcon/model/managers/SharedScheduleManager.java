@@ -37,6 +37,7 @@ import java.util.TimerTask;
 
 public class SharedScheduleManager {
     public static final long MY_DEFAULT_SCHEDULE_CODE = -1;
+    public boolean isInitialized;
     private SharedScheduleDao sharedScheduleDao;
     private SharedFavoritesDao sharedFavoritesDao;
     private List<SharedSchedule> schedules = new ArrayList<>();
@@ -49,10 +50,25 @@ public class SharedScheduleManager {
         this.sharedScheduleDao = new SharedScheduleDao();
         this.sharedFavoritesDao = new SharedFavoritesDao();
 
-        SharedSchedule schedule = new SharedSchedule(MY_DEFAULT_SCHEDULE_CODE, App.getContext().getString(R.string.my_schedule));
-        this.sharedScheduleDao.saveOrUpdateSafe(schedule);
-        this.schedules.addAll(this.sharedScheduleDao.getAllSafe());
-        this.currentSchedule = schedule;
+    }
+
+    //must called in background
+    public void initialize() {
+        if (isInitialized) {
+            L.e("Please initialize SharedScheduleManager");
+             return;
+        } else {
+            isInitialized = true;
+            this.currentSchedule = new SharedSchedule(MY_DEFAULT_SCHEDULE_CODE, App.getContext().getString(R.string.my_schedule));
+            List<SharedSchedule> allSchedules = sharedScheduleDao.getAllSafe();
+            if(allSchedules.contains(currentSchedule)){
+
+            }else {
+                schedules.add(currentSchedule);
+                sharedScheduleDao.saveOrUpdateSafe(currentSchedule);
+            }
+            schedules.addAll(allSchedules);
+        }
     }
 
     public List<String> getAllSchedulesNameList() {
@@ -85,9 +101,8 @@ public class SharedScheduleManager {
     }
 
     public void createSchedule(long scheduleCode) {
-        SharedSchedule schedule = new SharedSchedule();
-        schedule.setScheduleName(App.getContext().getString(R.string.schedule) + scheduleCode);
-        schedule.setScheduleCode(scheduleCode);
+        SharedSchedule schedule = generateSchedule(scheduleCode);
+
         if (schedules.contains(schedule)) {
             Toast.makeText(App.getContext(), "This schedule already exist", Toast.LENGTH_LONG).show();
         } else {
@@ -100,6 +115,7 @@ public class SharedScheduleManager {
     public void renameSchedule(String newScheduleName) {
         SharedSchedule schedule = schedules.get(schedules.indexOf(currentSchedule));
         schedule.setScheduleName(newScheduleName);
+
         currentSchedule.setScheduleName(newScheduleName);
         this.sharedScheduleDao.saveOrUpdateSafe(currentSchedule);
 
@@ -148,6 +164,7 @@ public class SharedScheduleManager {
     }
 
     public List<Long> getMyEventIds() {
+
         return Model.instance().getFavoriteManager().getFavoriteEventsSafe();
     }
 
@@ -431,6 +448,10 @@ public class SharedScheduleManager {
 
     public Long getMyScheduleCode() {
         return Model.instance().getPreferencesManager().getMyScheduleCode();
+    }
+
+    public SharedSchedule generateSchedule(long scheduleCode) {
+        return new SharedSchedule(scheduleCode, App.getContext().getString(R.string.schedule) + scheduleCode);
     }
 
 
