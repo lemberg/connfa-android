@@ -63,11 +63,5 @@
     <string name="undo">Undo</string>
     <string name="schedule">Schedule </string>
 
-
-    <string-array name="test_list">
-        <item>My Schedule</item>
-        <item>Pablo Mar 4</item>
-        <item>Database Test</item>
-    </string-array>
     <string name="title_activity_test">TestActivity</string>
 </resources>

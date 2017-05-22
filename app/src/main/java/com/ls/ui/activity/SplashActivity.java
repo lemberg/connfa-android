@@ -4,13 +4,10 @@ import com.ls.drupalcon.R;
 import com.ls.drupalcon.model.Model;
 import com.ls.drupalcon.model.PreferencesManager;
 import com.ls.drupalcon.model.UpdateCallback;
-import com.ls.drupalcon.model.UpdateRequest;
 import com.ls.drupalcon.model.UpdatesManager;
 import com.ls.drupalcon.model.managers.SharedScheduleManager;
 import com.ls.ui.dialog.NoConnectionDialog;
 import com.ls.util.L;
-import com.ls.util.ObserverHolder;
-import com.ls.utils.AnalyticsManager;
 import com.ls.utils.NetworkUtils;
 
 import android.net.Uri;
@@ -20,8 +17,6 @@ import android.os.Handler;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-
-import java.util.List;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -39,9 +34,9 @@ public class SplashActivity extends AppCompatActivity {
 //
 //            Long code = Long.valueOf(substring);
 //            SharedScheduleManager sharedScheduleManager = Model.instance().getSharedScheduleManager();
-//            sharedScheduleManager.createSchedule(code);
+//            sharedScheduleManager.saveNewSharedSchedule(code);
 //
-//            sharedScheduleManager.getSharedSchedule(code);
+//            sharedScheduleManager.fetchSharedEventsByCode(code);
 //        }
 //
 //        new AsyncTask<Void, Void, Void>() {
@@ -123,9 +118,9 @@ public class SplashActivity extends AppCompatActivity {
             String substring = uri.substring(uri.length() - 4, uri.length());
             Long code = Long.valueOf(substring);
             SharedScheduleManager sharedScheduleManager = Model.instance().getSharedScheduleManager();
-            sharedScheduleManager.createSchedule(code);
+            sharedScheduleManager.saveNewSharedSchedule(code);
 
-            sharedScheduleManager.getSharedSchedule(code);
+            sharedScheduleManager.fetchSharedEventsByCode(code);
 
             HomeActivity.startThisActivity(this, code);
         } else {

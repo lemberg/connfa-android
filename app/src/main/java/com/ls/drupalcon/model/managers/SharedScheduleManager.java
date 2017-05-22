@@ -13,10 +13,10 @@ import com.ls.drupalcon.app.App;
 import com.ls.drupalcon.model.Model;
 import com.ls.drupalcon.model.PreferencesManager;
 import com.ls.drupalcon.model.dao.EventDao;
-import com.ls.drupalcon.model.dao.SharedFavoritesDao;
+import com.ls.drupalcon.model.dao.SharedEventsDao;
 import com.ls.drupalcon.model.dao.SharedScheduleDao;
 import com.ls.drupalcon.model.data.Event;
-import com.ls.drupalcon.model.data.FriendsFavoriteItem;
+import com.ls.drupalcon.model.data.SharedEvents;
 import com.ls.drupalcon.model.data.PostResponse;
 import com.ls.drupalcon.model.data.Schedule;
 import com.ls.drupalcon.model.data.SharedSchedule;
@@ -39,7 +39,7 @@ public class SharedScheduleManager {
     public static final long MY_DEFAULT_SCHEDULE_CODE = -1;
     public boolean isInitialized;
     private SharedScheduleDao sharedScheduleDao;
-    private SharedFavoritesDao sharedFavoritesDao;
+    private SharedEventsDao sharedEventsDao;
     private List<SharedSchedule> schedules = new ArrayList<>();
     private SharedSchedule currentSchedule;
     private List<SharedSchedule> schedulesTemp;
@@ -48,7 +48,7 @@ public class SharedScheduleManager {
 
     public SharedScheduleManager() {
         this.sharedScheduleDao = new SharedScheduleDao();
-        this.sharedFavoritesDao = new SharedFavoritesDao();
+        this.sharedEventsDao = new SharedEventsDao();
 
     }
 
@@ -56,19 +56,21 @@ public class SharedScheduleManager {
     public void initialize() {
         if (isInitialized) {
             L.e("Please initialize SharedScheduleManager");
-             return;
+            return;
         } else {
             isInitialized = true;
             this.currentSchedule = new SharedSchedule(MY_DEFAULT_SCHEDULE_CODE, App.getContext().getString(R.string.my_schedule));
             List<SharedSchedule> allSchedules = sharedScheduleDao.getAllSafe();
-            if(allSchedules.contains(currentSchedule)){
-
-            }else {
+            if (!allSchedules.contains(currentSchedule)) {
                 schedules.add(currentSchedule);
                 sharedScheduleDao.saveOrUpdateSafe(currentSchedule);
             }
             schedules.addAll(allSchedules);
         }
+    }
+
+    public List<SharedSchedule> getSchedules() {
+        return schedules;
     }
 
     public List<String> getAllSchedulesNameList() {
@@ -100,7 +102,7 @@ public class SharedScheduleManager {
         return schedules.indexOf(currentSchedule);
     }
 
-    public void createSchedule(long scheduleCode) {
+    public void saveNewSharedSchedule(long scheduleCode) {
         SharedSchedule schedule = generateSchedule(scheduleCode);
 
         if (schedules.contains(schedule)) {
@@ -130,7 +132,7 @@ public class SharedScheduleManager {
             @Override
             public void run() {
                 sharedScheduleDao.deleteDataSafe(scheduleTemp.getId());
-                sharedFavoritesDao.deleteDataSafe(scheduleTemp.getId());
+                sharedEventsDao.deleteDataSafe(scheduleTemp.getId());
 //
             }
         }, 2000);
@@ -147,15 +149,15 @@ public class SharedScheduleManager {
     }
 
 
-    private List<FriendsFavoriteItem> getAllFriendsFavorite() {
-        List<FriendsFavoriteItem> allSafe = sharedFavoritesDao.getAllSafe();
+    private List<SharedEvents> getAllFriendsFavorite() {
+        List<SharedEvents> allSafe = sharedEventsDao.getAllSafe();
         return allSafe;
     }
 
     public ArrayList<Long> getFriendsFavoriteEventIds() {
 
         ArrayList<Long> favoriteEventIds = new ArrayList<>();
-        for (FriendsFavoriteItem favorite : getAllFriendsFavorite()) {
+        for (SharedEvents favorite : getAllFriendsFavorite()) {
             if (favorite.getSharedScheduleCode() == (Model.instance().getSharedScheduleManager().getCurrentScheduleId()))
                 favoriteEventIds.add(favorite.getEventId());
         }
@@ -175,33 +177,28 @@ public class SharedScheduleManager {
         return events;
     }
 
-    public void saveFavoritesDeleteAndSafe(ArrayList<FriendsFavoriteItem> items) {
-        sharedFavoritesDao.deleteAllSafe();
-        sharedFavoritesDao.saveDataSafe(items);
+    public void updateFavoriteEventsSafe(ArrayList<SharedEvents> items) {
+        sharedEventsDao.deleteAllSafe();
+        sharedEventsDao.saveDataSafe(items);
     }
 
-    public void saveFavoritesDeleteAndSafe(ArrayList<FriendsFavoriteItem> items, long ScheduleCode) {
+    public void saveFavoriteEventsSafe(ArrayList<SharedEvents> items) {
 
-        sharedFavoritesDao.saveDataSafe(items);
+        sharedEventsDao.saveDataSafe(items);
     }
 
     public void deleteAll() {
-        sharedFavoritesDao.deleteAllSafe();
+        sharedEventsDao.deleteAllSafe();
     }
 
-
-    public List<FriendsFavoriteItem> getAllFavoritesSafe() {
-        return sharedFavoritesDao.getAllSafe();
-    }
-
-    public SharedFavoritesDao getSharedFavoritesDao() {
-        return sharedFavoritesDao;
+    public SharedEventsDao getSharedEventsDao() {
+        return sharedEventsDao;
     }
 
     private List<Long> getWhoIsGoing(long eventId) {
         List<Long> results = new ArrayList<>();
-        List<FriendsFavoriteItem> allFriendsFavorite = getAllFriendsFavorite();
-        for (FriendsFavoriteItem item : allFriendsFavorite) {
+        List<SharedEvents> allFriendsFavorite = getAllFriendsFavorite();
+        for (SharedEvents item : allFriendsFavorite) {
             if (item.getEventId() == eventId) {
                 results.add(item.getId());
             }
@@ -214,7 +211,7 @@ public class SharedScheduleManager {
     public List<String> getSchedulesNameByCode(long eventId) {
         List<String> results = new ArrayList<>();
 
-        for (SharedSchedule schedule : getAllSchedules()) {
+        for (SharedSchedule schedule : getAllSharedSchedules()) {
             for (Long code : getWhoIsGoing(eventId)) {
                 if (code.equals(schedule.getId())) {
                     results.add(schedule.getScheduleName());
@@ -225,7 +222,7 @@ public class SharedScheduleManager {
         return results;
     }
 
-    public List<SharedSchedule> getAllSchedules() {
+    public List<SharedSchedule> getAllSharedSchedules() {
         List<SharedSchedule> allSchedules = sharedScheduleDao.getAllSafe();
         L.e("allSchedules = " + allSchedules);
         return allSchedules;
@@ -257,7 +254,7 @@ public class SharedScheduleManager {
         favoriteEventIds.add(eventId);
 
         final PreferencesManager preferencesManager = PreferencesManager.getInstance();
-        final BaseRequest request = new BaseRequest(BaseRequest.RequestMethod.POST, App.getContext().getString(R.string.api_value_base_url) + "createSchedule", requestConfig);
+        final BaseRequest request = new BaseRequest(BaseRequest.RequestMethod.POST, App.getContext().getString(R.string.api_value_base_url) + "saveNewSharedSchedule", requestConfig);
         request.setObjectToPost(getObjectToPost(favoriteEventIds));
 
         DrupalClient client = Model.instance().getClient();
@@ -283,70 +280,9 @@ public class SharedScheduleManager {
         }, false);
     }
 
-//    public void getAllSharedSchedule() {
-//        RequestConfig requestConfig = new RequestConfig();
-//        requestConfig.setResponseFormat(BaseRequest.ResponseFormat.JSON);
-//        requestConfig.setRequestFormat(BaseRequest.RequestFormat.JSON);
-//        requestConfig.setResponseClassSpecifier(Schedule.Holder.class);
-//
-//        BaseRequest request = new BaseRequest(BaseRequest.RequestMethod.GET, "http://connfa-integration.uat.link/api/v2/euna-mcdermott-dds/getSchedules?codes[]=3320", requestConfig);
-//        String lastDate = PreferencesManager.getInstance().getLastUpdateDate();
-//        request.addRequestHeader(UpdatesManager.IF_MODIFIED_SINCE_HEADER, lastDate);
-//
-//        DrupalClient client = Model.instance().getClient();
-//        ResponseData schedule = client.performRequest(request, "Schedule", new DrupalClient.OnResponseListener() {
-//            @Override
-//            public void onResponseReceived(ResponseData data, Object tag) {
-//                L.e("Object = " + tag);
-//            }
-//
-//            @Override
-//            public void onError(ResponseData data, Object tag) {
-//                L.e("ResponseData = " + data);
-//            }
-//
-//            @Override
-//            public void onCancel(Object tag) {
-//                L.e("Object = " + tag);
-//            }
-//        }, false);
-//
-//        L.e("ResponseData getAllSharedSchedule = " + schedule.toString());
-//    }
 
-    public void getAllSharedSchedule() {
-        Response.Listener<JSONObject> listener = new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                // display response
-                Schedule.Holder holder = SharedGson.getGson().fromJson(response.toString(), Schedule.Holder.class);
-
-                ArrayList<FriendsFavoriteItem> sharedSchedules = new ArrayList<>();
-                List<Schedule> schedules = holder.getSchedules();
-                for (Schedule schedule : schedules) {
-                    for (Long eventId : schedule.getEvents()) {
-                        sharedSchedules.add(new FriendsFavoriteItem(eventId, schedule.getCode()));
-                    }
-                }
-                saveFavoritesDeleteAndSafe(sharedSchedules);
-                L.e("Schedule.Holder.class = " + holder.toString());
-            }
-        };
-
-        Response.ErrorListener errorListener = new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.d("Error.Response", error.toString());
-            }
-        };
-
-        JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, App.getContext().getString(R.string.api_value_base_url) + getPath(), listener, errorListener);
-
-        Model.instance().getQueue().add(getRequest);
-    }
-
-    public void getSharedSchedule(final long scheduleCode) {
-        sharedFavoritesDao.deleteDataSafe(scheduleCode);
+    public void fetchSharedEventsByCode(final long scheduleCode) {
+        sharedEventsDao.deleteDataSafe(scheduleCode);
         final String url = App.getContext().getString(R.string.api_value_base_url) + "getSchedules?codes[]=" + scheduleCode;
 
         Response.Listener<JSONObject> listener = new Response.Listener<JSONObject>() {
@@ -354,14 +290,14 @@ public class SharedScheduleManager {
             public void onResponse(JSONObject response) {
                 Schedule.Holder holder = SharedGson.getGson().fromJson(response.toString(), Schedule.Holder.class);
 
-                ArrayList<FriendsFavoriteItem> sharedSchedules = new ArrayList<>();
+                ArrayList<SharedEvents> sharedSchedules = new ArrayList<>();
                 List<Schedule> schedules = holder.getSchedules();
                 for (Schedule schedule : schedules) {
                     for (Long eventId : schedule.getEvents()) {
-                        sharedSchedules.add(new FriendsFavoriteItem(eventId, schedule.getCode()));
+                        sharedSchedules.add(new SharedEvents(eventId, schedule.getCode()));
                     }
                 }
-                saveFavoritesDeleteAndSafe(sharedSchedules, scheduleCode);
+                updateFavoriteEventsSafe(sharedSchedules, scheduleCode);
                 L.e("Schedule.Holder.class = " + holder.toString());
             }
         };
@@ -425,7 +361,7 @@ public class SharedScheduleManager {
     }
 
     public String getPath() {
-        List<SharedSchedule> schedules = sharedScheduleDao.getAllSafe();
+        List<SharedSchedule> schedules = Model.instance().getSharedScheduleManager().getSchedules();
 
         StringBuilder url = new StringBuilder();
         url.append("getSchedules?");

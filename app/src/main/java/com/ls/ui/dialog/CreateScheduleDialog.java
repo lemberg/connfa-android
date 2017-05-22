@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 
 import com.ls.drupalcon.R;
+import com.ls.drupalcon.model.Model;
 import com.ls.drupalcon.model.managers.SharedScheduleManager;
 
 public class CreateScheduleDialog extends DialogFragment {
@@ -44,7 +45,7 @@ public class CreateScheduleDialog extends DialogFragment {
         editTextId.setText(getScheduleName());
 
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
-        alertDialogBuilder.setTitle(R.string.add_a_schedule);
+        alertDialogBuilder.setTitle("Add schedule name");
         alertDialogBuilder.setView(contentView);
         alertDialogBuilder.setPositiveButton(getActivity().getString(android.R.string.ok), new DialogInterface.OnClickListener() {
             @Override

@@ -48,7 +48,6 @@ public class AddScheduleDialog extends DialogFragment {
                 String text = editTextId.getText().toString();
                 if (TextUtils.isEmpty(text)) {
                     ToastManager.message(getContext(), "Please enter code");
-//                    Toast.makeText(getContext(), "Please enter code", Toast.LENGTH_LONG).show();
                 } else {
                     getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, getActivity().getIntent().putExtra(EXTRA_SCHEDULE_CODE, Long.parseLong(text)));
                 }

@@ -3,9 +3,9 @@ package com.ls.ui.adapter;
 import com.ls.drupalcon.R;
 import com.ls.drupalcon.app.App;
 import com.ls.drupalcon.model.Model;
-import com.ls.drupalcon.model.dao.SharedFavoritesDao;
+import com.ls.drupalcon.model.dao.SharedEventsDao;
 import com.ls.drupalcon.model.data.Event;
-import com.ls.drupalcon.model.data.FriendsFavoriteItem;
+import com.ls.drupalcon.model.data.SharedEvents;
 import com.ls.drupalcon.model.data.Level;
 import com.ls.drupalcon.model.data.Type;
 import com.ls.ui.adapter.item.BofsItem;
@@ -236,8 +236,8 @@ public class EventsAdapter extends BaseAdapter {
             holder.icon.setVisibility(View.GONE);
         }
         if (mEventMode != EventMode.SharedSchedules) {
-            SharedFavoritesDao sharedFavoritesDao = Model.instance().getSharedScheduleManager().getSharedFavoritesDao();
-            List<FriendsFavoriteItem> favoritesById = sharedFavoritesDao.getFavoritesById(event.getId());
+            SharedEventsDao sharedEventsDao = Model.instance().getSharedScheduleManager().getSharedEventsDao();
+            List<SharedEvents> favoritesById = sharedEventsDao.getFavoritesById(event.getId());
             if (favoritesById.isEmpty()) {
                 holder.iconFriends.setVisibility(View.GONE);
             } else {

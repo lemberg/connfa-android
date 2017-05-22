@@ -1,10 +1,11 @@
 package com.ls.ui.fragment;
 
 import com.astuetz.PagerSlidingTabStrip;
+import com.ls.drupalcon.model.managers.ScheduleManager;
 import com.ls.drupalcon.model.managers.SharedScheduleManager;
 import com.ls.ui.dialog.AddScheduleDialog;
 import com.ls.ui.dialog.CreateScheduleDialog;
-import com.ls.ui.dialog.ScheduleNameDialog;
+import com.ls.ui.dialog.EditScheduleDialog;
 import com.ls.ui.drawer.FriendFavoritesStrategy;
 import com.ls.ui.view.MaterialTapTargetPrompt;
 import com.ls.drupalcon.R;
@@ -34,7 +35,6 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -51,11 +51,11 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class EventHolderFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
@@ -420,13 +420,13 @@ public class EventHolderFragment extends Fragment implements SwipeRefreshLayout.
                     strategy = new FavoritesStrategy();
                     isMySchedule = true;
                     getActivity().invalidateOptionsMenu();
-                    new LoadData().execute();
+
                 } else {
                     strategy = new FriendFavoritesStrategy();
                     isMySchedule = false;
                     getActivity().invalidateOptionsMenu();
-                    new LoadData().execute();
                 }
+                new LoadData().execute();
 
             }
 
@@ -481,7 +481,7 @@ public class EventHolderFragment extends Fragment implements SwipeRefreshLayout.
     }
 
     void showChangeScheduleNameDialog(long code) {
-        DialogFragment newFragment = ScheduleNameDialog.newInstance(code);
+        DialogFragment newFragment = EditScheduleDialog.newInstance(code);
         newFragment.setTargetFragment(this, CHANGE_SCHEDULE_NAME_DIALOG_REQUEST_CODE);
         newFragment.show(getChildFragmentManager(), CreateScheduleDialog.TAG);
     }
@@ -505,13 +505,12 @@ public class EventHolderFragment extends Fragment implements SwipeRefreshLayout.
                 switch (resultCode) {
                     case Activity.RESULT_OK:
                         long newScheduleCode = data.getLongExtra(AddScheduleDialog.EXTRA_SCHEDULE_CODE, SharedScheduleManager.MY_DEFAULT_SCHEDULE_CODE);
-                        SharedScheduleManager sharedScheduleManager = Model.instance().getSharedScheduleManager();
-                        sharedScheduleManager.getSharedSchedule(newScheduleCode);
+//                        SharedScheduleManager sharedScheduleManager = Model.instance().getSharedScheduleManager();
+//                        sharedScheduleManager.fetchSharedEventsByCode(newScheduleCode);
 
                         showSetNameDialog(newScheduleCode);
                         break;
                     case Activity.RESULT_CANCELED:
-//                        undo("Schedule name is removed");
                         break;
                 }
                 break;
@@ -519,23 +518,37 @@ public class EventHolderFragment extends Fragment implements SwipeRefreshLayout.
                 switch (resultCode) {
                     case Activity.RESULT_OK:
                         long code = data.getLongExtra(CreateScheduleDialog.EXTRA_SCHEDULE_CODE, SharedScheduleManager.MY_DEFAULT_SCHEDULE_CODE);
-                        Model.instance().getSharedScheduleManager().createSchedule(code);
-                        refreshSpinner();
+                        Model.instance().getSharedScheduleManager().saveNewSharedSchedule(code);
+
+                        new AsyncTask<Void, Void, Boolean>() {
+
+                            @Override
+                            protected Boolean doInBackground(Void... params) {
+                                Model.instance().getFloorPlansManager().fetchData();
+                                ScheduleManager scheduleManager = Model.instance().getScheduleManager();
+                                return scheduleManager.fetchData();
+                            }
+
+                            @Override
+                            protected void onPostExecute(Boolean aBoolean) {
+                                super.onPostExecute(aBoolean);
+                                refreshSpinner();
+                            }
+                        }.execute();
+
                         break;
                     case Activity.RESULT_CANCELED:
-//                        undo("Schedule name is removed");
                         break;
                 }
                 break;
             case CHANGE_SCHEDULE_NAME_DIALOG_REQUEST_CODE:
                 switch (resultCode) {
                     case Activity.RESULT_OK:
-                        String newName = data.getStringExtra(ScheduleNameDialog.EXTRA_SCHEDULE_NAME);
+                        String newName = data.getStringExtra(EditScheduleDialog.EXTRA_SCHEDULE_NAME);
                         Model.instance().getSharedScheduleManager().renameSchedule(newName);
                         refreshSpinner();
                         break;
                     case Activity.RESULT_CANCELED:
-//                        undo("Schedule name is removed");
                         break;
                 }
                 break;

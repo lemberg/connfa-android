@@ -10,7 +10,7 @@ import com.ls.utils.CursorStringParser;
 import org.jetbrains.annotations.NotNull;
 
 
-public class FriendsFavoriteItem extends AbstractEntity<Long> implements Comparable<FriendsFavoriteItem> {
+public class SharedEvents extends AbstractEntity<Long> implements Comparable<SharedEvents> {
     private final static String COLUMN_ID = "_id";
     private final static String COLUMN_EVENT_ID= "_event_id";
 
@@ -43,7 +43,7 @@ public class FriendsFavoriteItem extends AbstractEntity<Long> implements Compara
     }
 
     @Override
-    public int compareTo(@NotNull FriendsFavoriteItem event) {
+    public int compareTo(@NotNull SharedEvents event) {
 
         int result;
         if (eventId == event.eventId) {
@@ -73,17 +73,17 @@ public class FriendsFavoriteItem extends AbstractEntity<Long> implements Compara
         this.sharedScheduleCode = sharedScheduleCode;
     }
 
-    public FriendsFavoriteItem() {
+    public SharedEvents() {
     }
 
-    public FriendsFavoriteItem(long eventId, long friendId) {
+    public SharedEvents(long eventId, long friendId) {
         this.eventId = eventId;
         this.sharedScheduleCode = friendId;
     }
 
     @Override
     public String toString() {
-        return "FriendsFavoriteItem{" +
+        return "SharedEvents{" +
                 "eventId=" + eventId +
                 ", sharedScheduleCode='" + sharedScheduleCode + '\'' +
                 '}';

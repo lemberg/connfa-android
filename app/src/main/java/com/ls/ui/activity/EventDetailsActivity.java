@@ -5,9 +5,9 @@ import com.ls.drupalcon.model.Model;
 import com.ls.drupalcon.model.PreferencesManager;
 import com.ls.drupalcon.model.UpdateRequest;
 import com.ls.drupalcon.model.UpdatesManager;
-import com.ls.drupalcon.model.dao.SharedFavoritesDao;
+import com.ls.drupalcon.model.dao.SharedEventsDao;
 import com.ls.drupalcon.model.data.EventDetailsEvent;
-import com.ls.drupalcon.model.data.FriendsFavoriteItem;
+import com.ls.drupalcon.model.data.SharedEvents;
 import com.ls.drupalcon.model.data.Level;
 import com.ls.drupalcon.model.data.Speaker;
 import com.ls.drupalcon.model.managers.EventManager;
@@ -112,9 +112,6 @@ public class EventDetailsActivity extends StackKeeperActivity {
         sharedScheduleManager.getFavoritesById(mEventId);
         sharedScheduleManager.getSharedSchedulesNamesById(mEventId);
 
-        SharedFavoritesDao sharedFavoritesDao = sharedScheduleManager.getSharedFavoritesDao();
-        List<FriendsFavoriteItem> favoritesById = sharedFavoritesDao.getFavoritesById(mEventId);
-        L.e("favoritesById = " + favoritesById.toString());
 
     }
 
