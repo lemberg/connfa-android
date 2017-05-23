@@ -35,6 +35,7 @@
     <string name="placeholder_social_events">Currently there are no social events</string>
     <string name="placeholder_speakers">Currently there are no speakers</string>
     <string name="placeholder_schedule">Your schedule is empty. Please add some events</string>
+    <string name="placeholder_shared_schedule">Currently shared schedule is empty</string>
     <string name="placeholder_floor_plan">Currently there are no floor plans</string>
     <string name="placeholder_location">The address is not specified</string>
     <string name="placeholder_social_media">Currently there are no tweets</string>
@@ -61,7 +62,7 @@
     <string name="add_a_schedule">Add a schedule</string>
     <string name="add">Add</string>
     <string name="undo">Undo</string>
-    <string name="schedule">Schedule </string>
+    <string name="schedule">Schedule\u0020</string>
 
     <string name="title_activity_test">TestActivity</string>
 </resources>

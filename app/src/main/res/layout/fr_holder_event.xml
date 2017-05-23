@@ -17,6 +17,14 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
+            <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:visibility="gone"
+                android:layout_gravity="center" />
+
             <com.astuetz.PagerSlidingTabStrip
                 android:id="@+id/pager_tab_strip"
                 android:layout_width="match_parent"
@@ -41,7 +49,7 @@
 
             <LinearLayout
                 android:id="@+id/layout_placeholder"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
                 android:gravity="center_vertical"
@@ -60,7 +68,7 @@
 
                 <com.ls.ui.view.FontTextView
                     android:id="@+id/text_view_placeholder"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_top_placeholder_text"
                     android:gravity="center_horizontal"

@@ -121,7 +121,6 @@ public class SplashActivity extends AppCompatActivity {
             sharedScheduleManager.saveNewSharedSchedule(code);
 
             sharedScheduleManager.fetchSharedEventsByCode(code);
-
             HomeActivity.startThisActivity(this, code);
         } else {
             HomeActivity.startThisActivity(this, SharedScheduleManager.MY_DEFAULT_SCHEDULE_CODE);

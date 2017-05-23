@@ -29,7 +29,7 @@ public class FriendFavoritesStrategy implements EventHolderFragmentStrategy {
 
     @Override
     public int getTextResId() {
-        return R.string.placeholder_schedule;
+        return R.string.placeholder_shared_schedule;
     }
 
     @Override

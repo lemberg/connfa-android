@@ -2,6 +2,7 @@ package com.ls.drupalcon.model.managers;
 
 import com.ls.drupalcon.app.App;
 import com.ls.drupalcon.model.dao.EventDao;
+import com.ls.utils.L;
 
 import java.util.List;
 
@@ -18,6 +19,7 @@ public class FavoriteManager {
     }
 
     public List<Long> getFavoriteEventsSafe() {
+        L.e("All me Favorites = " + mEventDao.selectFavoriteEventsSafe());
         return mEventDao.selectFavoriteEventsSafe();
     }
 

@@ -107,12 +107,6 @@ public class EventDetailsActivity extends StackKeeperActivity {
         initViews();
         setHeaderView();
 
-        SharedScheduleManager sharedScheduleManager = Model.instance().getSharedScheduleManager();
-        sharedScheduleManager.getSchedulesNameByCode(mEventId);
-        sharedScheduleManager.getFavoritesById(mEventId);
-        sharedScheduleManager.getSharedSchedulesNamesById(mEventId);
-
-
     }
 
     @Override

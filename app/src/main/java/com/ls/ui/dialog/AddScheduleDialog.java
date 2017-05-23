@@ -61,9 +61,10 @@ public class AddScheduleDialog extends DialogFragment {
             }
         });
         AlertDialog dialog = alertDialogBuilder.create();
+
         dialog.show();
-//        dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.primary));
-//        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.primary));
+        dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.favorite));
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.favorite));
         return dialog;
     }
 

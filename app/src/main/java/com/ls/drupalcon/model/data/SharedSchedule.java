@@ -17,11 +17,6 @@ public class SharedSchedule extends AbstractEntity<Long> {
     public SharedSchedule() {
     }
 
-    public SharedSchedule(Long scheduleCode, String scheduleName) {
-        this.scheduleCode = scheduleCode;
-        this.scheduleName = scheduleName;
-    }
-
     @Override
     public Long getId() {
         return scheduleCode;
