@@ -41,7 +41,7 @@ public class SharedScheduleDao extends AbstractEntityDAO<SharedSchedule, Long> {
         return new String[0];
     }
 
-//    public List<SharedEvents> getFavoritesById(long eventId) {
+//    public List<SharedEvents> getSharedSchedulesById(long eventId) {
 //        String query = "SELECT * FROM table_friends_favorite_events WHERE _event_id =" + eventId;
 //
 //        return getDataBySqlQuerySafe(query, null);

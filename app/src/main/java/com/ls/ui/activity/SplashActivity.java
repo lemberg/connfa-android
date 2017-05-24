@@ -27,6 +27,13 @@ public class SplashActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ac_splash);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Model.instance().getSharedScheduleManager().initialize();
+            }
+        }).run();
+
 //        Uri data = this.getIntent().getData();
 //        if (data != null && data.isHierarchical()) {
 //            String uri = this.getIntent().getDataString();
@@ -66,7 +73,6 @@ public class SplashActivity extends AppCompatActivity {
     private void startSplash() {
         String lastUpdate = PreferencesManager.getInstance().getLastUpdateDate();
         boolean isOnline = NetworkUtils.isOn(SplashActivity.this);
-
         if (isOnline) {
             checkForUpdates();
         } else if (TextUtils.isEmpty(lastUpdate)) {
@@ -80,8 +86,6 @@ public class SplashActivity extends AppCompatActivity {
         new AsyncTask<Void, Void, UpdatesManager>() {
             @Override
             protected UpdatesManager doInBackground(Void... params) {
-                Model.instance().getSharedScheduleManager().initialize();
-
                 UpdatesManager manager = Model.instance().getUpdatesManager();
                 manager.checkForDatabaseUpdate();
                 return manager;

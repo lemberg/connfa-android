@@ -19,7 +19,6 @@ public class FavoriteManager {
     }
 
     public List<Long> getFavoriteEventsSafe() {
-        L.e("All me Favorites = " + mEventDao.selectFavoriteEventsSafe());
         return mEventDao.selectFavoriteEventsSafe();
     }
 

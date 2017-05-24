@@ -1,13 +1,7 @@
 package com.ls.drupalcon.model.managers;
 
-import android.util.Log;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.ls.drupal.DrupalClient;
 import com.ls.drupalcon.R;
 import com.ls.drupalcon.app.App;
@@ -24,10 +18,7 @@ import com.ls.drupalcon.model.data.SharedSchedule;
 import com.ls.http.base.BaseRequest;
 import com.ls.http.base.RequestConfig;
 import com.ls.http.base.ResponseData;
-import com.ls.http.base.SharedGson;
 import com.ls.utils.L;
-
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -51,7 +42,6 @@ public class SharedScheduleManager {
     public SharedScheduleManager() {
         this.sharedScheduleDao = new SharedScheduleDao();
         this.sharedEventsDao = new SharedEventsDao();
-
     }
 
     //must called in background
@@ -86,7 +76,7 @@ public class SharedScheduleManager {
         this.currentSchedule = schedules.get(scheduleOrder);
     }
 
-    public SharedSchedule getCurrentSchedule() {
+    private SharedSchedule getCurrentSchedule() {
         return currentSchedule;
     }
 
@@ -115,11 +105,12 @@ public class SharedScheduleManager {
     }
 
     public void renameSchedule(String newScheduleName) {
-        SharedSchedule schedule = schedules.get(schedules.indexOf(currentSchedule));
+        int currentItemIndex = schedules.indexOf(currentSchedule);
+        SharedSchedule schedule = schedules.get(currentItemIndex);
         schedule.setScheduleName(newScheduleName);
 
-        currentSchedule.setScheduleName(newScheduleName);
-        this.sharedScheduleDao.saveOrUpdateSafe(currentSchedule);
+        currentSchedule = schedule;
+        this.sharedScheduleDao.saveOrUpdateSafe(schedule);
 
     }
 
@@ -164,18 +155,16 @@ public class SharedScheduleManager {
     }
 
     public List<Long> getMyFavoriteEventIds() {
-
+        //TODO run in background
         return Model.instance().getFavoriteManager().getFavoriteEventsSafe();
     }
 
     public List<Event> getAllFriendsFavoriteEvent() {
-        EventManager eventManager = Model.instance().getEventManager();
-        EventDao eventDao = eventManager.getEventDao();
-        List<Event> events = eventDao.selectEventsByIdsSafe(getFriendsFavoriteEventIds());
-        return events;
+        EventDao eventDao = Model.instance().getEventManager().getEventDao();
+        return eventDao.selectEventsByIdsSafe(getFriendsFavoriteEventIds());
     }
 
-    public void updateFavoriteEventsSafe(ArrayList<SharedEvents> items) {
+    public void saveSharedEvents(ArrayList<SharedEvents> items) {
         sharedEventsDao.deleteAllSafe();
         sharedEventsDao.saveDataSafe(items);
 
@@ -183,7 +172,7 @@ public class SharedScheduleManager {
         sharedEvents.addAll(items);
     }
 
-    public void saveFavoriteEventsSafe(ArrayList<SharedEvents> items) {
+    private void saveFavoriteEventsSafe(ArrayList<SharedEvents> items) {
         sharedEvents.addAll(items);
         sharedEventsDao.saveDataSafe(items);
     }
@@ -192,19 +181,79 @@ public class SharedScheduleManager {
         return sharedEventsDao;
     }
 
-    public List<SharedSchedule> getFavoritesById(long eventId) {
-        List<SharedSchedule> list = sharedScheduleDao.getScheduleNameId(eventId);
-        return list;
+    private List<SharedSchedule> getSharedSchedulesById(long eventId) {
+        return sharedScheduleDao.getScheduleNameId(eventId);
     }
 
     public ArrayList<String> getSharedSchedulesNamesById(long eventId) {
-        List<SharedSchedule> list = getFavoritesById(eventId);
+        List<SharedSchedule> list = getSharedSchedulesById(eventId);
         ArrayList<String> namesList = new ArrayList<>();
         for (SharedSchedule schedule : list) {
             namesList.add(schedule.getScheduleName());
         }
         L.e("getSharedSchedulesNamesById = " + namesList.toString());
         return namesList;
+    }
+
+
+    public void postScheduleData(Long eventId) {
+        PreferencesManager instance = PreferencesManager.getInstance();
+        if (instance.getMyScheduleCode() == MY_DEFAULT_SCHEDULE_CODE) {
+            postData(eventId);
+        } else {
+            updateData();
+        }
+    }
+
+    public void postAllScheduleData() {
+        PreferencesManager instance = PreferencesManager.getInstance();
+        if (instance.getMyScheduleCode() == MY_DEFAULT_SCHEDULE_CODE) {
+            postAllSchedules();
+        } else {
+            updateData();
+        }
+    }
+
+
+    private Map<String, List<Long>> getObjectToPost(List<Long> ids) {
+        Map<String, List<Long>> objectToPost = new HashMap<>();
+        objectToPost.put("data", ids);
+        L.e("Object to post = " + objectToPost.toString());
+        return objectToPost;
+    }
+
+    public String getPath() {
+        List<SharedSchedule> schedules = Model.instance().getSharedScheduleManager().getSchedules();
+
+        StringBuilder url = new StringBuilder();
+        url.append("getSchedules?");
+        url.append("codes[]=");
+
+        for (SharedSchedule schedule : schedules) {
+            Long id = schedule.getId();
+            if (id != MY_DEFAULT_SCHEDULE_CODE) {
+                url.append(schedule.getId());
+                url.append("&codes[]=");
+            }
+        }
+
+        L.e("Get URL = " + url.toString());
+        return url.toString();
+
+    }
+
+    public Long getMyScheduleCode() {
+        return Model.instance().getPreferencesManager().getMyScheduleCode();
+    }
+
+    public SharedSchedule generateSchedule(long scheduleCode) {
+        return new SharedSchedule(scheduleCode, App.getContext().getString(R.string.schedule) + scheduleCode);
+    }
+
+    private void initializeError() {
+        if (!isInitialized) {
+            throw new Error("SharedScheduleManager should be initialized asynchronously");
+        }
     }
 
     public void postData(final Long eventId) {
@@ -238,6 +287,68 @@ public class SharedScheduleManager {
             @Override
             public void onCancel(Object tag) {
                 L.e("Object = " + tag);
+            }
+        }, false);
+    }
+
+
+    private void updateData() {
+        RequestConfig requestConfig = new RequestConfig();
+        requestConfig.setResponseFormat(BaseRequest.ResponseFormat.JSON);
+        requestConfig.setRequestFormat(BaseRequest.RequestFormat.JSON);
+        requestConfig.setResponseClassSpecifier(PostResponse.class);
+        final PreferencesManager instance = PreferencesManager.getInstance();
+
+        BaseRequest request = new BaseRequest(BaseRequest.RequestMethod.PUT, App.getContext().getString(R.string.api_value_base_url) + "updateSchedule/" + instance.getMyScheduleCode(), requestConfig);
+        request.setObjectToPost(getObjectToPost(getMyFavoriteEventIds()));
+
+        DrupalClient client = Model.instance().getClient();
+        client.performRequest(request, "update", new DrupalClient.OnResponseListener() {
+            @Override
+            public void onResponseReceived(ResponseData data, Object tag) {
+                PostResponse response = (PostResponse) data.getData();
+                L.e("Update = " + response.toString() + " Tag = " + tag);
+            }
+
+            @Override
+            public void onError(ResponseData data, Object tag) {
+                L.e("Update Error = " + data);
+            }
+
+            @Override
+            public void onCancel(Object tag) {
+                L.e("Update Cancel = " + tag);
+            }
+        }, false);
+    }
+
+    public void postAllSchedules() {
+        RequestConfig requestConfig = new RequestConfig();
+        requestConfig.setResponseFormat(BaseRequest.ResponseFormat.JSON);
+        requestConfig.setRequestFormat(BaseRequest.RequestFormat.JSON);
+        requestConfig.setResponseClassSpecifier(PostResponse.class);
+
+        BaseRequest request = new BaseRequest(BaseRequest.RequestMethod.POST, App.getContext().getString(R.string.api_value_base_url) + "createSchedule", requestConfig);
+        request.setObjectToPost(getObjectToPost(getMyFavoriteEventIds()));
+
+        DrupalClient client = Model.instance().getClient();
+        client.performRequest(request, "post", new DrupalClient.OnResponseListener() {
+            @Override
+            public void onResponseReceived(ResponseData data, Object tag) {
+                PostResponse response = (PostResponse) data.getData();
+                L.e("Schedule Code  = " + response.getCode() + " Tag = " + tag);
+                Long code = response.getCode();
+                PreferencesManager.getInstance().saveMyScheduleCode(code);
+            }
+
+            @Override
+            public void onError(ResponseData data, Object tag) {
+                L.e("Update Error = " + data);
+            }
+
+            @Override
+            public void onCancel(Object tag) {
+                L.e("Update Cancel = " + tag);
             }
         }, false);
     }
@@ -279,87 +390,6 @@ public class SharedScheduleManager {
                 L.e("Update Cancel = " + tag);
             }
         }, false);
-    }
-
-
-    private void updateData() {
-        RequestConfig requestConfig = new RequestConfig();
-        requestConfig.setResponseFormat(BaseRequest.ResponseFormat.JSON);
-        requestConfig.setRequestFormat(BaseRequest.RequestFormat.JSON);
-        requestConfig.setResponseClassSpecifier(PostResponse.class);
-        final PreferencesManager instance = PreferencesManager.getInstance();
-
-        BaseRequest request = new BaseRequest(BaseRequest.RequestMethod.PUT, App.getContext().getString(R.string.api_value_base_url) + "updateSchedule/" + instance.getMyScheduleCode(), requestConfig);
-        request.setObjectToPost(getObjectToPost(getMyFavoriteEventIds()));
-
-        DrupalClient client = Model.instance().getClient();
-        client.performRequest(request, "update", new DrupalClient.OnResponseListener() {
-            @Override
-            public void onResponseReceived(ResponseData data, Object tag) {
-                PostResponse response = (PostResponse) data.getData();
-                L.e("Update = " + response.toString() + " Tag = " + tag);
-            }
-
-            @Override
-            public void onError(ResponseData data, Object tag) {
-                L.e("Update Error = " + data);
-            }
-
-            @Override
-            public void onCancel(Object tag) {
-                L.e("Update Cancel = " + tag);
-            }
-        }, false);
-    }
-
-    public void postScheduleData(Long eventId) {
-        PreferencesManager instance = PreferencesManager.getInstance();
-        if (instance.getMyScheduleCode() == MY_DEFAULT_SCHEDULE_CODE) {
-            postData(eventId);
-        } else {
-            updateData();
-        }
-    }
-
-    private Map<String, List<Long>> getObjectToPost(List<Long> ids) {
-        Map<String, List<Long>> objectToPost = new HashMap<>();
-        objectToPost.put("data", ids);
-        L.e("Object to post = " + objectToPost.toString());
-        return objectToPost;
-    }
-
-    public String getPath() {
-        List<SharedSchedule> schedules = Model.instance().getSharedScheduleManager().getSchedules();
-
-        StringBuilder url = new StringBuilder();
-        url.append("getSchedules?");
-        url.append("codes[]=");
-
-        for (SharedSchedule schedule : schedules) {
-            Long id = schedule.getId();
-            if (id != MY_DEFAULT_SCHEDULE_CODE) {
-                url.append(schedule.getId());
-                url.append("&codes[]=");
-            }
-
-
-        }
-
-        L.e("Get URL = " + url.toString());
-        return url.toString();
-
-    }
-
-    public Long getMyScheduleCode() {
-        return Model.instance().getPreferencesManager().getMyScheduleCode();
-    }
-
-    public SharedSchedule generateSchedule(long scheduleCode) {
-        return new SharedSchedule(scheduleCode, App.getContext().getString(R.string.schedule) + scheduleCode);
-    }
-
-    private void initializeError() {
-        throw new Error("Please initialize SharedScheduleManager");
     }
 
 
