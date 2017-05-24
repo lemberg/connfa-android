@@ -1,5 +1,6 @@
 package com.ls.drupalcon.model.managers;
 
+import android.os.AsyncTask;
 import android.widget.Toast;
 
 import com.ls.drupal.DrupalClient;
@@ -139,7 +140,7 @@ public class SharedScheduleManager {
     }
 
 
-    private List<SharedEvents> getAllFriendsFavorite() {
+    public List<SharedEvents> getAllFriendsFavorite() {
         return sharedEvents;
     }
 
@@ -154,8 +155,7 @@ public class SharedScheduleManager {
         return favoriteEventIds;
     }
 
-    public List<Long> getMyFavoriteEventIds() {
-        //TODO run in background
+    private List<Long> getMyFavoriteEventIds() {
         return Model.instance().getFavoriteManager().getFavoriteEventsSafe();
     }
 
@@ -205,7 +205,6 @@ public class SharedScheduleManager {
         }
     }
 
-
     private Map<String, List<Long>> getObjectToPost(List<Long> ids) {
         Map<String, List<Long>> objectToPost = new HashMap<>();
         objectToPost.put("data", ids);
@@ -237,7 +236,7 @@ public class SharedScheduleManager {
         return Model.instance().getPreferencesManager().getMyScheduleCode();
     }
 
-    public SharedSchedule generateSchedule(long scheduleCode) {
+    private SharedSchedule generateSchedule(long scheduleCode) {
         return new SharedSchedule(scheduleCode, App.getContext().getString(R.string.schedule) + scheduleCode);
     }
 
@@ -262,7 +261,7 @@ public class SharedScheduleManager {
         client.performRequest(request, false);
     }
 
-    public void postAllSchedules() {
+    private void postAllSchedules() {
         RequestConfig requestConfig = new RequestConfig();
         requestConfig.setResponseFormat(BaseRequest.ResponseFormat.JSON);
         requestConfig.setRequestFormat(BaseRequest.RequestFormat.JSON);

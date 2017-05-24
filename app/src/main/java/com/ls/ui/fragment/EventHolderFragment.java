@@ -3,6 +3,7 @@ package com.ls.ui.fragment;
 import com.astuetz.PagerSlidingTabStrip;
 import com.ls.drupalcon.model.managers.ScheduleManager;
 import com.ls.drupalcon.model.managers.SharedScheduleManager;
+import com.ls.drupalcon.model.managers.ToastManager;
 import com.ls.ui.dialog.AddScheduleDialog;
 import com.ls.ui.dialog.CreateScheduleDialog;
 import com.ls.ui.dialog.EditScheduleDialog;
@@ -34,6 +35,7 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -87,7 +89,13 @@ public class EventHolderFragment extends Fragment implements SwipeRefreshLayout.
         @Override
         public void onDataUpdated(List<UpdateRequest> requests) {
             updateData(requests);
-            refreshLayout.setRefreshing(false);
+//            refreshLayout.setRefreshing(false);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    refreshLayout.setRefreshing(false);
+                }
+            }, 1000);
         }
     };
     private ReceiverManager favoriteReceiver = new ReceiverManager(new ReceiverManager.FavoriteUpdatedListener() {
@@ -169,7 +177,11 @@ public class EventHolderFragment extends Fragment implements SwipeRefreshLayout.
                 showFilter();
                 break;
             case R.id.actionAddSchedule:
-                showAddScheduleDialog();
+                if (NetworkUtils.isOn(getContext())) {
+                    showAddScheduleDialog();
+                } else {
+                    ToastManager.message(getContext(), getString(R.string.NoConnectionMessage));
+                }
                 break;
             case R.id.actionShareMySchedule:
                 shareSchedule();
@@ -226,7 +238,13 @@ public class EventHolderFragment extends Fragment implements SwipeRefreshLayout.
                     case Favorites:
                         strategy = new FavoritesStrategy();
                         setCustomToolBar();
-                        Model.instance().getSharedScheduleManager().postAllScheduleData();
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Model.instance().getSharedScheduleManager().postAllScheduleData();
+                            }
+                        }).run();
+
                         break;
                 }
             }
@@ -287,7 +305,7 @@ public class EventHolderFragment extends Fragment implements SwipeRefreshLayout.
             UpdatesManager manager = Model.instance().getUpdatesManager();
             manager.startLoading(null);
         } else {
-            Toast.makeText(getContext(), getString(R.string.NoConnectionMessage), Toast.LENGTH_LONG).show();
+            ToastManager.messageSync(getContext(), getString(R.string.NoConnectionMessage));
             refreshLayout.setRefreshing(false);
         }
     }
@@ -470,11 +488,24 @@ public class EventHolderFragment extends Fragment implements SwipeRefreshLayout.
     }
 
     private void shareSchedule() {
+
+        if (!NetworkUtils.isOn(getContext())) {
+            ToastManager.message(getContext(), getString(R.string.NoConnectionMessage));
+            return;
+        }
+
+        if (strategy.getDayList().isEmpty()) {
+            ToastManager.message(getContext(), "Currently you have no favorites");
+            return;
+        }
+
         Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND);
         sendIntent.putExtra(Intent.EXTRA_TEXT, getContext().getString(R.string.api_value_base_url) + "schedule/share/insert?code=" + scheduleManager.getMyScheduleCode());
         sendIntent.setType("text/plain");
         startActivity(sendIntent);
+
+
     }
 
     void showAddScheduleDialog() {
