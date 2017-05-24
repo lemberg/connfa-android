@@ -196,21 +196,12 @@ public class SharedScheduleManager {
     }
 
 
-    public void postScheduleData(Long eventId) {
-        PreferencesManager instance = PreferencesManager.getInstance();
-        if (instance.getMyScheduleCode() == MY_DEFAULT_SCHEDULE_CODE) {
-            postData(eventId);
-        } else {
-            updateData();
-        }
-    }
-
     public void postAllScheduleData() {
         PreferencesManager instance = PreferencesManager.getInstance();
         if (instance.getMyScheduleCode() == MY_DEFAULT_SCHEDULE_CODE) {
             postAllSchedules();
         } else {
-            updateData();
+            updateAllSchedules();
         }
     }
 
@@ -256,43 +247,8 @@ public class SharedScheduleManager {
         }
     }
 
-    public void postData(final Long eventId) {
-        RequestConfig requestConfig = new RequestConfig();
-        requestConfig.setResponseFormat(BaseRequest.ResponseFormat.JSON);
-        requestConfig.setRequestFormat(BaseRequest.RequestFormat.JSON);
-        requestConfig.setResponseClassSpecifier(PostResponse.class);
 
-        ArrayList<Long> favoriteEventIds = new ArrayList<>();
-        favoriteEventIds.add(eventId);
-
-        final PreferencesManager preferencesManager = PreferencesManager.getInstance();
-        final BaseRequest request = new BaseRequest(BaseRequest.RequestMethod.POST, App.getContext().getString(R.string.api_value_base_url) + "createSchedule", requestConfig);
-        request.setObjectToPost(getObjectToPost(favoriteEventIds));
-
-        DrupalClient client = Model.instance().getClient();
-        client.performRequest(request, "post", new DrupalClient.OnResponseListener() {
-            @Override
-            public void onResponseReceived(ResponseData data, Object tag) {
-                PostResponse response = (PostResponse) data.getData();
-                L.e("Schedule Code  = " + response.getCode() + " Tag = " + tag);
-                Long code = response.getCode();
-                preferencesManager.saveMyScheduleCode(code);
-            }
-
-            @Override
-            public void onError(ResponseData data, Object tag) {
-                L.e("ResponseData = " + data);
-            }
-
-            @Override
-            public void onCancel(Object tag) {
-                L.e("Object = " + tag);
-            }
-        }, false);
-    }
-
-
-    private void updateData() {
+    private void updateAllSchedules() {
         RequestConfig requestConfig = new RequestConfig();
         requestConfig.setResponseFormat(BaseRequest.ResponseFormat.JSON);
         requestConfig.setRequestFormat(BaseRequest.RequestFormat.JSON);
@@ -303,23 +259,7 @@ public class SharedScheduleManager {
         request.setObjectToPost(getObjectToPost(getMyFavoriteEventIds()));
 
         DrupalClient client = Model.instance().getClient();
-        client.performRequest(request, "update", new DrupalClient.OnResponseListener() {
-            @Override
-            public void onResponseReceived(ResponseData data, Object tag) {
-                PostResponse response = (PostResponse) data.getData();
-                L.e("Update = " + response.toString() + " Tag = " + tag);
-            }
-
-            @Override
-            public void onError(ResponseData data, Object tag) {
-                L.e("Update Error = " + data);
-            }
-
-            @Override
-            public void onCancel(Object tag) {
-                L.e("Update Cancel = " + tag);
-            }
-        }, false);
+        client.performRequest(request, false);
     }
 
     public void postAllSchedules() {
@@ -366,7 +306,7 @@ public class SharedScheduleManager {
         BaseRequest request = new BaseRequest(BaseRequest.RequestMethod.GET, App.getContext().getString(R.string.api_value_base_url) + "getSchedules?codes[]=" + scheduleCode, requestConfig);
 
         DrupalClient client = Model.instance().getClient();
-        client.performRequest(request, "fetchSharedEventsByCode", new DrupalClient.OnResponseListener() {
+        client.performRequest(request, "Fetch Shared Events By Code", new DrupalClient.OnResponseListener() {
             @Override
             public void onResponseReceived(ResponseData data, Object tag) {
                 Schedule.Holder holder = (Schedule.Holder) data.getData();

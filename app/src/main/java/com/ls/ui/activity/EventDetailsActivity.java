@@ -415,7 +415,7 @@ public class EventDetailsActivity extends StackKeeperActivity {
             public void run() {
                 FavoriteManager manager = new FavoriteManager();
                 manager.setFavoriteEvent(mEventId, mIsFavorite);
-                sharedScheduleManager.postScheduleData(mEventId);
+                sharedScheduleManager.postAllScheduleData();
 
             }
         }).start();
