@@ -7,85 +7,78 @@
     android:background="@android:color/white"
     android:orientation="vertical">
 
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/swipeRefresh"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <com.ls.ui.view.CustomScrollView
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center"
+            android:visibility="gone" />
+
+        <com.astuetz.PagerSlidingTabStrip
+            android:id="@+id/pager_tab_strip"
+            android:layout_width="match_parent"
+            android:layout_height="48dip"
+            android:background="@color/primary"
+            android:textColor="#FFF"
+            android:textSize="13sp"
+            android:textStyle="normal"
+            app:pstsDividerColor="#00000000"
+            app:pstsIndicatorColor="@color/white"
+            app:pstsIndicatorHeight="3dp"
+            app:pstsTabPaddingLeftRight="35dp"
+            app:pstsTextSelectedStyle="normal"
+            app:pstsTextStyle="normal" />
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/viewPager"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:fillViewport="true">
+            android:layout_below="@id/pager_tab_strip" />
 
-            <RelativeLayout
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/layout_placeholder"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone">
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:layout_centerInParent="true"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:clickable="false"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:gravity="center"
+                android:orientation="vertical"
+                >
 
-                <ProgressBar
-                    android:id="@+id/progressBar"
+                <ImageView
+                    android:id="@+id/image_view_placeholder"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
                     android:layout_gravity="center"
-                    android:visibility="gone" />
+                    tools:src="@drawable/ic_no_my_schedule" />
 
-                <com.astuetz.PagerSlidingTabStrip
-                    android:id="@+id/pager_tab_strip"
-                    android:layout_width="match_parent"
-                    android:layout_height="48dip"
-                    android:background="@color/primary"
-                    android:textColor="#FFF"
-                    android:textSize="13sp"
-                    android:textStyle="normal"
-                    app:pstsDividerColor="#00000000"
-                    app:pstsIndicatorColor="@color/white"
-                    app:pstsIndicatorHeight="3dp"
-                    app:pstsTabPaddingLeftRight="35dp"
-                    app:pstsTextSelectedStyle="normal"
-                    app:pstsTextStyle="normal" />
-
-                <android.support.v4.view.ViewPager
-                    android:id="@+id/viewPager"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_below="@id/pager_tab_strip" />
-
-                <LinearLayout
-                    android:id="@+id/layout_placeholder"
+                <com.ls.ui.view.FontTextView
+                    android:id="@+id/text_view_placeholder"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                    android:layout_marginRight="@dimen/activity_horizontal_margin"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:visibility="gone"
-                    tools:visibility="visible">
-
-                    <ImageView
-                        android:id="@+id/image_view_placeholder"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        tools:src="@drawable/ic_no_my_schedule" />
-
-                    <com.ls.ui.view.FontTextView
-                        android:id="@+id/text_view_placeholder"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/margin_top_placeholder_text"
-                        android:gravity="center_horizontal"
-                        android:textColor="@color/placeholder_text"
-                        android:textSize="@dimen/text_size_placeholder"
-                        app:custom_font="@string/regular_font"
-                        tools:text="@string/placeholder_schedule" />
-                </LinearLayout>
-            </RelativeLayout>
-        </com.ls.ui.view.CustomScrollView>
-
-
-    </android.support.v4.widget.SwipeRefreshLayout>
-
+                    android:layout_marginTop="@dimen/margin_top_placeholder_text"
+                    android:gravity="center_horizontal"
+                    android:textColor="@color/placeholder_text"
+                    android:textSize="@dimen/text_size_placeholder"
+                    app:custom_font="@string/regular_font"
+                    tools:text="@string/placeholder_schedule" />
+            </LinearLayout>
+        </android.support.v4.widget.SwipeRefreshLayout>
+    </RelativeLayout>
 
 </LinearLayout>

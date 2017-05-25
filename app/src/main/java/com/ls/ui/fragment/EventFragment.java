@@ -2,8 +2,12 @@ package com.ls.ui.fragment;
 
 import com.ls.drupalcon.R;
 import com.ls.drupalcon.model.EventGenerator;
+import com.ls.drupalcon.model.Model;
 import com.ls.drupalcon.model.PreferencesManager;
+import com.ls.drupalcon.model.UpdateRequest;
+import com.ls.drupalcon.model.UpdatesManager;
 import com.ls.drupalcon.model.data.Event;
+import com.ls.drupalcon.model.managers.ToastManager;
 import com.ls.sponsors.GoldSponsors;
 import com.ls.sponsors.SponsorItem;
 import com.ls.sponsors.SponsorManager;
@@ -17,16 +21,19 @@ import com.ls.ui.receiver.ReceiverManager;
 import com.ls.utils.AnalyticsManager;
 import com.ls.utils.DateUtils;
 import com.ls.utils.L;
+import com.ls.utils.NetworkUtils;
 
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
@@ -35,7 +42,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
 
-public class EventFragment extends Fragment implements EventsAdapter.Listener {
+public class EventFragment extends Fragment implements EventsAdapter.Listener, SwipeRefreshLayout.OnRefreshListener {
 
     private static final String EXTRAS_ARG_MODE = "EXTRAS_ARG_MODE";
     private static final String EXTRAS_ARG_DAY = "EXTRAS_ARG_DAY";
@@ -51,6 +58,7 @@ public class EventFragment extends Fragment implements EventsAdapter.Listener {
     private ProgressBar mProgressBar;
 
     private EventGenerator mGenerator;
+    private SwipeRefreshLayout refreshLayout;
 
     private ReceiverManager receiverManager = new ReceiverManager(
             new ReceiverManager.FavoriteUpdatedListener() {
@@ -61,6 +69,21 @@ public class EventFragment extends Fragment implements EventsAdapter.Listener {
                     }
                 }
             });
+
+    private UpdatesManager.DataUpdatedListener updateReceiver = new UpdatesManager.DataUpdatedListener() {
+        @Override
+        public void onDataUpdated(List<UpdateRequest> requests) {
+            new LoadData().execute();
+            refreshLayout.setRefreshing(false);
+//            refreshLayout.setRefreshing(false);
+//            new Handler().postDelayed(new Runnable() {
+//                @Override
+//                public void run() {
+//                    refreshLayout.setRefreshing(false);
+//                }
+//            }, 1000);
+        }
+    };
 
     public static Fragment newInstance(long day, EventMode mode) {
         Fragment fragment = new EventFragment();
@@ -74,6 +97,7 @@ public class EventFragment extends Fragment implements EventsAdapter.Listener {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Model.instance().getUpdatesManager().registerUpdateListener(updateReceiver);
         return inflater.inflate(R.layout.fr_event, container, false);
     }
 
@@ -89,6 +113,12 @@ public class EventFragment extends Fragment implements EventsAdapter.Listener {
     @Override
     public void onClick(int position) {
         onItemClick(position);
+    }
+
+    @Override
+    public void onDestroyView() {
+        Model.instance().getUpdatesManager().unregisterUpdateListener(updateReceiver);
+        super.onDestroyView();
     }
 
     @Override
@@ -118,8 +148,31 @@ public class EventFragment extends Fragment implements EventsAdapter.Listener {
             mAdapter = new EventsAdapter(getActivity());
             mAdapter.setOnItemClickListener(this);
 
+            refreshLayout = (SwipeRefreshLayout) getView().findViewById(R.id.swipeRefresh);
+            refreshLayout.setOnRefreshListener(this);
+
             mListView = (ListView) getView().findViewById(R.id.listView);
             mListView.setAdapter(mAdapter);
+            mListView.setOnScrollListener(new AbsListView.OnScrollListener() {
+                @Override
+                public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+                }
+
+                @Override
+                public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                    if(totalItemCount == 0){
+                        refreshLayout.setEnabled(true);
+                    }
+                    if (firstVisibleItem == 0) {
+                        refreshLayout.setEnabled(true);
+                    }else {
+                        refreshLayout.setEnabled(false);
+                    }
+                }
+            });
+
+
         }
     }
 
@@ -235,5 +288,16 @@ public class EventFragment extends Fragment implements EventsAdapter.Listener {
         int randomInt = randomGenerator.nextInt(sponsorsList.size());
         SponsorManager.getInstance().setSponsorId(randomInt);
 
+    }
+
+    @Override
+    public void onRefresh() {
+        if (NetworkUtils.isOn(getContext())) {
+            UpdatesManager manager = Model.instance().getUpdatesManager();
+            manager.startLoading(null);
+        } else {
+            ToastManager.messageSync(getContext(), getString(R.string.NoConnectionMessage));
+            refreshLayout.setRefreshing(false);
+        }
     }
 }

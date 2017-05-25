@@ -90,12 +90,12 @@ public class EventHolderFragment extends Fragment implements SwipeRefreshLayout.
         public void onDataUpdated(List<UpdateRequest> requests) {
             updateData(requests);
 //            refreshLayout.setRefreshing(false);
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    refreshLayout.setRefreshing(false);
-                }
-            }, 1000);
+//            new Handler().postDelayed(new Runnable() {
+//                @Override
+//                public void run() {
+//                    refreshLayout.setRefreshing(false);
+//                }
+//            }, 1000);
         }
     };
     private ReceiverManager favoriteReceiver = new ReceiverManager(new ReceiverManager.FavoriteUpdatedListener() {
@@ -272,8 +272,8 @@ public class EventHolderFragment extends Fragment implements SwipeRefreshLayout.
 
         setHasOptionsMenu(true);
 
-        refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefresh);
-        refreshLayout.setOnRefreshListener(this);
+//        refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefresh);
+//        refreshLayout.setOnRefreshListener(this);
 
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -288,16 +288,16 @@ public class EventHolderFragment extends Fragment implements SwipeRefreshLayout.
 
             @Override
             public void onPageScrollStateChanged(int state) {
-                enableDisableSwipeRefresh(state == ViewPager.SCROLL_STATE_IDLE);
+//                enableDisableSwipeRefresh(state == ViewPager.SCROLL_STATE_IDLE);
             }
         });
     }
-
-    private void enableDisableSwipeRefresh(boolean enable) {
-        if (refreshLayout != null) {
-            refreshLayout.setEnabled(enable);
-        }
-    }
+//
+//    private void enableDisableSwipeRefresh(boolean enable) {
+//        if (refreshLayout != null) {
+//            refreshLayout.setEnabled(enable);
+//        }
+//    }
 
     @Override
     public void onRefresh() {
@@ -306,7 +306,7 @@ public class EventHolderFragment extends Fragment implements SwipeRefreshLayout.
             manager.startLoading(null);
         } else {
             ToastManager.messageSync(getContext(), getString(R.string.NoConnectionMessage));
-            refreshLayout.setRefreshing(false);
+//            refreshLayout.setRefreshing(false);
         }
     }
 
