@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <android.support.v4.widget.NestedScrollView
+        <com.ls.ui.view.CustomScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fillViewport="true">
@@ -82,7 +82,7 @@
                         tools:text="@string/placeholder_schedule" />
                 </LinearLayout>
             </RelativeLayout>
-        </android.support.v4.widget.NestedScrollView>
+        </com.ls.ui.view.CustomScrollView>
 
 
     </android.support.v4.widget.SwipeRefreshLayout>
