@@ -309,4 +309,6 @@ public class HomeActivity extends StateActivity implements FilterDialog.OnFilter
             supportActionBar.setTitle(title);
         }
     }
+
+
 }

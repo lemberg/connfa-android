@@ -111,7 +111,13 @@ public class SharedScheduleManager {
         schedule.setScheduleName(newScheduleName);
 
         currentSchedule = schedule;
-        this.sharedScheduleDao.saveOrUpdateSafe(schedule);
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                sharedScheduleDao.saveOrUpdateSafe(currentSchedule);
+            }
+        });
+
 
     }
 

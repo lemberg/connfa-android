@@ -32,10 +32,10 @@ import org.jetbrains.annotations.NotNull;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -43,6 +43,9 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -55,7 +58,6 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.List;
 
@@ -72,14 +74,13 @@ public class EventHolderFragment extends Fragment implements SwipeRefreshLayout.
     private PagerSlidingTabStrip mPagerTabs;
     private BaseEventDaysPagerAdapter mAdapter;
 
-    private View mLayoutPlaceholder;
+    private SwipeRefreshLayout refreshLayout;
     private ImageView mImageViewNoContent;
     private TextView mTextViewNoContent;
 
     private boolean mIsFilterUsed;
     private EventHolderFragmentStrategy strategy;
     private boolean isMySchedule = true;
-    private SwipeRefreshLayout refreshLayout;
     private ArrayAdapter<String> spinnerAdapter;
     private Spinner navigationSpinner;
     private SharedScheduleManager scheduleManager = Model.instance().getSharedScheduleManager();
@@ -89,13 +90,8 @@ public class EventHolderFragment extends Fragment implements SwipeRefreshLayout.
         @Override
         public void onDataUpdated(List<UpdateRequest> requests) {
             updateData(requests);
-//            refreshLayout.setRefreshing(false);
-//            new Handler().postDelayed(new Runnable() {
-//                @Override
-//                public void run() {
-//                    refreshLayout.setRefreshing(false);
-//                }
-//            }, 1000);
+            refreshLayout.setRefreshing(false);
+
         }
     };
     private ReceiverManager favoriteReceiver = new ReceiverManager(new ReceiverManager.FavoriteUpdatedListener() {
@@ -129,13 +125,6 @@ public class EventHolderFragment extends Fragment implements SwipeRefreshLayout.
         View view = inflater.inflate(R.layout.fr_holder_event, container, false);
         mProgressBar = (ProgressBar) view.findViewById(R.id.progressBar);
         return view;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-//        SharedScheduleManager sharedScheduleManager = Model.instance().getSharedScheduleManager();
-//        sharedScheduleManager.getAllSharedSchedule();
     }
 
     @Override
@@ -188,13 +177,11 @@ public class EventHolderFragment extends Fragment implements SwipeRefreshLayout.
                 break;
             case R.id.actionEditSchedule:
                 showChangeScheduleNameDialog(Model.instance().getSharedScheduleManager().getCurrentScheduleId());
-//                showChangeScheduleNameDialog();
                 break;
             case R.id.actionRemoveSchedule:
                 undo(Model.instance().getSharedScheduleManager().getCurrentFriendScheduleName() + " is removed");
                 Model.instance().getSharedScheduleManager().deleteSharedSchedule();
                 refreshSpinner();
-//                setSpinnerPosition(0);
                 new LoadData().execute();
                 break;
         }
@@ -266,38 +253,13 @@ public class EventHolderFragment extends Fragment implements SwipeRefreshLayout.
         mPagerTabs.setTypeface(typeface, 0);
         mPagerTabs.setViewPager(mViewPager);
 
-        mLayoutPlaceholder = view.findViewById(R.id.layout_placeholder);
+        refreshLayout = (SwipeRefreshLayout)view.findViewById(R.id.layout_placeholder);
+        refreshLayout.setOnRefreshListener(this);
         mTextViewNoContent = (TextView) view.findViewById(R.id.text_view_placeholder);
         mImageViewNoContent = (ImageView) view.findViewById(R.id.image_view_placeholder);
 
         setHasOptionsMenu(true);
-
-//        refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefresh);
-//        refreshLayout.setOnRefreshListener(this);
-
-        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-//                enableDisableSwipeRefresh(state == ViewPager.SCROLL_STATE_IDLE);
-            }
-        });
     }
-//
-//    private void enableDisableSwipeRefresh(boolean enable) {
-//        if (refreshLayout != null) {
-//            refreshLayout.setEnabled(enable);
-//        }
-//    }
 
     @Override
     public void onRefresh() {
@@ -306,7 +268,6 @@ public class EventHolderFragment extends Fragment implements SwipeRefreshLayout.
             manager.startLoading(null);
         } else {
             ToastManager.messageSync(getContext(), getString(R.string.NoConnectionMessage));
-//            refreshLayout.setRefreshing(false);
         }
     }
 
@@ -327,7 +288,7 @@ public class EventHolderFragment extends Fragment implements SwipeRefreshLayout.
     private void updateViews(List<Long> dayList) {
         if (dayList.isEmpty()) {
             mPagerTabs.setVisibility(View.GONE);
-            mLayoutPlaceholder.setVisibility(View.VISIBLE);
+            refreshLayout.setVisibility(View.VISIBLE);
 
             if (mIsFilterUsed) {
                 mImageViewNoContent.setVisibility(View.GONE);
@@ -338,7 +299,7 @@ public class EventHolderFragment extends Fragment implements SwipeRefreshLayout.
                 mTextViewNoContent.setText(App.getContext().getText(strategy.getTextResId()));
             }
         } else {
-            mLayoutPlaceholder.setVisibility(View.GONE);
+            refreshLayout.setVisibility(View.GONE);
             mPagerTabs.setVisibility(View.VISIBLE);
         }
 
@@ -594,7 +555,7 @@ public class EventHolderFragment extends Fragment implements SwipeRefreshLayout.
 
     private void undo(String message) {
         Snackbar snack = Snackbar.make(getView(), message, Snackbar.LENGTH_LONG);
-        snack.setAction("Undo", new View.OnClickListener() {
+        snack.setAction(R.string.undo, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 L.e("Undo");
@@ -603,7 +564,7 @@ public class EventHolderFragment extends Fragment implements SwipeRefreshLayout.
                 refreshSpinner();
             }
         });
-        snack.setActionTextColor(R.color.primary);
+        snack.setActionTextColor(Color.parseColor("#65B6AA"));
         snack.show();
     }
 
@@ -632,4 +593,8 @@ public class EventHolderFragment extends Fragment implements SwipeRefreshLayout.
     }
 
 
+    private String getColoredSpanned(String text, String color) {
+        String input = "<font color=" + color + ">" + text + "</font>";
+        return input;
+    }
 }

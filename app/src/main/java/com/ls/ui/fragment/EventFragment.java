@@ -161,9 +161,6 @@ public class EventFragment extends Fragment implements EventsAdapter.Listener, S
 
                 @Override
                 public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                    if(totalItemCount == 0){
-                        refreshLayout.setEnabled(true);
-                    }
                     if (firstVisibleItem == 0) {
                         refreshLayout.setEnabled(true);
                     }else {
