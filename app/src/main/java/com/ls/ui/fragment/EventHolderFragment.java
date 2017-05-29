@@ -43,9 +43,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.text.SpannableStringBuilder;
-import android.text.Spanned;
-import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -225,13 +222,7 @@ public class EventHolderFragment extends Fragment implements SwipeRefreshLayout.
                     case Favorites:
                         strategy = new FavoritesStrategy();
                         setCustomToolBar();
-                        new Thread(new Runnable() {
-                            @Override
-                            public void run() {
-                                Model.instance().getSharedScheduleManager().postAllScheduleData();
-                            }
-                        }).run();
-
+                        postAllSchedulesAsynchronously();
                         break;
                 }
             }
@@ -280,7 +271,9 @@ public class EventHolderFragment extends Fragment implements SwipeRefreshLayout.
 
         @Override
         protected void onPostExecute(List<Long> result) {
-            updateViews(result);
+            if(getActivity() != null){
+                updateViews(result);
+            }
         }
     }
 
@@ -420,10 +413,9 @@ public class EventHolderFragment extends Fragment implements SwipeRefreshLayout.
 
         long code = getArguments().getLong(SHARED_SCHEDULE_CODE_EXTRAS);
         L.e("New schedule code = " + code);
-        if (code > 0) {
-
-            setSpinnerPosition(Model.instance().getSharedScheduleManager().getAllSchedulesNameList().size() - 1);
-        }
+//        if (code != SharedScheduleManager.MY_DEFAULT_SCHEDULE_CODE) {
+            setSpinnerPosition(Model.instance().getSharedScheduleManager().getItemPosition());
+//        }
 
     }
 
@@ -518,7 +510,6 @@ public class EventHolderFragment extends Fragment implements SwipeRefreshLayout.
 
                             @Override
                             protected Boolean doInBackground(Void... params) {
-                                Model.instance().getFloorPlansManager().fetchData();
                                 ScheduleManager scheduleManager = Model.instance().getScheduleManager();
                                 return scheduleManager.fetchData();
                             }
@@ -592,9 +583,13 @@ public class EventHolderFragment extends Fragment implements SwipeRefreshLayout.
         navigationSpinner.setSelection(position);
     }
 
-
-    private String getColoredSpanned(String text, String color) {
-        String input = "<font color=" + color + ">" + text + "</font>";
-        return input;
+    private void postAllSchedulesAsynchronously(){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Model.instance().getSharedScheduleManager().postAllSchedules();
+            }
+        }).run();
     }
+
 }

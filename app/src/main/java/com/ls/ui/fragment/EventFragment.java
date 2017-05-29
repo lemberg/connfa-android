@@ -7,6 +7,7 @@ import com.ls.drupalcon.model.PreferencesManager;
 import com.ls.drupalcon.model.UpdateRequest;
 import com.ls.drupalcon.model.UpdatesManager;
 import com.ls.drupalcon.model.data.Event;
+import com.ls.drupalcon.model.managers.SharedScheduleManager;
 import com.ls.drupalcon.model.managers.ToastManager;
 import com.ls.sponsors.GoldSponsors;
 import com.ls.sponsors.SponsorItem;
@@ -26,11 +27,10 @@ import com.ls.utils.NetworkUtils;
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -42,7 +42,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
 
-public class EventFragment extends Fragment implements EventsAdapter.Listener, SwipeRefreshLayout.OnRefreshListener {
+public class EventFragment extends Fragment implements EventsAdapter.Listener, SwipeRefreshLayout.OnRefreshListener, SharedScheduleManager.OnEventsLoadedListener {
 
     private static final String EXTRAS_ARG_MODE = "EXTRAS_ARG_MODE";
     private static final String EXTRAS_ARG_DAY = "EXTRAS_ARG_DAY";
@@ -75,13 +75,6 @@ public class EventFragment extends Fragment implements EventsAdapter.Listener, S
         public void onDataUpdated(List<UpdateRequest> requests) {
             new LoadData().execute();
             refreshLayout.setRefreshing(false);
-//            refreshLayout.setRefreshing(false);
-//            new Handler().postDelayed(new Runnable() {
-//                @Override
-//                public void run() {
-//                    refreshLayout.setRefreshing(false);
-//                }
-//            }, 1000);
         }
     };
 
@@ -93,6 +86,12 @@ public class EventFragment extends Fragment implements EventsAdapter.Listener, S
         fragment.setArguments(args);
 
         return fragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Model.instance().getSharedScheduleManager().setOnEventsLoaded(this);
     }
 
     @Override
@@ -125,6 +124,7 @@ public class EventFragment extends Fragment implements EventsAdapter.Listener, S
     public void onDestroy() {
         mGenerator.setShouldBreak(true);
         receiverManager.unregister(getActivity());
+        Model.instance().getSharedScheduleManager().removeOnEventsLoaded(this);
         super.onDestroy();
     }
 
@@ -171,6 +171,11 @@ public class EventFragment extends Fragment implements EventsAdapter.Listener, S
 
 
         }
+    }
+
+    @Override
+    public void sharedEventsLoadedCompleted() {
+        L.e("sharedEventsLoadedCompleted!");
     }
 
     class LoadData extends AsyncTask<Void, Void, List<EventListItem>> {

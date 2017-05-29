@@ -34,25 +34,6 @@ public class SplashActivity extends AppCompatActivity {
             }
         }).run();
 
-//        Uri data = this.getIntent().getData();
-//        if (data != null && data.isHierarchical()) {
-//            String uri = this.getIntent().getDataString();
-//            String substring = uri.substring(uri.length() - 4, uri.length());
-//
-//            Long code = Long.valueOf(substring);
-//            SharedScheduleManager sharedScheduleManager = Model.instance().getSharedScheduleManager();
-//            sharedScheduleManager.saveNewSharedSchedule(code);
-//
-//            sharedScheduleManager.fetchSharedEventsByCode(code);
-//        }
-//
-//        new AsyncTask<Void, Void, Void>() {
-//            @Override
-//            protected Void doInBackground(Void... params) {
-//                return null;
-//            }
-//        }.execute();
-
         mHandler = new Handler();
         mHandler.postDelayed(new Runnable() {
             @Override
@@ -122,8 +103,8 @@ public class SplashActivity extends AppCompatActivity {
             String substring = uri.substring(uri.length() - 4, uri.length());
             Long code = Long.valueOf(substring);
             SharedScheduleManager sharedScheduleManager = Model.instance().getSharedScheduleManager();
-            sharedScheduleManager.saveNewSharedSchedule(code);
 
+            sharedScheduleManager.saveNewSharedSchedule(code);
             sharedScheduleManager.fetchSharedEventsByCode(code);
             HomeActivity.startThisActivity(this, code);
         } else {

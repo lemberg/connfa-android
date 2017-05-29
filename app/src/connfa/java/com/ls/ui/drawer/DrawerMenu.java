@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DrawerMenu {
+    public static final int MY_SCHEDULE_POSITION = 4;
 
     public static List<DrawerMenuItem> getNavigationDrawerItems() {
         List<DrawerMenuItem> result = new ArrayList<>();
@@ -23,5 +24,9 @@ public class DrawerMenu {
         result.add(new DrawerMenuItem(R.string.about, R.drawable.menu_icon_about, R.drawable.menu_icon_about_sel, EventMode.About, false));
 
         return result;
+    }
+
+    public static DrawerMenuItem getMyScheduleDrawerMenuItem(){
+        return getNavigationDrawerItems().get(MY_SCHEDULE_POSITION);
     }
 }

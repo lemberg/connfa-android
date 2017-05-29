@@ -108,9 +108,7 @@ public class HomeActivity extends StateActivity implements FilterDialog.OnFilter
     }
 
     private void initToolbar() {
-//        mPresentTitle = DrawerMenu.getNavigationDrawerItems().get(0).getName();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolBar);
-//        mToolbar.setTitle(mPresentTitle);
         setSupportActionBar(toolbar);
         initNavigationDrawer(toolbar);
     }
@@ -289,15 +287,14 @@ public class HomeActivity extends StateActivity implements FilterDialog.OnFilter
         if (code == SharedScheduleManager.MY_DEFAULT_SCHEDULE_CODE) {
             drawerMenuItem = DrawerMenu.getNavigationDrawerItems().get(mSelectedItem);
             mFrManager.setFragment(drawerMenuItem.getEventMode(), SharedScheduleManager.MY_DEFAULT_SCHEDULE_CODE);
-            AnalyticsManager.drawerFragmentTracker(this, drawerMenuItem.getName());
-            mSelectedItem = 0;
         } else {
-            mSelectedItem = 4;
-            drawerMenuItem = DrawerMenu.getNavigationDrawerItems().get(mSelectedItem);
+            mSelectedItem = DrawerMenu.MY_SCHEDULE_POSITION;
+            drawerMenuItem = DrawerMenu.getMyScheduleDrawerMenuItem();
             mAdapter.setSelectedPos(mSelectedItem);
             mFrManager.setFragment(drawerMenuItem.getEventMode(), code);
             AnalyticsManager.drawerFragmentTracker(this, drawerMenuItem.getName());
         }
+        AnalyticsManager.drawerFragmentTracker(this, drawerMenuItem.getName());
         mPresentTitle = drawerMenuItem.getName();
         L.e("setDefaultFragment mPresentTitle = " + getString(mPresentTitle));
         setToolBarTitle(mPresentTitle);

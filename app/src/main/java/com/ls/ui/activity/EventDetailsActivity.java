@@ -5,9 +5,7 @@ import com.ls.drupalcon.model.Model;
 import com.ls.drupalcon.model.PreferencesManager;
 import com.ls.drupalcon.model.UpdateRequest;
 import com.ls.drupalcon.model.UpdatesManager;
-import com.ls.drupalcon.model.dao.SharedEventsDao;
 import com.ls.drupalcon.model.data.EventDetailsEvent;
-import com.ls.drupalcon.model.data.SharedEvents;
 import com.ls.drupalcon.model.data.Level;
 import com.ls.drupalcon.model.data.Speaker;
 import com.ls.drupalcon.model.managers.EventManager;
@@ -20,7 +18,6 @@ import com.ls.sponsors.SponsorManager;
 import com.ls.ui.receiver.ReceiverManager;
 import com.ls.ui.view.CircleImageView;
 import com.ls.ui.view.NotifyingScrollView;
-import com.ls.util.L;
 import com.ls.utils.AnalyticsManager;
 import com.ls.utils.DateUtils;
 import com.ls.utils.ScheduleManager;
@@ -415,7 +412,7 @@ public class EventDetailsActivity extends StackKeeperActivity {
             public void run() {
                 FavoriteManager manager = new FavoriteManager();
                 manager.setFavoriteEvent(mEventId, mIsFavorite);
-                sharedScheduleManager.postAllScheduleData();
+                sharedScheduleManager.postAllSchedules();
 
             }
         }).start();

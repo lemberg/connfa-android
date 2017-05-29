@@ -39,6 +39,19 @@ public class SharedScheduleManager {
     private List<SharedSchedule> schedulesTemp;
     private SharedSchedule scheduleTemp;
     private Timer timer = new Timer();
+    private ArrayList<OnEventsLoadedListener> onEventsLoadedListeners = new ArrayList<>();
+
+    public interface OnEventsLoadedListener {
+        void sharedEventsLoadedCompleted();
+    }
+
+    public void setOnEventsLoaded(OnEventsLoadedListener onEventsLoadedListener) {
+        this.onEventsLoadedListeners.add(onEventsLoadedListener);
+    }
+
+    public void removeOnEventsLoaded(OnEventsLoadedListener onEventsLoadedListener) {
+        this.onEventsLoadedListeners.remove(onEventsLoadedListener);
+    }
 
     public SharedScheduleManager() {
         this.sharedScheduleDao = new SharedScheduleDao();
@@ -124,8 +137,6 @@ public class SharedScheduleManager {
     public void deleteSharedSchedule() {
         schedulesTemp = new ArrayList<>(schedules);
         scheduleTemp = currentSchedule;
-        L.e("Temp = " + scheduleTemp);
-        L.e("currentSchedule = " + currentSchedule.toString());
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
@@ -181,6 +192,12 @@ public class SharedScheduleManager {
     private void saveFavoriteEventsSafe(ArrayList<SharedEvents> items) {
         sharedEvents.addAll(items);
         sharedEventsDao.saveDataSafe(items);
+
+        if (onEventsLoadedListeners.isEmpty()) {
+            for(OnEventsLoadedListener eventsLoaded: onEventsLoadedListeners)
+                eventsLoaded.sharedEventsLoadedCompleted();
+        }
+
     }
 
     public SharedEventsDao getSharedEventsDao() {
@@ -202,12 +219,12 @@ public class SharedScheduleManager {
     }
 
 
-    public void postAllScheduleData() {
+    public void postAllSchedules() {
         PreferencesManager instance = PreferencesManager.getInstance();
         if (instance.getMyScheduleCode() == MY_DEFAULT_SCHEDULE_CODE) {
-            postAllSchedules();
+            postSchedules();
         } else {
-            updateAllSchedules();
+            updateSchedules();
         }
     }
 
@@ -253,7 +270,7 @@ public class SharedScheduleManager {
     }
 
 
-    private void updateAllSchedules() {
+    private void updateSchedules() {
         RequestConfig requestConfig = new RequestConfig();
         requestConfig.setResponseFormat(BaseRequest.ResponseFormat.JSON);
         requestConfig.setRequestFormat(BaseRequest.RequestFormat.JSON);
@@ -267,7 +284,7 @@ public class SharedScheduleManager {
         client.performRequest(request, false);
     }
 
-    private void postAllSchedules() {
+    private void postSchedules() {
         RequestConfig requestConfig = new RequestConfig();
         requestConfig.setResponseFormat(BaseRequest.ResponseFormat.JSON);
         requestConfig.setRequestFormat(BaseRequest.RequestFormat.JSON);

@@ -135,21 +135,17 @@ public class EventGenerator {
                 socials.add(eventListItem);
             }
         }
-//        List<TimeRange> ranges = new ArrayList<>();
         if (!schedules.isEmpty()) {
-//            ranges.addAll(mEventManager.getDistrictFavoriteTimeRangeSafe(Event.PROGRAM_CLASS, favoriteEventIds, day));
             List<TimeRange> ranges = mEventManager.getDistrictFavoriteTimeRangeSafe(Event.PROGRAM_CLASS, favoriteEventIds, day);
             schedules = getEventItems(eventItemCreator, schedules, ranges);
         }
 
         if (!bofs.isEmpty()) {
-//            addRange(mEventManager.getDistrictFavoriteTimeRangeSafe(Event.SOCIALS_CLASS, favoriteEventIds, day), favoriteEventIds, day);
             List<TimeRange> ranges = mEventManager.getDistrictFavoriteTimeRangeSafe(Event.BOFS_CLASS, favoriteEventIds, day);
             bofs = getEventItems(eventItemCreator, bofs, ranges);
         }
 
         if (!socials.isEmpty()) {
-//            addRange(mEventManager.getDistrictFavoriteTimeRangeSafe(Event.SOCIALS_CLASS, favoriteEventIds, day), favoriteEventIds, day);
             List<TimeRange> ranges = mEventManager.getDistrictFavoriteTimeRangeSafe(Event.SOCIALS_CLASS, favoriteEventIds, day);
             socials = getEventItems(eventItemCreator, socials, ranges);
 
@@ -174,7 +170,6 @@ public class EventGenerator {
 
             }
         });
-//        return getEventItems(eventItemCreator, result, ranges);
         return result;
     }
 
