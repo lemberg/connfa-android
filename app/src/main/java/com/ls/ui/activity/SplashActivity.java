@@ -102,10 +102,10 @@ public class SplashActivity extends AppCompatActivity {
             String uri = this.getIntent().getDataString();
             String substring = uri.substring(uri.length() - 4, uri.length());
             Long code = Long.valueOf(substring);
-            SharedScheduleManager sharedScheduleManager = Model.instance().getSharedScheduleManager();
-
-            sharedScheduleManager.saveNewSharedSchedule(code);
-            sharedScheduleManager.fetchSharedEventsByCode(code);
+//            SharedScheduleManager sharedScheduleManager = Model.instance().getSharedScheduleManager();
+//
+//            sharedScheduleManager.saveNewSharedSchedule(code);
+//            sharedScheduleManager.fetchSharedEventsByCode(code);
             HomeActivity.startThisActivity(this, code);
         } else {
             HomeActivity.startThisActivity(this, SharedScheduleManager.MY_DEFAULT_SCHEDULE_CODE);

@@ -4,9 +4,12 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
+import android.text.Editable;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -14,11 +17,15 @@ import android.widget.EditText;
 import com.ls.drupalcon.R;
 import com.ls.drupalcon.model.Model;
 import com.ls.drupalcon.model.managers.SharedScheduleManager;
+import com.ls.drupalcon.model.managers.ToastManager;
+import com.ls.utils.L;
 
 public class CreateScheduleDialog extends DialogFragment {
 
     public static final String TAG = CreateScheduleDialog.class.getName();
     public static final String EXTRA_SCHEDULE_CODE = "extra_schedule_code";
+    public static final String EXTRA_SCHEDULE_NAME = "extra_schedule_name";
+    private static long code;
 
 
     public static CreateScheduleDialog newInstance(long code) {
@@ -38,6 +45,7 @@ public class CreateScheduleDialog extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+        code = getArguments().getLong(EXTRA_SCHEDULE_CODE, SharedScheduleManager.MY_DEFAULT_SCHEDULE_CODE);
 
         ViewGroup contentView = (ViewGroup) LayoutInflater.from(getActivity()).inflate(R.layout.dialog_shedule_name, null);
         final EditText editTextId = (EditText) contentView.findViewById(R.id.scheduleName);
@@ -50,7 +58,17 @@ public class CreateScheduleDialog extends DialogFragment {
         alertDialogBuilder.setPositiveButton(getActivity().getString(android.R.string.ok), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, getActivity().getIntent().putExtra(EXTRA_SCHEDULE_CODE, getScheduleCode()));
+                String text = editTextId.getText().toString();
+                if(TextUtils.isEmpty(text)){
+                    ToastManager.messageSync(getContext(), "Please enter schedule name");
+                }else {
+                    Intent intent = getActivity().getIntent();
+                    intent.putExtra(EXTRA_SCHEDULE_CODE, code);
+                    intent.putExtra(EXTRA_SCHEDULE_NAME, text);
+                    L.e("Name = " + text);
+                    getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, intent);
+                }
+
             }
         });
 
@@ -75,9 +93,9 @@ public class CreateScheduleDialog extends DialogFragment {
         }
     }
 
-    private long getScheduleCode() {
-            return  getArguments().getLong(EXTRA_SCHEDULE_CODE, SharedScheduleManager.MY_DEFAULT_SCHEDULE_CODE);
-    }
+//    private long getScheduleCode() {
+//            return  getArguments().getLong(EXTRA_SCHEDULE_CODE, SharedScheduleManager.MY_DEFAULT_SCHEDULE_CODE);
+//    }
 
 }
 

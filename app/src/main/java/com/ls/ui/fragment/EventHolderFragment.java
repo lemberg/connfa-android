@@ -194,6 +194,13 @@ public class EventHolderFragment extends Fragment implements SwipeRefreshLayout.
         initData();
         initView();
         new LoadData().execute();
+        long code = getArguments().getLong(SHARED_SCHEDULE_CODE_EXTRAS);
+        L.e("New schedule code = " + code);
+        if (code > 0) {
+            showSetNameDialog(code);
+//            setSpinnerPosition(Model.instance().getSharedScheduleManager().getItemPosition());
+        }
+
     }
 
     @Override
@@ -411,11 +418,12 @@ public class EventHolderFragment extends Fragment implements SwipeRefreshLayout.
             }
         });
 
-        long code = getArguments().getLong(SHARED_SCHEDULE_CODE_EXTRAS);
-        L.e("New schedule code = " + code);
-//        if (code != SharedScheduleManager.MY_DEFAULT_SCHEDULE_CODE) {
-            setSpinnerPosition(Model.instance().getSharedScheduleManager().getItemPosition());
-//        }
+//        long code = getArguments().getLong(SHARED_SCHEDULE_CODE_EXTRAS);
+//        L.e("New schedule code = " + code);
+////        if (code != SharedScheduleManager.MY_DEFAULT_SCHEDULE_CODE) {
+//            setSpinnerPosition(Model.instance().getSharedScheduleManager().getItemPosition());
+////        }
+//        showSetNameDialog(code);
 
     }
 
@@ -496,7 +504,8 @@ public class EventHolderFragment extends Fragment implements SwipeRefreshLayout.
                 switch (resultCode) {
                     case Activity.RESULT_OK:
                         long code = data.getLongExtra(CreateScheduleDialog.EXTRA_SCHEDULE_CODE, SharedScheduleManager.MY_DEFAULT_SCHEDULE_CODE);
-                        Model.instance().getSharedScheduleManager().saveNewSharedSchedule(code);
+                        String name = data.getStringExtra(CreateScheduleDialog.EXTRA_SCHEDULE_NAME);
+                        Model.instance().getSharedScheduleManager().saveNewSharedSchedule(code, name);
 
                         new AsyncTask<Void, Void, Boolean>() {
                             @Override
@@ -566,6 +575,7 @@ public class EventHolderFragment extends Fragment implements SwipeRefreshLayout.
             disableCustomToolBar();
             setToolbarTitle();
             isMySchedule = true;
+            //todo check this: setSpinnerPosition
             setSpinnerPosition(0);
             strategy = new FavoritesStrategy();
         } else {

@@ -106,8 +106,8 @@ public class SharedScheduleManager {
         return schedules.indexOf(currentSchedule);
     }
 
-    public void saveNewSharedSchedule(long scheduleCode) {
-        SharedSchedule schedule = generateSchedule(scheduleCode);
+    public void saveNewSharedSchedule(long scheduleCode, String name) {
+        SharedSchedule schedule = generateSchedule(scheduleCode, name);
 
         if (schedules.contains(schedule)) {
             Toast.makeText(App.getContext(), "This schedule already exist", Toast.LENGTH_LONG).show();
@@ -259,8 +259,8 @@ public class SharedScheduleManager {
         return Model.instance().getPreferencesManager().getMyScheduleCode();
     }
 
-    private SharedSchedule generateSchedule(long scheduleCode) {
-        return new SharedSchedule(scheduleCode, App.getContext().getString(R.string.schedule) + scheduleCode);
+    private SharedSchedule generateSchedule(long scheduleCode, String name) {
+        return new SharedSchedule(scheduleCode, name);
     }
 
     private void initializeError() {
