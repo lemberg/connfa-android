@@ -240,13 +240,13 @@ public class SharedScheduleManager {
 
         StringBuilder url = new StringBuilder();
         url.append("getSchedules?");
-        url.append("codes[]=");
+//        url.append("codes[]=");
 
         for (SharedSchedule schedule : schedules) {
             Long id = schedule.getId();
             if (id != MY_DEFAULT_SCHEDULE_CODE) {
-                url.append(schedule.getId());
                 url.append("&codes[]=");
+                url.append(schedule.getId());
             }
         }
 

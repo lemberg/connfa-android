@@ -121,7 +121,6 @@ public class UpdatesManager {
             facade.beginTransactions();
             boolean success = true;
             List<UpdateRequest> updateList = updateDate.getIdsForUpdate();
-            L.e("UpdateRequest = " + updateList.toString());
             for (UpdateRequest update : updateList) {
                 success = sendRequestById(update);
                 if (!success) {
@@ -194,10 +193,10 @@ public class UpdatesManager {
             case FLOOR_PLANS:
                 manager = Model.instance().getFloorPlansManager();
                 break;
-
-            case SCHEDULES:
-                manager = Model.instance().getScheduleManager();
-                break;
+//
+//            case SCHEDULES:
+//                manager = Model.instance().getScheduleManager();
+//                break;
 
             default:
                 return true;
