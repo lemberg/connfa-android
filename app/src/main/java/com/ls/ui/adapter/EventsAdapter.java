@@ -85,9 +85,9 @@ public class EventsAdapter extends BaseAdapter {
     }
 
     public void setData(List<EventListItem> data, EventMode mode) {
-        EventListItem eventListItem = data.get(0);
-        L.e("eventListItems = " + eventListItem.getEvent().getName());
-        L.e("Mode = " + mode);
+//        EventListItem eventListItem = data.get(0);
+//        L.e("eventListItems = " + eventListItem.getEvent().getName());
+//        L.e("Mode = " + mode);
         mData.clear();
         mData.addAll(data);
         mEventMode = mode;

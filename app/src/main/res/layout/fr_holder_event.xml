@@ -1,88 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/swipeRefresh"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white"
-    android:orientation="vertical">
+    android:layout_below="@id/progressBar">
 
-    <RelativeLayout
+    <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:fillViewport="true">
 
-        <ProgressBar
-            android:id="@+id/progressBar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_gravity="center"
-            android:visibility="gone" />
-
-        <com.astuetz.PagerSlidingTabStrip
-            android:id="@+id/pager_tab_strip"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:background="@color/primary"
-            android:textColor="#FFF"
-            android:textSize="13sp"
-            android:textStyle="normal"
-            app:pstsDividerColor="#00000000"
-            app:pstsIndicatorColor="@color/white"
-            app:pstsIndicatorHeight="3dp"
-            app:pstsTabPaddingLeftRight="35dp"
-            app:pstsTextSelectedStyle="normal"
-            app:pstsTextStyle="normal" />
-
-        <android.support.v4.view.ViewPager
-            android:id="@+id/viewPager"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/pager_tab_strip" />
+            android:orientation="vertical">
 
-        <!--<android.support.v4.widget.SwipeRefreshLayout-->
-            <!--android:id="@+id/layout_placeholder"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:visibility="gone">-->
+            <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:visibility="gone" />
 
-            <!--<android.support.v4.widget.NestedScrollView-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:fillViewport="true">-->
+            <com.astuetz.PagerSlidingTabStrip
+                android:id="@+id/pager_tab_strip"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:background="@color/primary"
+                android:textColor="#FFF"
+                android:textSize="13sp"
+                android:textStyle="normal"
+                app:pstsDividerColor="#00000000"
+                app:pstsIndicatorColor="@color/white"
+                app:pstsIndicatorHeight="3dp"
+                app:pstsTabPaddingLeftRight="35dp"
+                app:pstsTextSelectedStyle="normal"
+                app:pstsTextStyle="normal" />
 
+            <android.support.v4.view.ViewPager
+                android:id="@+id/viewPager"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
-                <LinearLayout
-                    android:id="@+id/layout_placeholder"
+            <LinearLayout
+                android:id="@+id/layout_placeholder"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/image_view_placeholder"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    tools:src="@drawable/ic_no_my_schedule" />
+
+                <com.ls.ui.view.FontTextView
+                    android:id="@+id/text_view_placeholder"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:paddingLeft="@dimen/activity_horizontal_margin"
-                    android:paddingRight="@dimen/activity_horizontal_margin">
-
-                    <ImageView
-                        android:id="@+id/image_view_placeholder"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        tools:src="@drawable/ic_no_my_schedule" />
-
-                    <com.ls.ui.view.FontTextView
-                        android:id="@+id/text_view_placeholder"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/margin_top_placeholder_text"
-                        android:gravity="center_horizontal"
-                        android:textColor="@color/placeholder_text"
-                        android:textSize="@dimen/text_size_placeholder"
-                        app:custom_font="@string/regular_font"
-                        tools:text="@string/placeholder_schedule" />
-                </LinearLayout>
-
-            <!--</android.support.v4.widget.NestedScrollView>-->
-        <!--</android.support.v4.widget.SwipeRefreshLayout>-->
-    </RelativeLayout>
-
-</LinearLayout>
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_top_placeholder_text"
+                    android:gravity="center_horizontal"
+                    android:textColor="@color/placeholder_text"
+                    android:textSize="@dimen/text_size_placeholder"
+                    app:custom_font="@string/regular_font"
+                    tools:text="@string/placeholder_schedule" />
+            </LinearLayout>
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
+</android.support.v4.widget.SwipeRefreshLayout>

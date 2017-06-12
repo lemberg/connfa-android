@@ -42,7 +42,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
 
-public class EventFragment extends Fragment implements EventsAdapter.Listener, SwipeRefreshLayout.OnRefreshListener, SharedScheduleManager.OnEventsLoadedListener {
+public class EventFragment extends Fragment implements EventsAdapter.Listener, SharedScheduleManager.OnEventsLoadedListener {
 
     private static final String EXTRAS_ARG_MODE = "EXTRAS_ARG_MODE";
     private static final String EXTRAS_ARG_DAY = "EXTRAS_ARG_DAY";
@@ -69,15 +69,15 @@ public class EventFragment extends Fragment implements EventsAdapter.Listener, S
                     }
                 }
             });
-
-    private UpdatesManager.DataUpdatedListener updateReceiver = new UpdatesManager.DataUpdatedListener() {
-        @Override
-        public void onDataUpdated(List<UpdateRequest> requests) {
-            L.e("List<UpdateRequest> requests = " + requests);
-            new LoadData().execute();
-            refreshLayout.setRefreshing(false);
-        }
-    };
+//
+//    private UpdatesManager.DataUpdatedListener updateReceiver = new UpdatesManager.DataUpdatedListener() {
+//        @Override
+//        public void onDataUpdated(List<UpdateRequest> requests) {
+//            L.e("List<UpdateRequest> requests = " + requests);
+//            new LoadData().execute();
+//            refreshLayout.setRefreshing(false);
+//        }
+//    };
 
     public static Fragment newInstance(long day, EventMode mode) {
         Fragment fragment = new EventFragment();
@@ -104,7 +104,7 @@ public class EventFragment extends Fragment implements EventsAdapter.Listener, S
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        Model.instance().getUpdatesManager().registerUpdateListener(updateReceiver);
+//        Model.instance().getUpdatesManager().registerUpdateListener(updateReceiver);
         receiverManager.register(getActivity());
 
         initData();
@@ -119,7 +119,7 @@ public class EventFragment extends Fragment implements EventsAdapter.Listener, S
 
     @Override
     public void onDestroyView() {
-        Model.instance().getUpdatesManager().unregisterUpdateListener(updateReceiver);
+//        Model.instance().getUpdatesManager().unregisterUpdateListener(updateReceiver);
         super.onDestroyView();
     }
 
@@ -151,8 +151,8 @@ public class EventFragment extends Fragment implements EventsAdapter.Listener, S
             mAdapter = new EventsAdapter(getActivity());
             mAdapter.setOnItemClickListener(this);
 
-            refreshLayout = (SwipeRefreshLayout) getView().findViewById(R.id.swipeRefresh);
-            refreshLayout.setOnRefreshListener(this);
+//            refreshLayout = (SwipeRefreshLayout) getView().findViewById(R.id.swipeRefresh);
+//            refreshLayout.setOnRefreshListener(this);
 
             mListView = (ListView) getView().findViewById(R.id.listView);
             mListView.setAdapter(mAdapter);
@@ -164,11 +164,11 @@ public class EventFragment extends Fragment implements EventsAdapter.Listener, S
 
                 @Override
                 public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                    if (firstVisibleItem == 0) {
-                        refreshLayout.setEnabled(true);
-                    }else {
-                        refreshLayout.setEnabled(false);
-                    }
+//                    if (firstVisibleItem == 0) {
+//                        refreshLayout.setEnabled(true);
+//                    }else {
+//                        refreshLayout.setEnabled(false);
+//                    }
                 }
             });
 
@@ -294,15 +294,15 @@ public class EventFragment extends Fragment implements EventsAdapter.Listener, S
         SponsorManager.getInstance().setSponsorId(randomInt);
 
     }
-
-    @Override
-    public void onRefresh() {
-        if (NetworkUtils.isOn(getContext())) {
-            UpdatesManager manager = Model.instance().getUpdatesManager();
-            manager.startLoading(null);
-        } else {
-            ToastManager.messageSync(getContext(), getString(R.string.NoConnectionMessage));
-            refreshLayout.setRefreshing(false);
-        }
-    }
+//
+//    @Override
+//    public void onRefresh() {
+//        if (NetworkUtils.isOn(getContext())) {
+//            UpdatesManager manager = Model.instance().getUpdatesManager();
+//            manager.startLoading(null);
+//        } else {
+//            ToastManager.messageSync(getContext(), getString(R.string.NoConnectionMessage));
+//            refreshLayout.setRefreshing(false);
+//        }
+//    }
 }

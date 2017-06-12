@@ -52,13 +52,14 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import java.util.List;
 
-public class EventHolderFragment extends Fragment {
+public class EventHolderFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
     public static final String TAG = "ProjectsFragment";
     private static final String EXTRAS_ARG_MODE = "EXTRAS_ARG_MODE";
@@ -74,7 +75,7 @@ public class EventHolderFragment extends Fragment {
     private View mLayoutPlaceholder;
     private ImageView mImageViewNoContent;
     private TextView mTextViewNoContent;
-
+    private SwipeRefreshLayout refreshLayout;
     private boolean mIsFilterUsed;
     private EventHolderFragmentStrategy strategy;
     private boolean isMySchedule = true;
@@ -86,9 +87,8 @@ public class EventHolderFragment extends Fragment {
     private UpdatesManager.DataUpdatedListener updateReceiver = new UpdatesManager.DataUpdatedListener() {
         @Override
         public void onDataUpdated(List<UpdateRequest> requests) {
-
-//            updateData(requests);
-//            refreshLayout.setRefreshing(false);
+            updateData(requests);
+            refreshLayout.setRefreshing(false);
 
         }
     };
@@ -243,6 +243,8 @@ public class EventHolderFragment extends Fragment {
             return;
         }
 
+        mLayoutPlaceholder = view.findViewById(R.id.layout_placeholder);
+
         mAdapter = new BaseEventDaysPagerAdapter(getChildFragmentManager());
         mViewPager = (ViewPager) view.findViewById(R.id.viewPager);
         mViewPager.setAdapter(mAdapter);
@@ -251,24 +253,23 @@ public class EventHolderFragment extends Fragment {
         mPagerTabs = (PagerSlidingTabStrip) getView().findViewById(R.id.pager_tab_strip);
         mPagerTabs.setTypeface(typeface, 0);
         mPagerTabs.setViewPager(mViewPager);
-
-        mLayoutPlaceholder = view.findViewById(R.id.layout_placeholder);
-//        refreshLayout.setOnRefreshListener(this);
+        refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefresh);
+        refreshLayout.setOnRefreshListener(this);
         mTextViewNoContent = (TextView) view.findViewById(R.id.text_view_placeholder);
         mImageViewNoContent = (ImageView) view.findViewById(R.id.image_view_placeholder);
 
         setHasOptionsMenu(true);
     }
 
-//    @Override
-//    public void onRefresh() {
-//        if (NetworkUtils.isOn(getContext())) {
-//            UpdatesManager manager = Model.instance().getUpdatesManager();
-//            manager.startLoading(null);
-//        } else {
-//            ToastManager.messageSync(getContext(), getString(R.string.NoConnectionMessage));
-//        }
-//    }
+    @Override
+    public void onRefresh() {
+        if (NetworkUtils.isOn(getContext())) {
+            UpdatesManager manager = Model.instance().getUpdatesManager();
+            manager.startLoading(null);
+        } else {
+            ToastManager.messageSync(getContext(), getString(R.string.NoConnectionMessage));
+        }
+    }
 
     class LoadData extends AsyncTask<Void, Void, List<Long>> {
 
@@ -348,7 +349,7 @@ public class EventHolderFragment extends Fragment {
 
     private void updateData(List<UpdateRequest> requests) {
         if (strategy.update(requests)) {
-            L.e("Weeeeee");
+            L.e("updateData");
             new LoadData().execute();
         }
     }
@@ -464,7 +465,7 @@ public class EventHolderFragment extends Fragment {
 
         Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND);
-        sendIntent.putExtra(Intent.EXTRA_TEXT, getContext().getString(R.string.api_value_base_url) + "schedule/share/" + scheduleManager.getMyScheduleCode());
+        sendIntent.putExtra(Intent.EXTRA_TEXT, getContext().getString(R.string.api_value_base_url) + "schedule/share/insert?code=" + scheduleManager.getMyScheduleCode());
         sendIntent.setType("text/plain");
         startActivity(sendIntent);
 
