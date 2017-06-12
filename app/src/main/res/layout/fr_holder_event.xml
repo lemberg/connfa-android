@@ -41,21 +41,22 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/pager_tab_strip" />
 
-        <android.support.v4.widget.SwipeRefreshLayout
-            android:id="@+id/layout_placeholder"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone">
+        <!--<android.support.v4.widget.SwipeRefreshLayout-->
+            <!--android:id="@+id/layout_placeholder"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:visibility="gone">-->
 
-            <android.support.v4.widget.NestedScrollView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fillViewport="true">
+            <!--<android.support.v4.widget.NestedScrollView-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:fillViewport="true">-->
 
 
                 <LinearLayout
+                    android:id="@+id/layout_placeholder"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:gravity="center"
                     android:orientation="vertical"
                     android:paddingLeft="@dimen/activity_horizontal_margin"
@@ -80,8 +81,8 @@
                         tools:text="@string/placeholder_schedule" />
                 </LinearLayout>
 
-            </android.support.v4.widget.NestedScrollView>
-        </android.support.v4.widget.SwipeRefreshLayout>
+            <!--</android.support.v4.widget.NestedScrollView>-->
+        <!--</android.support.v4.widget.SwipeRefreshLayout>-->
     </RelativeLayout>
 
 </LinearLayout>

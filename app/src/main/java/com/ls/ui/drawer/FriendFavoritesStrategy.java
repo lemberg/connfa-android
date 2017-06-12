@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FriendFavoritesStrategy implements EventHolderFragmentStrategy {
+    private static UpdateRequest request = UpdateRequest.PROGRAMS;
 
     @Override
     public List<Long> getDayList() {
@@ -44,7 +45,7 @@ public class FriendFavoritesStrategy implements EventHolderFragmentStrategy {
 
     @Override
     public boolean update(List<UpdateRequest> requests) {
-        return true;
+        return requests.contains(request);
     }
 
     @Override

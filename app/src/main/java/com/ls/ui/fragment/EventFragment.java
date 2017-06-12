@@ -73,6 +73,7 @@ public class EventFragment extends Fragment implements EventsAdapter.Listener, S
     private UpdatesManager.DataUpdatedListener updateReceiver = new UpdatesManager.DataUpdatedListener() {
         @Override
         public void onDataUpdated(List<UpdateRequest> requests) {
+            L.e("List<UpdateRequest> requests = " + requests);
             new LoadData().execute();
             refreshLayout.setRefreshing(false);
         }

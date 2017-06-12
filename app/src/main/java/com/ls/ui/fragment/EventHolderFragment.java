@@ -58,7 +58,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
-public class EventHolderFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
+public class EventHolderFragment extends Fragment {
 
     public static final String TAG = "ProjectsFragment";
     private static final String EXTRAS_ARG_MODE = "EXTRAS_ARG_MODE";
@@ -71,7 +71,7 @@ public class EventHolderFragment extends Fragment implements SwipeRefreshLayout.
     private PagerSlidingTabStrip mPagerTabs;
     private BaseEventDaysPagerAdapter mAdapter;
 
-    private SwipeRefreshLayout refreshLayout;
+    private View mLayoutPlaceholder;
     private ImageView mImageViewNoContent;
     private TextView mTextViewNoContent;
 
@@ -87,7 +87,7 @@ public class EventHolderFragment extends Fragment implements SwipeRefreshLayout.
         @Override
         public void onDataUpdated(List<UpdateRequest> requests) {
             updateData(requests);
-            refreshLayout.setRefreshing(false);
+//            refreshLayout.setRefreshing(false);
 
         }
     };
@@ -251,23 +251,23 @@ public class EventHolderFragment extends Fragment implements SwipeRefreshLayout.
         mPagerTabs.setTypeface(typeface, 0);
         mPagerTabs.setViewPager(mViewPager);
 
-        refreshLayout = (SwipeRefreshLayout)view.findViewById(R.id.layout_placeholder);
-        refreshLayout.setOnRefreshListener(this);
+        mLayoutPlaceholder = view.findViewById(R.id.layout_placeholder);
+//        refreshLayout.setOnRefreshListener(this);
         mTextViewNoContent = (TextView) view.findViewById(R.id.text_view_placeholder);
         mImageViewNoContent = (ImageView) view.findViewById(R.id.image_view_placeholder);
 
         setHasOptionsMenu(true);
     }
 
-    @Override
-    public void onRefresh() {
-        if (NetworkUtils.isOn(getContext())) {
-            UpdatesManager manager = Model.instance().getUpdatesManager();
-            manager.startLoading(null);
-        } else {
-            ToastManager.messageSync(getContext(), getString(R.string.NoConnectionMessage));
-        }
-    }
+//    @Override
+//    public void onRefresh() {
+//        if (NetworkUtils.isOn(getContext())) {
+//            UpdatesManager manager = Model.instance().getUpdatesManager();
+//            manager.startLoading(null);
+//        } else {
+//            ToastManager.messageSync(getContext(), getString(R.string.NoConnectionMessage));
+//        }
+//    }
 
     class LoadData extends AsyncTask<Void, Void, List<Long>> {
 
@@ -288,7 +288,7 @@ public class EventHolderFragment extends Fragment implements SwipeRefreshLayout.
     private void updateViews(List<Long> dayList) {
         if (dayList.isEmpty()) {
             mPagerTabs.setVisibility(View.GONE);
-            refreshLayout.setVisibility(View.VISIBLE);
+            mLayoutPlaceholder.setVisibility(View.VISIBLE);
 
             if (mIsFilterUsed) {
                 mImageViewNoContent.setVisibility(View.GONE);
@@ -299,7 +299,7 @@ public class EventHolderFragment extends Fragment implements SwipeRefreshLayout.
                 mTextViewNoContent.setText(App.getContext().getText(strategy.getTextResId()));
             }
         } else {
-            refreshLayout.setVisibility(View.GONE);
+            mLayoutPlaceholder.setVisibility(View.GONE);
             mPagerTabs.setVisibility(View.VISIBLE);
         }
 
@@ -462,7 +462,7 @@ public class EventHolderFragment extends Fragment implements SwipeRefreshLayout.
 
         Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND);
-        sendIntent.putExtra(Intent.EXTRA_TEXT, getContext().getString(R.string.api_value_base_url) + "schedule/share/insert?code=" + scheduleManager.getMyScheduleCode());
+        sendIntent.putExtra(Intent.EXTRA_TEXT, getContext().getString(R.string.api_value_base_url) + "schedule/share/" + scheduleManager.getMyScheduleCode());
         sendIntent.setType("text/plain");
         startActivity(sendIntent);
 

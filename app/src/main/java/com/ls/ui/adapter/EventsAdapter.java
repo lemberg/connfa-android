@@ -16,9 +16,11 @@ import com.ls.ui.adapter.item.TimeRangeItem;
 import com.ls.ui.drawer.EventMode;
 import com.ls.ui.view.RoundedBackgroundSpan;
 import com.ls.utils.DateUtils;
+import com.ls.utils.L;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
@@ -83,6 +85,9 @@ public class EventsAdapter extends BaseAdapter {
     }
 
     public void setData(List<EventListItem> data, EventMode mode) {
+        EventListItem eventListItem = data.get(0);
+        L.e("eventListItems = " + eventListItem.getEvent().getName());
+        L.e("Mode = " + mode);
         mData.clear();
         mData.addAll(data);
         mEventMode = mode;
@@ -350,6 +355,8 @@ public class EventsAdapter extends BaseAdapter {
 
             holder.txtTitle.setText(stringBuilder);
         } else {
+            L.e("Thread = " + Looper.getMainLooper().getThread());
+            L.e("eventName = " + eventName);
             holder.txtTitle.setText(eventName);
         }
     }

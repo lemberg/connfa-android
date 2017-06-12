@@ -99,6 +99,7 @@ public class SplashActivity extends AppCompatActivity {
     private void startMainActivity() {
         Uri data = this.getIntent().getData();
         if (data != null && data.isHierarchical()) {
+            L.e("Uri = " + data.toString());
             String uri = this.getIntent().getDataString();
             String substring = uri.substring(uri.length() - 4, uri.length());
             Long code = Long.valueOf(substring);
