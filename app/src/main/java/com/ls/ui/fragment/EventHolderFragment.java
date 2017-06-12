@@ -86,7 +86,8 @@ public class EventHolderFragment extends Fragment {
     private UpdatesManager.DataUpdatedListener updateReceiver = new UpdatesManager.DataUpdatedListener() {
         @Override
         public void onDataUpdated(List<UpdateRequest> requests) {
-            updateData(requests);
+
+//            updateData(requests);
 //            refreshLayout.setRefreshing(false);
 
         }
@@ -278,7 +279,7 @@ public class EventHolderFragment extends Fragment {
 
         @Override
         protected void onPostExecute(List<Long> result) {
-            if(getActivity() != null){
+            if (getActivity() != null) {
                 updateViews(result);
             }
         }
@@ -347,6 +348,7 @@ public class EventHolderFragment extends Fragment {
 
     private void updateData(List<UpdateRequest> requests) {
         if (strategy.update(requests)) {
+            L.e("Weeeeee");
             new LoadData().execute();
         }
     }
@@ -593,7 +595,7 @@ public class EventHolderFragment extends Fragment {
         navigationSpinner.setSelection(position);
     }
 
-    private void postAllSchedulesAsynchronously(){
+    private void postAllSchedulesAsynchronously() {
         new Thread(new Runnable() {
             @Override
             public void run() {

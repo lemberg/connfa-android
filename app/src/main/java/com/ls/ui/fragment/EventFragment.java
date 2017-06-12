@@ -97,17 +97,19 @@ public class EventFragment extends Fragment implements EventsAdapter.Listener, S
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Model.instance().getUpdatesManager().registerUpdateListener(updateReceiver);
+
         return inflater.inflate(R.layout.fr_event, container, false);
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        Model.instance().getUpdatesManager().registerUpdateListener(updateReceiver);
+        receiverManager.register(getActivity());
+
         initData();
         initViews();
         new LoadData().execute();
-        receiverManager.register(getActivity());
     }
 
     @Override
