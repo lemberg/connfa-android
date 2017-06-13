@@ -193,10 +193,10 @@ public class UpdatesManager {
             case FLOOR_PLANS:
                 manager = Model.instance().getFloorPlansManager();
                 break;
-//
-//            case SCHEDULES:
-//                manager = Model.instance().getScheduleManager();
-//                break;
+
+            case SCHEDULES:
+                manager = Model.instance().getScheduleManager();
+                break;
 
             default:
                 return true;

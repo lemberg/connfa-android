@@ -1,9 +1,15 @@
 package com.ls.ui.fragment;
 
 import com.astuetz.PagerSlidingTabStrip;
+import com.ls.drupal.DrupalClient;
+import com.ls.drupalcon.model.data.Schedule;
+import com.ls.drupalcon.model.data.SharedEvents;
 import com.ls.drupalcon.model.managers.ScheduleManager;
 import com.ls.drupalcon.model.managers.SharedScheduleManager;
 import com.ls.drupalcon.model.managers.ToastManager;
+import com.ls.http.base.BaseRequest;
+import com.ls.http.base.RequestConfig;
+import com.ls.http.base.ResponseData;
 import com.ls.ui.dialog.AddScheduleDialog;
 import com.ls.ui.dialog.CreateScheduleDialog;
 import com.ls.ui.dialog.EditScheduleDialog;
@@ -57,9 +63,10 @@ import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class EventHolderFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener{
+public class EventHolderFragment extends Fragment {
 
     public static final String TAG = "ProjectsFragment";
     private static final String EXTRAS_ARG_MODE = "EXTRAS_ARG_MODE";
@@ -75,10 +82,10 @@ public class EventHolderFragment extends Fragment implements SwipeRefreshLayout.
     private View mLayoutPlaceholder;
     private ImageView mImageViewNoContent;
     private TextView mTextViewNoContent;
-    private SwipeRefreshLayout refreshLayout;
     private boolean mIsFilterUsed;
     private EventHolderFragmentStrategy strategy;
     private boolean isMySchedule = true;
+    private boolean isItemRefreshEnabled = true;
     private ArrayAdapter<String> spinnerAdapter;
     private Spinner navigationSpinner;
     private SharedScheduleManager scheduleManager = Model.instance().getSharedScheduleManager();
@@ -87,8 +94,11 @@ public class EventHolderFragment extends Fragment implements SwipeRefreshLayout.
     private UpdatesManager.DataUpdatedListener updateReceiver = new UpdatesManager.DataUpdatedListener() {
         @Override
         public void onDataUpdated(List<UpdateRequest> requests) {
+            L.e("onDataUpdated");
+            isItemRefreshEnabled = true;
             updateData(requests);
-            refreshLayout.setRefreshing(false);
+            getActivity().invalidateOptionsMenu();
+
 
         }
     };
@@ -155,6 +165,17 @@ public class EventHolderFragment extends Fragment implements SwipeRefreshLayout.
                 menuInflater.inflate(R.menu.menu_added_schedule, menu);
             }
         }
+
+        MenuItem item = menu.findItem(R.id.actionRefresh);
+
+        if (isItemRefreshEnabled) {
+            item.setEnabled(true);
+            item.getIcon().setAlpha(255);
+        } else {
+            // disabled
+            item.setEnabled(false);
+            item.getIcon().setAlpha(130);
+        }
     }
 
     @Override
@@ -181,6 +202,15 @@ public class EventHolderFragment extends Fragment implements SwipeRefreshLayout.
                 Model.instance().getSharedScheduleManager().deleteSharedSchedule();
                 refreshSpinner();
                 new LoadData().execute();
+                break;
+
+            case R.id.actionRefresh:
+                UpdatesManager manager = Model.instance().getUpdatesManager();
+                manager.startLoading(null);
+
+                isItemRefreshEnabled = false;
+                getActivity().invalidateOptionsMenu();
+
                 break;
         }
         return true;
@@ -248,51 +278,16 @@ public class EventHolderFragment extends Fragment implements SwipeRefreshLayout.
         mAdapter = new BaseEventDaysPagerAdapter(getChildFragmentManager());
         mViewPager = (ViewPager) view.findViewById(R.id.viewPager);
         mViewPager.setAdapter(mAdapter);
-        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-                enableDisableSwipeRefresh(state == ViewPager.SCROLL_STATE_IDLE);
-            }
-        });
-
-
         Typeface typeface = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Roboto-Regular.ttf");
         mPagerTabs = (PagerSlidingTabStrip) getView().findViewById(R.id.pager_tab_strip);
         mPagerTabs.setTypeface(typeface, 0);
         mPagerTabs.setViewPager(mViewPager);
-        refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefresh);
-        refreshLayout.setOnRefreshListener(this);
         mTextViewNoContent = (TextView) view.findViewById(R.id.text_view_placeholder);
         mImageViewNoContent = (ImageView) view.findViewById(R.id.image_view_placeholder);
 
         setHasOptionsMenu(true);
     }
 
-    @Override
-    public void onRefresh() {
-        if (NetworkUtils.isOn(getContext())) {
-            UpdatesManager manager = Model.instance().getUpdatesManager();
-            manager.startLoading(null);
-        } else {
-            ToastManager.messageSync(getContext(), getString(R.string.NoConnectionMessage));
-        }
-    }
-
-    private void enableDisableSwipeRefresh(boolean enable) {
-        if (refreshLayout != null) {
-            refreshLayout.setEnabled(enable);
-        }
-    }
 
     class LoadData extends AsyncTask<Void, Void, List<Long>> {
 
@@ -530,35 +525,10 @@ public class EventHolderFragment extends Fragment implements SwipeRefreshLayout.
             case SET_SCHEDULE_NAME_DIALOG_REQUEST_CODE:
                 switch (resultCode) {
                     case Activity.RESULT_OK:
-                        long code = data.getLongExtra(CreateScheduleDialog.EXTRA_SCHEDULE_CODE, SharedScheduleManager.MY_DEFAULT_SCHEDULE_CODE);
+                        final long code = data.getLongExtra(CreateScheduleDialog.EXTRA_SCHEDULE_CODE, SharedScheduleManager.MY_DEFAULT_SCHEDULE_CODE);
                         String name = data.getStringExtra(CreateScheduleDialog.EXTRA_SCHEDULE_NAME);
-                        Model.instance().getSharedScheduleManager().saveNewSharedSchedule(code, name);
 
-                        new AsyncTask<Void, Void, Boolean>() {
-                            @Override
-                            protected void onPreExecute() {
-                                super.onPreExecute();
-                                if (mProgressBar != null) {
-                                    mProgressBar.setVisibility(View.VISIBLE);
-                                }
-
-                            }
-
-                            @Override
-                            protected Boolean doInBackground(Void... params) {
-                                ScheduleManager scheduleManager = Model.instance().getScheduleManager();
-                                return scheduleManager.fetchData();
-                            }
-
-                            @Override
-                            protected void onPostExecute(Boolean aBoolean) {
-                                super.onPostExecute(aBoolean);
-                                if (mProgressBar != null) {
-                                    mProgressBar.setVisibility(View.GONE);
-                                }
-                                refreshSpinner();
-                            }
-                        }.execute();
+                        fetchSharedEventsByCode(code, name);
 
                         break;
                     case Activity.RESULT_CANCELED:
@@ -627,6 +597,42 @@ public class EventHolderFragment extends Fragment implements SwipeRefreshLayout.
                 Model.instance().getSharedScheduleManager().postAllSchedules();
             }
         }).run();
+    }
+
+    public void fetchSharedEventsByCode(final long scheduleCode, final String name) {
+        RequestConfig requestConfig = new RequestConfig();
+        requestConfig.setResponseFormat(BaseRequest.ResponseFormat.JSON);
+        requestConfig.setRequestFormat(BaseRequest.RequestFormat.JSON);
+        requestConfig.setResponseClassSpecifier(Schedule.class);
+
+
+        BaseRequest request = new BaseRequest(BaseRequest.RequestMethod.GET, App.getContext().getString(R.string.api_value_base_url) + "getSchedule/" + scheduleCode, requestConfig);
+
+        DrupalClient client = Model.instance().getClient();
+        client.performRequest(request, "Fetch Shared Events By Code", new DrupalClient.OnResponseListener() {
+            @Override
+            public void onResponseReceived(ResponseData data, Object tag) {
+                Schedule schedule = (Schedule) data.getData();
+                L.e("sharedSchedules = " + schedule);
+                ArrayList<SharedEvents> sharedSchedules = new ArrayList<>();
+                for (Long eventId : schedule.getEvents()) {
+                    sharedSchedules.add(new SharedEvents(eventId, schedule.getCode()));
+                }
+                Model.instance().getSharedScheduleManager().saveNewSharedSchedule(scheduleCode, name);
+                Model.instance().getSharedScheduleManager().saveFavoriteEventsSafe(sharedSchedules);
+                refreshSpinner();
+            }
+
+            @Override
+            public void onError(ResponseData data, Object tag) {
+                ToastManager.messageSync(App.getContext(), "Wrong code = " + data.getStatusCode());
+            }
+
+            @Override
+            public void onCancel(Object tag) {
+                L.e("Update Cancel = " + tag);
+            }
+        }, false);
     }
 
 }

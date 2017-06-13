@@ -36,7 +36,7 @@ public class ScheduleManager extends SynchronousItemManager<Schedule.Holder, Obj
                 sharedSchedules.add(new SharedEvents(eventId, schedule.getCode()));
             }
         }
-        L.e("sharedSchedules =" + sharedSchedules);
+//        L.e("sharedSchedules =" + sharedSchedules);
         Model.instance().getSharedScheduleManager().saveSharedEvents(sharedSchedules);
         return true;
     }

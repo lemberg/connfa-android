@@ -2,6 +2,12 @@
       xmlns:app="http://schemas.android.com/apk/res-auto"
       xmlns:tools="http://schemas.android.com/tools"
       tools:context="com.example.toolbar.MainActivity" >
+    <item
+        android:id="@+id/actionRefresh"
+        android:orderInCategory="100"
+        android:title="@string/filter"
+        android:icon="@drawable/ic_refresh_white_24dp"
+        app:showAsAction="ifRoom"/>
 
     <item
         android:id="@+id/actionFilter"
@@ -9,4 +15,6 @@
         android:title="@string/filter"
         android:icon="@drawable/ic_filter_empty"
         app:showAsAction="ifRoom"/>
+
+
 </menu>

@@ -352,8 +352,6 @@ public class EventsAdapter extends BaseAdapter {
 
             holder.txtTitle.setText(stringBuilder);
         } else {
-            L.e("Thread = " + Looper.getMainLooper().getThread());
-            L.e("eventName = " + eventName);
             holder.txtTitle.setText(eventName);
         }
     }

@@ -145,7 +145,6 @@ public class SharedScheduleManager {
 
 
     public List<SharedEvents> getAllFriendsFavorite() {
-//        L.e("Weee = "+ getFriendsFavoriteEventIds().size());
         return sharedEvents;
     }
 
@@ -177,7 +176,8 @@ public class SharedScheduleManager {
         sharedEvents.addAll(items);
     }
 
-    private void saveFavoriteEventsSafe(ArrayList<SharedEvents> items) {
+    public void saveFavoriteEventsSafe(ArrayList<SharedEvents> items) {
+        L.e("saveFavoriteEventsSafe = " + items);
         sharedEvents.addAll(items);
         sharedEventsDao.saveDataSafe(items);
     }
@@ -299,34 +299,30 @@ public class SharedScheduleManager {
 
 
     public void fetchSharedEventsByCode(final long scheduleCode) {
-        sharedEventsDao.deleteDataSafe(scheduleCode);
-
         RequestConfig requestConfig = new RequestConfig();
         requestConfig.setResponseFormat(BaseRequest.ResponseFormat.JSON);
         requestConfig.setRequestFormat(BaseRequest.RequestFormat.JSON);
-        requestConfig.setResponseClassSpecifier(Schedule.Holder.class);
+        requestConfig.setResponseClassSpecifier(Schedule.class);
 
 
-        BaseRequest request = new BaseRequest(BaseRequest.RequestMethod.GET, App.getContext().getString(R.string.api_value_base_url) + "getSchedules?codes[]=" + scheduleCode, requestConfig);
+        BaseRequest request = new BaseRequest(BaseRequest.RequestMethod.GET, App.getContext().getString(R.string.api_value_base_url) + "getSchedule/" + scheduleCode, requestConfig);
 
         DrupalClient client = Model.instance().getClient();
         client.performRequest(request, "Fetch Shared Events By Code", new DrupalClient.OnResponseListener() {
             @Override
             public void onResponseReceived(ResponseData data, Object tag) {
-                Schedule.Holder holder = (Schedule.Holder) data.getData();
+                Schedule schedule = (Schedule) data.getData();
+                L.e("sharedSchedules = " + schedule);
                 ArrayList<SharedEvents> sharedSchedules = new ArrayList<>();
-                List<Schedule> schedules = holder.getSchedules();
-                for (Schedule schedule : schedules) {
-                    for (Long eventId : schedule.getEvents()) {
-                        sharedSchedules.add(new SharedEvents(eventId, schedule.getCode()));
-                    }
+                for (Long eventId : schedule.getEvents()) {
+                    sharedSchedules.add(new SharedEvents(eventId, schedule.getCode()));
                 }
                 saveFavoriteEventsSafe(sharedSchedules);
             }
 
             @Override
             public void onError(ResponseData data, Object tag) {
-                L.e("Update Error = " + data);
+                ToastManager.messageSync(App.getContext(), "Wrong code = " + data.getStatusCode());
             }
 
             @Override
