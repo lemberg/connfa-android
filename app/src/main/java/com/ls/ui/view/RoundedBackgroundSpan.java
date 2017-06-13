@@ -26,8 +26,8 @@ public class RoundedBackgroundSpan extends ReplacementSpan {
 //        float textSize = paint.getTextSize();
         float fontBottom = paint.getFontMetrics().bottom;
         float fontTop = paint.getFontMetrics().top;
-        L.e("fontBottom = " + fontBottom);
-        L.e("fontTop = " + fontTop);
+//        L.e("fontBottom = " + fontBottom);
+//        L.e("fontTop = " + fontTop);
 //        paint.setColor(backgroundColor);
 //        canvas.drawLine(x, y, x +30, y, paint);
 

@@ -158,6 +158,7 @@ public class SharedScheduleManager {
 
 
     public List<SharedEvents> getAllFriendsFavorite() {
+//        L.e("Weee = "+ getFriendsFavoriteEventIds().size());
         return sharedEvents;
     }
 

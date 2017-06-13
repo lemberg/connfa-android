@@ -13,6 +13,7 @@ import com.ls.sponsors.GoldSponsors;
 import com.ls.sponsors.SponsorItem;
 import com.ls.sponsors.SponsorManager;
 import com.ls.ui.activity.EventDetailsActivity;
+import com.ls.ui.adapter.BaseEventDaysPagerAdapter;
 import com.ls.ui.adapter.EventsAdapter;
 import com.ls.ui.adapter.item.EventListItem;
 import com.ls.ui.adapter.item.SimpleTimeRangeCreator;
@@ -47,6 +48,17 @@ public class EventFragment extends Fragment implements EventsAdapter.Listener, S
     private static final String EXTRAS_ARG_MODE = "EXTRAS_ARG_MODE";
     private static final String EXTRAS_ARG_DAY = "EXTRAS_ARG_DAY";
 
+    private Listener1 listener;
+
+    public interface Listener1 {
+        void OnClicked();
+    }
+
+    public void setListener(Listener1 listener) {
+        this.listener = listener;
+    }
+
+
     private List<Long> levelIds;
     private List<Long> trackIds;
     private long mDay;
@@ -58,7 +70,6 @@ public class EventFragment extends Fragment implements EventsAdapter.Listener, S
     private ProgressBar mProgressBar;
 
     private EventGenerator mGenerator;
-    private SwipeRefreshLayout refreshLayout;
 
     private ReceiverManager receiverManager = new ReceiverManager(
             new ReceiverManager.FavoriteUpdatedListener() {
@@ -69,18 +80,9 @@ public class EventFragment extends Fragment implements EventsAdapter.Listener, S
                     }
                 }
             });
-//
-//    private UpdatesManager.DataUpdatedListener updateReceiver = new UpdatesManager.DataUpdatedListener() {
-//        @Override
-//        public void onDataUpdated(List<UpdateRequest> requests) {
-//            L.e("List<UpdateRequest> requests = " + requests);
-//            new LoadData().execute();
-//            refreshLayout.setRefreshing(false);
-//        }
-//    };
 
-    public static Fragment newInstance(long day, EventMode mode) {
-        Fragment fragment = new EventFragment();
+    public static EventFragment newInstance(long day, EventMode mode) {
+        EventFragment fragment = new EventFragment();
         Bundle args = new Bundle();
         args.putSerializable(EXTRAS_ARG_MODE, mode);
         args.putLong(EXTRAS_ARG_DAY, day);
@@ -104,7 +106,6 @@ public class EventFragment extends Fragment implements EventsAdapter.Listener, S
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-//        Model.instance().getUpdatesManager().registerUpdateListener(updateReceiver);
         receiverManager.register(getActivity());
 
         initData();
@@ -119,7 +120,6 @@ public class EventFragment extends Fragment implements EventsAdapter.Listener, S
 
     @Override
     public void onDestroyView() {
-//        Model.instance().getUpdatesManager().unregisterUpdateListener(updateReceiver);
         super.onDestroyView();
     }
 
@@ -151,9 +151,6 @@ public class EventFragment extends Fragment implements EventsAdapter.Listener, S
             mAdapter = new EventsAdapter(getActivity());
             mAdapter.setOnItemClickListener(this);
 
-//            refreshLayout = (SwipeRefreshLayout) getView().findViewById(R.id.swipeRefresh);
-//            refreshLayout.setOnRefreshListener(this);
-
             mListView = (ListView) getView().findViewById(R.id.listView);
             mListView.setAdapter(mAdapter);
             mListView.setOnScrollListener(new AbsListView.OnScrollListener() {
@@ -164,11 +161,13 @@ public class EventFragment extends Fragment implements EventsAdapter.Listener, S
 
                 @Override
                 public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-//                    if (firstVisibleItem == 0) {
+
+                    if (firstVisibleItem == 0) {
+                        listener.OnClicked();
 //                        refreshLayout.setEnabled(true);
-//                    }else {
+                    }else {
 //                        refreshLayout.setEnabled(false);
-//                    }
+                    }
                 }
             });
 
@@ -294,15 +293,4 @@ public class EventFragment extends Fragment implements EventsAdapter.Listener, S
         SponsorManager.getInstance().setSponsorId(randomInt);
 
     }
-//
-//    @Override
-//    public void onRefresh() {
-//        if (NetworkUtils.isOn(getContext())) {
-//            UpdatesManager manager = Model.instance().getUpdatesManager();
-//            manager.startLoading(null);
-//        } else {
-//            ToastManager.messageSync(getContext(), getString(R.string.NoConnectionMessage));
-//            refreshLayout.setRefreshing(false);
-//        }
-//    }
 }

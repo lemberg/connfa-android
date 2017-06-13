@@ -59,7 +59,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
-public class EventHolderFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
+public class EventHolderFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, BaseEventDaysPagerAdapter.Listener {
 
     public static final String TAG = "ProjectsFragment";
     private static final String EXTRAS_ARG_MODE = "EXTRAS_ARG_MODE";
@@ -246,8 +246,26 @@ public class EventHolderFragment extends Fragment implements SwipeRefreshLayout.
         mLayoutPlaceholder = view.findViewById(R.id.layout_placeholder);
 
         mAdapter = new BaseEventDaysPagerAdapter(getChildFragmentManager());
+        mAdapter.setListener(this);
         mViewPager = (ViewPager) view.findViewById(R.id.viewPager);
         mViewPager.setAdapter(mAdapter);
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+                enableDisableSwipeRefresh(state == ViewPager.SCROLL_STATE_IDLE);
+            }
+        });
+
 
         Typeface typeface = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Roboto-Regular.ttf");
         mPagerTabs = (PagerSlidingTabStrip) getView().findViewById(R.id.pager_tab_strip);
@@ -269,6 +287,17 @@ public class EventHolderFragment extends Fragment implements SwipeRefreshLayout.
         } else {
             ToastManager.messageSync(getContext(), getString(R.string.NoConnectionMessage));
         }
+    }
+
+    private void enableDisableSwipeRefresh(boolean enable) {
+        if (refreshLayout != null) {
+            refreshLayout.setEnabled(enable);
+        }
+    }
+
+    @Override
+    public void OnClicked() {
+        L.e("Top top");
     }
 
     class LoadData extends AsyncTask<Void, Void, List<Long>> {

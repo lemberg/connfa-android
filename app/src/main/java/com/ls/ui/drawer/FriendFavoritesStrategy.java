@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FriendFavoritesStrategy implements EventHolderFragmentStrategy {
-    private static UpdateRequest request = UpdateRequest.PROGRAMS;
+    private static UpdateRequest request = UpdateRequest.SCHEDULES;
 
     @Override
     public List<Long> getDayList() {
