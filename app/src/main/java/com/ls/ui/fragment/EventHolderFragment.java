@@ -398,6 +398,7 @@ public class EventHolderFragment extends Fragment implements SwipeRefreshLayout.
                     .setIcon(R.drawable.ic_menu_more)
                     .setTarget(R.id.promptAnchor)
                     .setBackgroundColour(getResources().getColor(R.color.primary))
+                    .setIconDrawableColourFilter(getResources().getColor(R.color.primary))
                     .show();
         }
     }
