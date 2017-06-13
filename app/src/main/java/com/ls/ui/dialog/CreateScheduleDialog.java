@@ -11,7 +11,9 @@ import android.support.v4.app.DialogFragment;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 
 import com.ls.drupalcon.R;
@@ -55,9 +57,21 @@ public class CreateScheduleDialog extends DialogFragment {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
         alertDialogBuilder.setTitle("Add schedule name");
         alertDialogBuilder.setView(contentView);
-        alertDialogBuilder.setPositiveButton(getActivity().getString(android.R.string.ok), new DialogInterface.OnClickListener() {
+        alertDialogBuilder.setPositiveButton(getActivity().getString(android.R.string.ok), null);
+        alertDialogBuilder.setNegativeButton(getActivity().getString(android.R.string.cancel), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_CANCELED, getActivity().getIntent());
+            }
+        });
+        final AlertDialog dialog = alertDialogBuilder.create();
+        dialog.show();
+        
+        dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.favorite));
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.favorite));
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 String text = editTextId.getText().toString();
                 if(TextUtils.isEmpty(text)){
                     ToastManager.messageSync(getContext(), "Please enter schedule name");
@@ -66,22 +80,12 @@ public class CreateScheduleDialog extends DialogFragment {
                     intent.putExtra(EXTRA_SCHEDULE_CODE, code);
                     intent.putExtra(EXTRA_SCHEDULE_NAME, text);
                     L.e("Name = " + text);
+                    dialog.dismiss();
                     getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, intent);
                 }
-
             }
         });
 
-        alertDialogBuilder.setNegativeButton(getActivity().getString(android.R.string.cancel), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_CANCELED, getActivity().getIntent());
-            }
-        });
-        AlertDialog dialog = alertDialogBuilder.create();
-        dialog.show();
-        dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.favorite));
-        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.favorite));
         return dialog;
     }
 

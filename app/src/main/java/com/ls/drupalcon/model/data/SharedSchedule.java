@@ -55,40 +55,26 @@ public class SharedSchedule extends AbstractEntity<Long> {
                 '}';
     }
 
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        SharedSchedule schedule = (SharedSchedule) o;
+        SharedSchedule that = (SharedSchedule) o;
 
-        return scheduleCode != null ? scheduleCode.equals(schedule.scheduleCode) : schedule.scheduleCode == null;
+        if (scheduleCode != null ? !scheduleCode.equals(that.scheduleCode) : that.scheduleCode != null)
+            return false;
+        return scheduleName != null ? scheduleName.equals(that.scheduleName) : that.scheduleName == null;
 
     }
 
     @Override
     public int hashCode() {
-        return scheduleCode != null ? scheduleCode.hashCode() : 0;
+        int result = scheduleCode != null ? scheduleCode.hashCode() : 0;
+        result = 31 * result + (scheduleName != null ? scheduleName.hashCode() : 0);
+        return result;
     }
-    //    @Override
-//    public boolean equals(Object o) {
-//        if (this == o) return true;
-//        if (o == null || getClass() != o.getClass()) return false;
-//
-//        SharedSchedule that = (SharedSchedule) o;
-//
-//        if (scheduleCode != null ? !scheduleCode.equals(that.scheduleCode) : that.scheduleCode != null)
-//            return false;
-//        return scheduleName != null ? scheduleName.equals(that.scheduleName) : that.scheduleName == null;
-//
-//    }
-//
-//    @Override
-//    public int hashCode() {
-//        int result = scheduleCode != null ? scheduleCode.hashCode() : 0;
-//        result = 31 * result + (scheduleName != null ? scheduleName.hashCode() : 0);
-//        return result;
-//    }
 
     public void setScheduleCode(Long scheduleCode) {
         this.scheduleCode = scheduleCode;
