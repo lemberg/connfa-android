@@ -43,21 +43,10 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
 
-public class EventFragment extends Fragment implements EventsAdapter.Listener, SharedScheduleManager.OnEventsLoadedListener {
+public class EventFragment extends Fragment implements EventsAdapter.Listener{
 
     private static final String EXTRAS_ARG_MODE = "EXTRAS_ARG_MODE";
     private static final String EXTRAS_ARG_DAY = "EXTRAS_ARG_DAY";
-
-    private Listener1 listener;
-
-    public interface Listener1 {
-        void OnClicked();
-    }
-
-    public void setListener(Listener1 listener) {
-        this.listener = listener;
-    }
-
 
     private List<Long> levelIds;
     private List<Long> trackIds;
@@ -91,11 +80,6 @@ public class EventFragment extends Fragment implements EventsAdapter.Listener, S
         return fragment;
     }
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        Model.instance().getSharedScheduleManager().setOnEventsLoaded(this);
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -127,7 +111,6 @@ public class EventFragment extends Fragment implements EventsAdapter.Listener, S
     public void onDestroy() {
         mGenerator.setShouldBreak(true);
         receiverManager.unregister(getActivity());
-        Model.instance().getSharedScheduleManager().removeOnEventsLoaded(this);
         super.onDestroy();
     }
 
@@ -163,7 +146,6 @@ public class EventFragment extends Fragment implements EventsAdapter.Listener, S
                 public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
 
                     if (firstVisibleItem == 0) {
-                        listener.OnClicked();
 //                        refreshLayout.setEnabled(true);
                     }else {
 //                        refreshLayout.setEnabled(false);
@@ -173,11 +155,6 @@ public class EventFragment extends Fragment implements EventsAdapter.Listener, S
 
 
         }
-    }
-
-    @Override
-    public void sharedEventsLoadedCompleted() {
-        L.e("sharedEventsLoadedCompleted!");
     }
 
     class LoadData extends AsyncTask<Void, Void, List<EventListItem>> {

@@ -59,7 +59,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
-public class EventHolderFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, BaseEventDaysPagerAdapter.Listener {
+public class EventHolderFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener{
 
     public static final String TAG = "ProjectsFragment";
     private static final String EXTRAS_ARG_MODE = "EXTRAS_ARG_MODE";
@@ -246,7 +246,6 @@ public class EventHolderFragment extends Fragment implements SwipeRefreshLayout.
         mLayoutPlaceholder = view.findViewById(R.id.layout_placeholder);
 
         mAdapter = new BaseEventDaysPagerAdapter(getChildFragmentManager());
-        mAdapter.setListener(this);
         mViewPager = (ViewPager) view.findViewById(R.id.viewPager);
         mViewPager.setAdapter(mAdapter);
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -293,11 +292,6 @@ public class EventHolderFragment extends Fragment implements SwipeRefreshLayout.
         if (refreshLayout != null) {
             refreshLayout.setEnabled(enable);
         }
-    }
-
-    @Override
-    public void OnClicked() {
-        L.e("Top top");
     }
 
     class LoadData extends AsyncTask<Void, Void, List<Long>> {

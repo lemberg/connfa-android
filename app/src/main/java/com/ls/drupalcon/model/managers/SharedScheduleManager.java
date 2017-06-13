@@ -39,19 +39,6 @@ public class SharedScheduleManager {
     private List<SharedSchedule> schedulesTemp;
     private SharedSchedule scheduleTemp;
     private Timer timer = new Timer();
-    private ArrayList<OnEventsLoadedListener> onEventsLoadedListeners = new ArrayList<>();
-
-    public interface OnEventsLoadedListener {
-        void sharedEventsLoadedCompleted();
-    }
-
-    public void setOnEventsLoaded(OnEventsLoadedListener onEventsLoadedListener) {
-        this.onEventsLoadedListeners.add(onEventsLoadedListener);
-    }
-
-    public void removeOnEventsLoaded(OnEventsLoadedListener onEventsLoadedListener) {
-        this.onEventsLoadedListeners.remove(onEventsLoadedListener);
-    }
 
     public SharedScheduleManager() {
         this.sharedScheduleDao = new SharedScheduleDao();
@@ -193,12 +180,6 @@ public class SharedScheduleManager {
     private void saveFavoriteEventsSafe(ArrayList<SharedEvents> items) {
         sharedEvents.addAll(items);
         sharedEventsDao.saveDataSafe(items);
-
-        if (onEventsLoadedListeners.isEmpty()) {
-            for(OnEventsLoadedListener eventsLoaded: onEventsLoadedListeners)
-                eventsLoaded.sharedEventsLoadedCompleted();
-        }
-
     }
 
     public SharedEventsDao getSharedEventsDao() {

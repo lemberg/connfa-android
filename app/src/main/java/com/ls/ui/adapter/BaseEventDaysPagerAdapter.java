@@ -13,24 +13,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BaseEventDaysPagerAdapter extends FragmentStatePagerAdapter implements EventFragment.Listener1 {
-
-    private Listener listener;
-
-    @Override
-    public void OnClicked() {
-        listener.OnClicked();
-
-    }
-
-    public interface Listener {
-        void OnClicked();
-    }
-
-    public void setListener(Listener listener) {
-        this.listener = listener;
-    }
-
+public class BaseEventDaysPagerAdapter extends FragmentStatePagerAdapter  {
 
     private EventHolderFragmentStrategy strategy;
 
@@ -44,9 +27,7 @@ public class BaseEventDaysPagerAdapter extends FragmentStatePagerAdapter impleme
     @Override
     public Fragment getItem(int position) {
         Long date = getDate(position);
-        EventFragment fragment = EventFragment.newInstance(date, strategy.getEventMode());
-        fragment.setListener(this);
-        return fragment;
+        return EventFragment.newInstance(date, strategy.getEventMode());
     }
 
     public void setData(List<Long> eventDays, EventHolderFragmentStrategy strategy) {
