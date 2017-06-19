@@ -36,6 +36,7 @@ public class CreateScheduleDialog extends DialogFragment {
 
     public static CreateScheduleDialog newCreateDialogInstance(long code){
         String name = App.getContext().getString(R.string.schedule) + " " + code;
+        String title = App.getContext().getString(R.string.schedule_name);
         return newInstance(code,name,"Add schedule name");
     }
 

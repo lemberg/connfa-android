@@ -49,6 +49,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -484,11 +485,26 @@ public class EventHolderFragment extends Fragment {
 
         Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND);
-        sendIntent.putExtra(Intent.EXTRA_TEXT, getContext().getString(R.string.api_value_base_url) + "schedule/share/insert?code=" + scheduleManager.getMyScheduleCode());
+        sendIntent.putExtra(Intent.EXTRA_SUBJECT, "Add a schedule");
+        sendIntent.putExtra(Intent.EXTRA_TEXT, getEmailBody().toString());
         sendIntent.setType("text/plain");
         startActivity(sendIntent);
 
 
+    }
+
+    private StringBuilder getEmailBody(){
+        StringBuilder builder =  new StringBuilder();
+        builder.append("Hi, I have just published/shared my schedule for ")
+                .append(getString(R.string.app_name))
+                .append(" where I will be an attendee.")
+                .append(" Here is the link to add my schedule into the app: ")
+                .append(getContext().getString(R.string.api_value_base_url) + "schedule/share/" + scheduleManager.getMyScheduleCode())
+                .append("\n If you have any issues with the link, use the Schedule Unique Code in the app to add my schedule manually.\n")
+                .append("\nSchedule Unique Code: ")
+//                .append("<b>" + scheduleManager.getMyScheduleCode() + "</b> ");
+                .append("scheduleManager.getMyScheduleCode()");
+        return builder;
     }
 
     void showAddScheduleDialog() {
@@ -625,7 +641,7 @@ public class EventHolderFragment extends Fragment {
 
             @Override
             public void onError(ResponseData data, Object tag) {
-                ToastManager.messageSync(App.getContext(), "Wrong code = " + data.getStatusCode());
+                ToastManager.messageSync(App.getContext(), "Schedule not found. Please check your code");
             }
 
             @Override

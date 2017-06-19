@@ -20,6 +20,6 @@
     <com.ls.ui.view.FontTextView
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:text="This code you may get from a person who already shared his/her own schedule with you" />
+        android:text="@string/you_may_get_this_code_from_a_person_who_has_already_shared_his_her_own_schedule_with_you" />
 
 </LinearLayout>

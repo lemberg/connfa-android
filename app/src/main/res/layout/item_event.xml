@@ -111,7 +111,7 @@
                             android:clickable="false"
                             android:textColor="@color/black_100"
                             android:textSize="@dimen/text_size_medium"
-                            app:custom_font="@string/regular_font"
+                            app:custom_font="@string/medium_font"
                             tools:text="Dinner with Drupal" />
 
                         <ImageView
