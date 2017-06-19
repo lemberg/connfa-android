@@ -31,13 +31,11 @@ public class CreateScheduleDialog extends DialogFragment {
     public static final String EXTRA_SCHEDULE_NAME = "extra_schedule_name";
     public static final String EXTRA_SCHEDULE_TITLE = "extra_dialog_title";
     private static long code;
-    private static String name;
-    private static String title;
 
     public static CreateScheduleDialog newCreateDialogInstance(long code){
         String name = App.getContext().getString(R.string.schedule) + " " + code;
         String title = App.getContext().getString(R.string.schedule_name);
-        return newInstance(code,name,"Add schedule name");
+        return newInstance(code,name, title);
     }
 
     public static CreateScheduleDialog newEditDialogInstance(long code, String name){
