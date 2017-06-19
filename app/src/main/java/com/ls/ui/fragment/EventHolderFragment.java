@@ -195,7 +195,7 @@ public class EventHolderFragment extends Fragment {
                 shareSchedule();
                 break;
             case R.id.actionEditSchedule:
-                showChangeScheduleNameDialog(Model.instance().getSharedScheduleManager().getCurrentScheduleId());
+                showChangeScheduleNameDialog(Model.instance().getSharedScheduleManager().getCurrentScheduleId(),Model.instance().getSharedScheduleManager().getCurrentFriendScheduleName());
                 break;
             case R.id.actionRemoveSchedule:
                 undo(Model.instance().getSharedScheduleManager().getCurrentFriendScheduleName() + " is removed");
@@ -497,14 +497,14 @@ public class EventHolderFragment extends Fragment {
         newFragment.show(getChildFragmentManager(), AddScheduleDialog.TAG);
     }
 
-    void showChangeScheduleNameDialog(long code) {
-        DialogFragment newFragment = EditScheduleDialog.newInstance(code);
+    void showChangeScheduleNameDialog(long code, String name) {
+        DialogFragment newFragment = CreateScheduleDialog.newEditDialogInstance(code,name);
         newFragment.setTargetFragment(this, CHANGE_SCHEDULE_NAME_DIALOG_REQUEST_CODE);
-        newFragment.show(getChildFragmentManager(), CreateScheduleDialog.TAG);
+        newFragment.show(getChildFragmentManager(), EditScheduleDialog.TAG);
     }
 
     void showSetNameDialog(long code) {
-        DialogFragment newFragment = CreateScheduleDialog.newInstance(code);
+        DialogFragment newFragment = CreateScheduleDialog.newCreateDialogInstance(code);
         newFragment.setTargetFragment(this, SET_SCHEDULE_NAME_DIALOG_REQUEST_CODE);
         newFragment.show(getChildFragmentManager(), CreateScheduleDialog.TAG);
     }
