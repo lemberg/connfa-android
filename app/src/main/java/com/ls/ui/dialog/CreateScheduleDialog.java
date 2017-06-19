@@ -55,7 +55,7 @@ public class CreateScheduleDialog extends DialogFragment {
         editTextId.setText(getScheduleName());
 
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
-        alertDialogBuilder.setTitle("Add schedule name");
+        alertDialogBuilder.setTitle(R.string.schedule_name);
         alertDialogBuilder.setView(contentView);
         alertDialogBuilder.setPositiveButton(getActivity().getString(android.R.string.ok), null);
         alertDialogBuilder.setNegativeButton(getActivity().getString(android.R.string.cancel), new DialogInterface.OnClickListener() {
@@ -66,7 +66,7 @@ public class CreateScheduleDialog extends DialogFragment {
         });
         final AlertDialog dialog = alertDialogBuilder.create();
         dialog.show();
-        
+
         dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.favorite));
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.favorite));
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
