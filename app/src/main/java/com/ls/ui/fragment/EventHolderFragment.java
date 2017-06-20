@@ -503,7 +503,7 @@ public class EventHolderFragment extends Fragment {
                 .append("\n If you have any issues with the link, use the Schedule Unique Code in the app to add my schedule manually.\n")
                 .append("\nSchedule Unique Code: ")
 //                .append("<b>" + scheduleManager.getMyScheduleCode() + "</b> ");
-                .append("scheduleManager.getMyScheduleCode()");
+                .append(scheduleManager.getMyScheduleCode());
         return builder;
     }
 

@@ -95,6 +95,7 @@ public class SharedScheduleManager {
 
     public void saveNewSharedSchedule(long scheduleCode, String name) {
         SharedSchedule schedule = generateSchedule(scheduleCode, name);
+        currentSchedule = schedule;
         schedules.add(schedule);
         this.sharedScheduleDao.saveDataSafe(schedule);
     }
