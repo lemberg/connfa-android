@@ -32,20 +32,20 @@ public class CreateScheduleDialog extends DialogFragment {
     public static final String EXTRA_SCHEDULE_TITLE = "extra_dialog_title";
     private static long code;
 
-    public static CreateScheduleDialog newCreateDialogInstance(long code){
+    public static CreateScheduleDialog newCreateDialogInstance(long code) {
         String name = App.getContext().getString(R.string.schedule) + " " + code;
         String title = App.getContext().getString(R.string.schedule_name);
-        return newInstance(code,name, title);
+        return newInstance(code, name, title);
     }
 
-    public static CreateScheduleDialog newEditDialogInstance(long code, String name){
-        return newInstance(code,name,"Schedule name");
+    public static CreateScheduleDialog newEditDialogInstance(long code, String name) {
+        return newInstance(code, name, "Schedule name");
     }
 
     public static CreateScheduleDialog newInstance(long code, @Nullable String currentName, @NonNull String dialogTitle) {
         Bundle bundle = new Bundle();
         bundle.putLong(EXTRA_SCHEDULE_CODE, code);
-        if(!TextUtils.isEmpty(currentName)) {
+        if (!TextUtils.isEmpty(currentName)) {
             bundle.putString(EXTRA_SCHEDULE_NAME, currentName);
         }
         bundle.putString(EXTRA_SCHEDULE_TITLE, dialogTitle);
@@ -82,22 +82,23 @@ public class CreateScheduleDialog extends DialogFragment {
         });
         final AlertDialog dialog = alertDialogBuilder.create();
         dialog.show();
-        
+
         dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.favorite));
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.favorite));
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String text = editTextId.getText().toString();
-                if(TextUtils.isEmpty(text)){
+                String text = editTextId.getText().toString().trim();
+                if (TextUtils.isEmpty(text)) {
                     ToastManager.messageSync(getContext(), "Please enter schedule name");
-                }else {
-                    Intent intent = getActivity().getIntent();
-                    intent.putExtra(EXTRA_SCHEDULE_CODE, code);
-                    intent.putExtra(EXTRA_SCHEDULE_NAME, text);
-                    L.e("Name = " + text);
-                    dialog.dismiss();
-                    getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, intent);
+                } else {
+                    if (!Model.instance().getSharedScheduleManager().checkIfNameIsExist(text)) {
+                        Intent intent = getActivity().getIntent();
+                        intent.putExtra(EXTRA_SCHEDULE_CODE, code);
+                        intent.putExtra(EXTRA_SCHEDULE_NAME, text);
+                        getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, intent);
+                        dialog.dismiss();
+                    }
                 }
             }
         });

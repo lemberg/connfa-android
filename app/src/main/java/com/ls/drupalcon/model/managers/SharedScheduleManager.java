@@ -95,14 +95,16 @@ public class SharedScheduleManager {
 
     public void saveNewSharedSchedule(long scheduleCode, String name) {
         SharedSchedule schedule = generateSchedule(scheduleCode, name);
-
+//        boolean b = checkIfNameIsExist(name);
+//        if (b) return;
+//
+        currentSchedule = schedule;
         if (schedules.contains(schedule)) {
             Toast.makeText(App.getContext(), "This schedule already exist", Toast.LENGTH_LONG).show();
         } else {
             schedules.add(schedule);
             this.sharedScheduleDao.saveDataSafe(schedule);
         }
-        currentSchedule = schedule;
     }
 
     public void renameSchedule(String newScheduleName) {
@@ -243,6 +245,16 @@ public class SharedScheduleManager {
 
     private SharedSchedule generateSchedule(long scheduleCode, String name) {
         return new SharedSchedule(scheduleCode, name);
+    }
+
+    public boolean checkIfNameIsExist(String name) {
+        for (SharedSchedule item : schedules) {
+            if (item.getScheduleName().equals(name)) {
+                Toast.makeText(App.getContext(), "This schedule name already exist", Toast.LENGTH_LONG).show();
+                return true;
+            }
+        }
+        return false;
     }
 
     private void initializeError() {

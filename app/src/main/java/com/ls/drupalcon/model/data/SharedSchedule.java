@@ -61,19 +61,15 @@ public class SharedSchedule extends AbstractEntity<Long> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        SharedSchedule that = (SharedSchedule) o;
+        SharedSchedule schedule = (SharedSchedule) o;
 
-        if (scheduleCode != null ? !scheduleCode.equals(that.scheduleCode) : that.scheduleCode != null)
-            return false;
-        return scheduleName != null ? scheduleName.equals(that.scheduleName) : that.scheduleName == null;
+        return scheduleCode != null ? scheduleCode.equals(schedule.scheduleCode) : schedule.scheduleCode == null;
 
     }
 
     @Override
     public int hashCode() {
-        int result = scheduleCode != null ? scheduleCode.hashCode() : 0;
-        result = 31 * result + (scheduleName != null ? scheduleName.hashCode() : 0);
-        return result;
+        return scheduleCode != null ? scheduleCode.hashCode() : 0;
     }
 
     public void setScheduleCode(Long scheduleCode) {

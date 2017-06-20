@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.ls.drupalcon.R;
 import com.ls.drupalcon.app.App;
+import com.ls.drupalcon.model.Model;
 import com.ls.drupalcon.model.managers.ToastManager;
 
 public class AddScheduleDialog extends DialogFragment {
@@ -49,7 +50,13 @@ public class AddScheduleDialog extends DialogFragment {
                 if (TextUtils.isEmpty(text)) {
                     ToastManager.message(getContext(), "Please enter code");
                 } else {
-                    getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, getActivity().getIntent().putExtra(EXTRA_SCHEDULE_CODE, Long.parseLong(text)));
+                    long code = Long.parseLong(text);
+                    if(Model.instance().getSharedScheduleManager().getMyScheduleCode() == code){
+                        ToastManager.message(getContext(), "Weeeee");
+                    }else {
+                        getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, getActivity().getIntent().putExtra(EXTRA_SCHEDULE_CODE, code));
+
+                    }
                 }
             }
         });
