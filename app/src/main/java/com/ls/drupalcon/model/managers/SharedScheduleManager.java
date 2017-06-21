@@ -312,40 +312,4 @@ public class SharedScheduleManager {
         }, false);
     }
 
-
-    public void fetchSharedEventsByCode(final long scheduleCode) {
-        RequestConfig requestConfig = new RequestConfig();
-        requestConfig.setResponseFormat(BaseRequest.ResponseFormat.JSON);
-        requestConfig.setRequestFormat(BaseRequest.RequestFormat.JSON);
-        requestConfig.setResponseClassSpecifier(Schedule.class);
-
-
-        BaseRequest request = new BaseRequest(BaseRequest.RequestMethod.GET, App.getContext().getString(R.string.api_value_base_url) + "getSchedule/" + scheduleCode, requestConfig);
-
-        DrupalClient client = Model.instance().getClient();
-        client.performRequest(request, "Fetch Shared Events By Code", new DrupalClient.OnResponseListener() {
-            @Override
-            public void onResponseReceived(ResponseData data, Object tag) {
-                Schedule schedule = (Schedule) data.getData();
-                L.e("sharedSchedules = " + schedule);
-                ArrayList<SharedEvents> sharedSchedules = new ArrayList<>();
-                for (Long eventId : schedule.getEvents()) {
-                    sharedSchedules.add(new SharedEvents(eventId, schedule.getCode()));
-                }
-                saveFavoriteEventsSafe(sharedSchedules);
-            }
-
-            @Override
-            public void onError(ResponseData data, Object tag) {
-                ToastManager.messageSync(App.getContext(), "Wrong code = " + data.getStatusCode());
-            }
-
-            @Override
-            public void onCancel(Object tag) {
-                L.e("Update Cancel = " + tag);
-            }
-        }, false);
-    }
-
-
 }

@@ -95,11 +95,10 @@ public class EventHolderFragment extends Fragment {
     private UpdatesManager.DataUpdatedListener updateReceiver = new UpdatesManager.DataUpdatedListener() {
         @Override
         public void onDataUpdated(List<UpdateRequest> requests) {
-            L.e("onDataUpdated");
+            mProgressBar.setVisibility(View.GONE);
             isItemRefreshEnabled = true;
             updateData(requests);
             getActivity().invalidateOptionsMenu();
-
 
         }
     };
@@ -173,7 +172,6 @@ public class EventHolderFragment extends Fragment {
             item.setEnabled(true);
             item.getIcon().setAlpha(255);
         } else {
-            // disabled
             item.setEnabled(false);
             item.getIcon().setAlpha(130);
         }
@@ -196,7 +194,7 @@ public class EventHolderFragment extends Fragment {
                 shareSchedule();
                 break;
             case R.id.actionEditSchedule:
-                showChangeScheduleNameDialog(Model.instance().getSharedScheduleManager().getCurrentScheduleId(),Model.instance().getSharedScheduleManager().getCurrentFriendScheduleName());
+                showChangeScheduleNameDialog(Model.instance().getSharedScheduleManager().getCurrentScheduleId(), Model.instance().getSharedScheduleManager().getCurrentFriendScheduleName());
                 break;
             case R.id.actionRemoveSchedule:
                 undo(Model.instance().getSharedScheduleManager().getCurrentFriendScheduleName() + " is removed");
@@ -206,12 +204,7 @@ public class EventHolderFragment extends Fragment {
                 break;
 
             case R.id.actionRefresh:
-                UpdatesManager manager = Model.instance().getUpdatesManager();
-                manager.startLoading(null);
-
-                isItemRefreshEnabled = false;
-                getActivity().invalidateOptionsMenu();
-
+                refreshContent();
                 break;
         }
         return true;
@@ -230,7 +223,6 @@ public class EventHolderFragment extends Fragment {
         L.e("New schedule code = " + code);
         if (code > 0) {
             showSetNameDialog(code);
-//            setSpinnerPosition(Model.instance().getSharedScheduleManager().getItemPosition());
         }
 
     }
@@ -285,6 +277,7 @@ public class EventHolderFragment extends Fragment {
         mPagerTabs.setViewPager(mViewPager);
         mTextViewNoContent = (TextView) view.findViewById(R.id.text_view_placeholder);
         mImageViewNoContent = (ImageView) view.findViewById(R.id.image_view_placeholder);
+        mProgressBar = (ProgressBar) view.findViewById(R.id.progressBar);
 
         setHasOptionsMenu(true);
     }
@@ -368,7 +361,6 @@ public class EventHolderFragment extends Fragment {
 
     private void updateData(List<UpdateRequest> requests) {
         if (strategy.update(requests)) {
-            L.e("updateData");
             new LoadData().execute();
         }
     }
@@ -430,6 +422,7 @@ public class EventHolderFragment extends Fragment {
                     strategy = new FriendFavoritesStrategy();
                     isMySchedule = false;
                     getActivity().invalidateOptionsMenu();
+                    refreshContent();
                 }
                 new LoadData().execute();
 
@@ -440,13 +433,6 @@ public class EventHolderFragment extends Fragment {
 
             }
         });
-
-//        long code = getArguments().getLong(SHARED_SCHEDULE_CODE_EXTRAS);
-//        L.e("New schedule code = " + code);
-////        if (code != SharedScheduleManager.MY_DEFAULT_SCHEDULE_CODE) {
-//            setSpinnerPosition(Model.instance().getSharedScheduleManager().getItemPosition());
-////        }
-//        showSetNameDialog(code);
 
     }
 
@@ -493,8 +479,8 @@ public class EventHolderFragment extends Fragment {
 
     }
 
-    private StringBuilder getEmailBody(){
-        StringBuilder builder =  new StringBuilder();
+    private StringBuilder getEmailBody() {
+        StringBuilder builder = new StringBuilder();
         builder.append("Hi, I have just published/shared my schedule for ")
                 .append(getString(R.string.app_name))
                 .append(" where I will be an attendee.")
@@ -502,7 +488,6 @@ public class EventHolderFragment extends Fragment {
                 .append(getContext().getString(R.string.api_value_base_url) + "schedule/share/" + scheduleManager.getMyScheduleCode())
                 .append("\n If you have any issues with the link, use the Schedule Unique Code in the app to add my schedule manually.\n")
                 .append("\nSchedule Unique Code: ")
-//                .append("<b>" + scheduleManager.getMyScheduleCode() + "</b> ");
                 .append(scheduleManager.getMyScheduleCode());
         return builder;
     }
@@ -514,7 +499,7 @@ public class EventHolderFragment extends Fragment {
     }
 
     void showChangeScheduleNameDialog(long code, String name) {
-        DialogFragment newFragment = CreateScheduleDialog.newEditDialogInstance(code,name);
+        DialogFragment newFragment = CreateScheduleDialog.newEditDialogInstance(code, name);
         newFragment.setTargetFragment(this, CHANGE_SCHEDULE_NAME_DIALOG_REQUEST_CODE);
         newFragment.show(getChildFragmentManager(), EditScheduleDialog.TAG);
     }
@@ -571,7 +556,6 @@ public class EventHolderFragment extends Fragment {
         snack.setAction(R.string.undo, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                L.e("Undo");
                 SharedScheduleManager manager = Model.instance().getSharedScheduleManager();
                 manager.restoreSchedule();
                 refreshSpinner();
@@ -615,12 +599,27 @@ public class EventHolderFragment extends Fragment {
         }).run();
     }
 
+    private void refreshContent(){
+
+        if (NetworkUtils.isOn(getContext())) {
+            mProgressBar.setVisibility(View.VISIBLE);
+            UpdatesManager manager = Model.instance().getUpdatesManager();
+            manager.startLoading(null);
+
+            isItemRefreshEnabled = false;
+            getActivity().invalidateOptionsMenu();
+        } else {
+            ToastManager.messageSync(getContext(), getString(R.string.NoConnectionMessage));
+        }
+    }
+
     public void fetchSharedEventsByCode(final long scheduleCode, final String name) {
+        mProgressBar.setVisibility(View.VISIBLE);
         RequestConfig requestConfig = new RequestConfig();
         requestConfig.setResponseFormat(BaseRequest.ResponseFormat.JSON);
         requestConfig.setRequestFormat(BaseRequest.RequestFormat.JSON);
         requestConfig.setResponseClassSpecifier(Schedule.class);
-
+        L.e("Start fetchSharedEventsByCode");
 
         BaseRequest request = new BaseRequest(BaseRequest.RequestMethod.GET, App.getContext().getString(R.string.api_value_base_url) + "getSchedule/" + scheduleCode, requestConfig);
 
@@ -628,8 +627,9 @@ public class EventHolderFragment extends Fragment {
         client.performRequest(request, "Fetch Shared Events By Code", new DrupalClient.OnResponseListener() {
             @Override
             public void onResponseReceived(ResponseData data, Object tag) {
+                L.e("End fetchSharedEventsByCode");
                 Schedule schedule = (Schedule) data.getData();
-                L.e("sharedSchedules = " + schedule);
+
                 ArrayList<SharedEvents> sharedSchedules = new ArrayList<>();
                 for (Long eventId : schedule.getEvents()) {
                     sharedSchedules.add(new SharedEvents(eventId, schedule.getCode()));
@@ -637,6 +637,7 @@ public class EventHolderFragment extends Fragment {
                 Model.instance().getSharedScheduleManager().saveNewSharedSchedule(scheduleCode, name);
                 Model.instance().getSharedScheduleManager().saveFavoriteEventsSafe(sharedSchedules);
                 refreshSpinner();
+                mProgressBar.setVisibility(View.GONE);
             }
 
             @Override

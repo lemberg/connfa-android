@@ -1,18 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-    <ProgressBar
-        android:id="@+id/progressBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:layout_gravity="center"
-        android:visibility="gone" />
 
     <com.astuetz.PagerSlidingTabStrip
         android:id="@+id/pager_tab_strip"
@@ -27,14 +20,14 @@
         app:pstsIndicatorHeight="3dp"
         app:pstsTabPaddingLeftRight="35dp"
         app:pstsTextSelectedStyle="normal"
-        app:pstsTextStyle="normal" />
+        app:pstsTextStyle="normal"/>
 
     <android.support.v4.view.ViewPager
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/pager_tab_strip"
-        tools:visibility="gone" />
+        tools:visibility="gone"/>
 
     <LinearLayout
         android:id="@+id/layout_placeholder"
@@ -53,7 +46,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            tools:src="@drawable/ic_no_my_schedule" />
+            tools:src="@drawable/ic_no_my_schedule"/>
 
         <com.ls.ui.view.FontTextView
             android:id="@+id/text_view_placeholder"
@@ -64,6 +57,14 @@
             android:textColor="@color/placeholder_text"
             android:textSize="@dimen/text_size_placeholder"
             app:custom_font="@string/regular_font"
-            tools:text="@string/placeholder_schedule" />
+            tools:text="@string/placeholder_schedule"/>
     </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_gravity="center"
+        android:visibility="gone"/>
 </RelativeLayout>
