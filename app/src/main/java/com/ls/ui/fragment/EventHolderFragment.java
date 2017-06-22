@@ -111,19 +111,19 @@ public class EventHolderFragment extends Fragment {
         }
     });
 
-    private Listener<ResponseData, ResponseData> listener = new Listener<ResponseData, ResponseData>() {
-        @Override
-        public void onSucceeded(ResponseData result) {
-
-            mProgressBar.setVisibility(View.GONE);
-        }
-
-        @Override
-        public void onFailed(ResponseData result) {
-            ToastManager.messageSync(App.getContext(), "Schedule not found. Please check your code");
-            mProgressBar.setVisibility(View.GONE);
-        }
-    };
+//    private Listener<ResponseData, ResponseData> listener = new Listener<ResponseData, ResponseData>() {
+//        @Override
+//        public void onSucceeded(ResponseData result) {
+//            showSetNameDialog(newScheduleCode);
+//            mProgressBar.setVisibility(View.GONE);
+//        }
+//
+//        @Override
+//        public void onFailed(ResponseData result) {
+//            ToastManager.messageSync(App.getContext(), "Schedule not found. Please check your code");
+//            mProgressBar.setVisibility(View.GONE);
+//        }
+//    };
 
     public static EventHolderFragment newInstance(EventMode eventMode) {
         EventHolderFragment fragment = new EventHolderFragment();
@@ -239,16 +239,17 @@ public class EventHolderFragment extends Fragment {
         L.e("New schedule code = " + sharedScheduleCode);
         if (sharedScheduleCode > 0) {
             if (!Model.instance().getSharedScheduleManager().checkIfCodeIsExist(sharedScheduleCode)) {
-                Model.instance().getSharedScheduleManager().fetchSharedEventsByCode(sharedScheduleCode, "Test test", new Listener<ResponseData, ResponseData>() {
-                    @Override
-                    public void onSucceeded(ResponseData result) {
-                        showSetNameDialog(sharedScheduleCode);
-                    }
-
-                    @Override
-                    public void onFailed(ResponseData result) {
-                    }
-                });
+                fetchSharedEventsByCode(sharedScheduleCode, "Test test");
+//                Model.instance().getSharedScheduleManager().fetchSharedEventsByCode(sharedScheduleCode, "Test test", new Listener<ResponseData, ResponseData>() {
+//                    @Override
+//                    public void onSucceeded(ResponseData result) {
+//                        showSetNameDialog(sharedScheduleCode);
+//                    }
+//
+//                    @Override
+//                    public void onFailed(ResponseData result) {
+//                    }
+//                });
             }
         }
 
@@ -540,11 +541,11 @@ public class EventHolderFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case ADD_SCHEDULE_DIALOG_REQUEST_CODE:
+                mProgressBar.setVisibility(View.GONE);
                 switch (resultCode) {
                     case Activity.RESULT_OK:
-                        mProgressBar.setVisibility(View.GONE);
                         long newScheduleCode = data.getLongExtra(AddScheduleDialog.EXTRA_SCHEDULE_CODE, SharedScheduleManager.MY_DEFAULT_SCHEDULE_CODE);
-                        showSetNameDialog(newScheduleCode);
+                        fetchSharedEventsByCode(newScheduleCode, "Test test");
                         break;
                     case Activity.RESULT_CANCELED:
                         mProgressBar.setVisibility(View.GONE);
@@ -643,8 +644,20 @@ public class EventHolderFragment extends Fragment {
 
     public void fetchSharedEventsByCode(final long scheduleCode, final String name) {
         mProgressBar.setVisibility(View.VISIBLE);
-        Model.instance().getSharedScheduleManager().fetchSharedEventsByCode(scheduleCode, name, listener);
+        Model.instance().getSharedScheduleManager().fetchSharedEventsByCode(scheduleCode, name, new Listener<ResponseData, ResponseData>() {
+            @Override
+            public void onSucceeded(ResponseData result) {
+                showSetNameDialog(scheduleCode);
+                mProgressBar.setVisibility(View.GONE);
+            }
 
+            @Override
+            public void onFailed(ResponseData result) {
+                ToastManager.messageSync(App.getContext(), "Schedule not found. Please check your code");
+                mProgressBar.setVisibility(View.GONE);
+            }
+        });
     }
+
 
 }
