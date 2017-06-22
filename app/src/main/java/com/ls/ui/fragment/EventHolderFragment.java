@@ -2,6 +2,7 @@ package com.ls.ui.fragment;
 
 import com.astuetz.PagerSlidingTabStrip;
 import com.ls.drupal.DrupalClient;
+import com.ls.drupalcon.model.Listener;
 import com.ls.drupalcon.model.data.Schedule;
 import com.ls.drupalcon.model.data.SharedEvents;
 import com.ls.drupalcon.model.managers.ScheduleManager;
@@ -109,6 +110,20 @@ public class EventHolderFragment extends Fragment {
             updateFavorites();
         }
     });
+
+    private Listener<ResponseData, ResponseData> listener = new Listener<ResponseData, ResponseData>() {
+        @Override
+        public void onSucceeded(ResponseData result) {
+
+            mProgressBar.setVisibility(View.GONE);
+        }
+
+        @Override
+        public void onFailed(ResponseData result) {
+            ToastManager.messageSync(App.getContext(), "Schedule not found. Please check your code");
+            mProgressBar.setVisibility(View.GONE);
+        }
+    };
 
     public static EventHolderFragment newInstance(EventMode eventMode) {
         EventHolderFragment fragment = new EventHolderFragment();
@@ -220,10 +235,21 @@ public class EventHolderFragment extends Fragment {
         initData();
         initView();
         new LoadData().execute();
-        long code = getArguments().getLong(SHARED_SCHEDULE_CODE_EXTRAS);
-        L.e("New schedule code = " + code);
-        if (code > 0) {
-            showSetNameDialog(code);
+        final long sharedScheduleCode = getArguments().getLong(SHARED_SCHEDULE_CODE_EXTRAS);
+        L.e("New schedule code = " + sharedScheduleCode);
+        if (sharedScheduleCode > 0) {
+            if (!Model.instance().getSharedScheduleManager().checkIfCodeIsExist(sharedScheduleCode)) {
+                Model.instance().getSharedScheduleManager().fetchSharedEventsByCode(sharedScheduleCode, "Test test", new Listener<ResponseData, ResponseData>() {
+                    @Override
+                    public void onSucceeded(ResponseData result) {
+                        showSetNameDialog(sharedScheduleCode);
+                    }
+
+                    @Override
+                    public void onFailed(ResponseData result) {
+                    }
+                });
+            }
         }
 
     }
@@ -504,6 +530,7 @@ public class EventHolderFragment extends Fragment {
     }
 
     void showSetNameDialog(long code) {
+        mProgressBar.setVisibility(View.VISIBLE);
         DialogFragment newFragment = CreateScheduleDialog.newCreateDialogInstance(code);
         newFragment.setTargetFragment(this, SET_SCHEDULE_NAME_DIALOG_REQUEST_CODE);
         newFragment.show(getChildFragmentManager(), CreateScheduleDialog.TAG);
@@ -515,20 +542,22 @@ public class EventHolderFragment extends Fragment {
             case ADD_SCHEDULE_DIALOG_REQUEST_CODE:
                 switch (resultCode) {
                     case Activity.RESULT_OK:
+                        mProgressBar.setVisibility(View.GONE);
                         long newScheduleCode = data.getLongExtra(AddScheduleDialog.EXTRA_SCHEDULE_CODE, SharedScheduleManager.MY_DEFAULT_SCHEDULE_CODE);
                         showSetNameDialog(newScheduleCode);
                         break;
                     case Activity.RESULT_CANCELED:
+                        mProgressBar.setVisibility(View.GONE);
                         break;
                 }
                 break;
             case SET_SCHEDULE_NAME_DIALOG_REQUEST_CODE:
+                mProgressBar.setVisibility(View.GONE);
                 switch (resultCode) {
                     case Activity.RESULT_OK:
-                        final long code = data.getLongExtra(CreateScheduleDialog.EXTRA_SCHEDULE_CODE, SharedScheduleManager.MY_DEFAULT_SCHEDULE_CODE);
                         String name = data.getStringExtra(CreateScheduleDialog.EXTRA_SCHEDULE_NAME);
-
-                        fetchSharedEventsByCode(code, name);
+                        Model.instance().getSharedScheduleManager().renameSchedule(name);
+                        refreshSpinner();
 
                         break;
                     case Activity.RESULT_CANCELED:
@@ -614,39 +643,8 @@ public class EventHolderFragment extends Fragment {
 
     public void fetchSharedEventsByCode(final long scheduleCode, final String name) {
         mProgressBar.setVisibility(View.VISIBLE);
-        RequestConfig requestConfig = new RequestConfig();
-        requestConfig.setResponseFormat(BaseRequest.ResponseFormat.JSON);
-        requestConfig.setRequestFormat(BaseRequest.RequestFormat.JSON);
-        requestConfig.setResponseClassSpecifier(Schedule.class);
+        Model.instance().getSharedScheduleManager().fetchSharedEventsByCode(scheduleCode, name, listener);
 
-        BaseRequest request = new BaseRequest(BaseRequest.RequestMethod.GET, App.getContext().getString(R.string.api_value_base_url) + "getSchedule/" + scheduleCode, requestConfig);
-
-        DrupalClient client = Model.instance().getClient();
-        client.performRequest(request, "Fetch Shared Events By Code", new DrupalClient.OnResponseListener() {
-            @Override
-            public void onResponseReceived(ResponseData data, Object tag) {
-                Schedule schedule = (Schedule) data.getData();
-                ArrayList<SharedEvents> sharedSchedules = new ArrayList<>();
-                for (Long eventId : schedule.getEvents()) {
-                    sharedSchedules.add(new SharedEvents(eventId, schedule.getCode()));
-                }
-                Model.instance().getSharedScheduleManager().saveNewSharedSchedule(scheduleCode, name);
-                Model.instance().getSharedScheduleManager().saveFavoriteEventsSafe(sharedSchedules);
-                refreshSpinner();
-                mProgressBar.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onError(ResponseData data, Object tag) {
-                ToastManager.messageSync(App.getContext(), "Schedule not found. Please check your code");
-                mProgressBar.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onCancel(Object tag) {
-                L.e("Update Cancel = " + tag);
-            }
-        }, false);
     }
 
 }

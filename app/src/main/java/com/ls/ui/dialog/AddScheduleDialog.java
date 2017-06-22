@@ -18,8 +18,10 @@ import android.widget.Toast;
 
 import com.ls.drupalcon.R;
 import com.ls.drupalcon.app.App;
+import com.ls.drupalcon.model.Listener;
 import com.ls.drupalcon.model.Model;
 import com.ls.drupalcon.model.managers.ToastManager;
+import com.ls.http.base.ResponseData;
 
 public class AddScheduleDialog extends DialogFragment {
 
@@ -65,13 +67,25 @@ public class AddScheduleDialog extends DialogFragment {
                 if (TextUtils.isEmpty(text)) {
                     ToastManager.message(getContext(), "Please enter code");
                 } else {
-                    long code = Long.parseLong(text);
+                    final long code = Long.parseLong(text);
                     if (!Model.instance().getSharedScheduleManager().checkIfCodeIsExist(code)) {
                         if (Model.instance().getSharedScheduleManager().getMyScheduleCode() == code) {
                             ToastManager.message(getContext(), "Your own code was entered");
                         } else {
-                            getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, getActivity().getIntent().putExtra(EXTRA_SCHEDULE_CODE, code));
-                            dialog.dismiss();
+                            Model.instance().getSharedScheduleManager().fetchSharedEventsByCode(code, "Test test", new Listener<ResponseData, ResponseData>() {
+                                @Override
+                                public void onSucceeded(ResponseData result) {
+                                    getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, getActivity().getIntent().putExtra(EXTRA_SCHEDULE_CODE, code));
+                                    dialog.dismiss();
+                                }
+
+                                @Override
+                                public void onFailed(ResponseData result) {
+                                    getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_CANCELED, getActivity().getIntent().putExtra(EXTRA_SCHEDULE_CODE, code));
+                                    dialog.dismiss();
+                                }
+                            });
+
 
                         }
                     }

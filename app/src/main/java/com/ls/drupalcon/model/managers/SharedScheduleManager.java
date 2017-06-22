@@ -1,11 +1,13 @@
 package com.ls.drupalcon.model.managers;
 
 import android.os.AsyncTask;
+import android.view.View;
 import android.widget.Toast;
 
 import com.ls.drupal.DrupalClient;
 import com.ls.drupalcon.R;
 import com.ls.drupalcon.app.App;
+import com.ls.drupalcon.model.Listener;
 import com.ls.drupalcon.model.Model;
 import com.ls.drupalcon.model.PreferencesManager;
 import com.ls.drupalcon.model.dao.EventDao;
@@ -310,6 +312,42 @@ public class SharedScheduleManager {
                 L.e("Update Cancel = " + tag);
             }
         }, false);
+    }
+
+    public void fetchSharedEventsByCode(final long scheduleCode, final String name, final Listener<ResponseData, ResponseData> listener) {
+
+        RequestConfig requestConfig = new RequestConfig();
+        requestConfig.setResponseFormat(BaseRequest.ResponseFormat.JSON);
+        requestConfig.setRequestFormat(BaseRequest.RequestFormat.JSON);
+        requestConfig.setResponseClassSpecifier(Schedule.class);
+
+        BaseRequest request = new BaseRequest(BaseRequest.RequestMethod.GET, App.getContext().getString(R.string.api_value_base_url) + "getSchedule/" + scheduleCode, requestConfig);
+
+        DrupalClient client = Model.instance().getClient();
+        client.performRequest(request, "Fetch Shared Events By Code", new DrupalClient.OnResponseListener() {
+            @Override
+            public void onResponseReceived(ResponseData data, Object tag) {
+                Schedule schedule = (Schedule) data.getData();
+                ArrayList<SharedEvents> sharedSchedules = new ArrayList<>();
+                for (Long eventId : schedule.getEvents()) {
+                    sharedSchedules.add(new SharedEvents(eventId, schedule.getCode()));
+                }
+                Model.instance().getSharedScheduleManager().saveNewSharedSchedule(scheduleCode, name);
+                Model.instance().getSharedScheduleManager().saveFavoriteEventsSafe(sharedSchedules);
+                listener.onSucceeded(data);
+
+            }
+
+            @Override
+            public void onError(ResponseData data, Object tag) {
+                listener.onFailed(data);
+            }
+
+            @Override
+            public void onCancel(Object tag) {
+            }
+        }, false);
+
     }
 
 }
