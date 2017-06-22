@@ -39,7 +39,7 @@
             <intent-filter>
                 <data
                     android:host="connfa-integration.uat.link"
-                    android:scheme="http" />
+                    android:scheme="https" />
 
                 <action android:name="android.intent.action.VIEW" />
 

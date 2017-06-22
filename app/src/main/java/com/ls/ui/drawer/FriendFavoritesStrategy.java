@@ -5,8 +5,10 @@ import com.ls.drupalcon.model.Model;
 import com.ls.drupalcon.model.UpdateRequest;
 import com.ls.drupalcon.model.data.Event;
 import com.ls.drupalcon.model.managers.SharedScheduleManager;
+import com.ls.utils.L;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class FriendFavoritesStrategy implements EventHolderFragmentStrategy {
@@ -16,15 +18,25 @@ public class FriendFavoritesStrategy implements EventHolderFragmentStrategy {
     public List<Long> getDayList() {
         SharedScheduleManager sharedScheduleManager = Model.instance().getSharedScheduleManager();
         List<Event> allFriendsFavoriteEvent = sharedScheduleManager.getAllFriendsFavoriteEvent();
-        List<Long> dayList = new ArrayList<>();
 
+        List<Long> dayList = new ArrayList<>();
         for (Event event : allFriendsFavoriteEvent) {
             long date = event.getTimeRange().getDate();
             if (!dayList.contains(date)) {
                 dayList.add(date);
             }
-
         }
+        L.e("getDayList = " + dayList);
+
+        List<Long> dayList1 = new ArrayList<>();
+        for (Event event : allFriendsFavoriteEvent) {
+            long date = event.getTimeRange().getDate();
+            if (!dayList1.contains(date)) {
+                dayList1.add(date);
+            }
+        }
+        L.e("dayList1 = " + dayList1);
+//        Collections.sort(dayList);
         return dayList;
     }
 

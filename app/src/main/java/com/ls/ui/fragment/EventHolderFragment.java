@@ -65,6 +65,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class EventHolderFragment extends Fragment {
@@ -316,7 +317,6 @@ public class EventHolderFragment extends Fragment {
             mLayoutPlaceholder.setVisibility(View.GONE);
             mPagerTabs.setVisibility(View.VISIBLE);
         }
-
         mAdapter.setData(dayList, strategy);
         switchToCurrentDay(dayList);
     }
@@ -422,7 +422,6 @@ public class EventHolderFragment extends Fragment {
                     strategy = new FriendFavoritesStrategy();
                     isMySchedule = false;
                     getActivity().invalidateOptionsMenu();
-                    refreshContent();
                 }
                 new LoadData().execute();
 
@@ -485,7 +484,7 @@ public class EventHolderFragment extends Fragment {
                 .append(getString(R.string.app_name))
                 .append(" where I will be an attendee.")
                 .append(" Here is the link to add my schedule into the app: ")
-                .append(getContext().getString(R.string.api_value_base_url) + "schedule/share/" + scheduleManager.getMyScheduleCode())
+                .append("https://connfa-integration.uat.link/schedule/share?code=" + scheduleManager.getMyScheduleCode())
                 .append("\n If you have any issues with the link, use the Schedule Unique Code in the app to add my schedule manually.\n")
                 .append("\nSchedule Unique Code: ")
                 .append(scheduleManager.getMyScheduleCode());
@@ -599,7 +598,7 @@ public class EventHolderFragment extends Fragment {
         }).run();
     }
 
-    private void refreshContent(){
+    private void refreshContent() {
 
         if (NetworkUtils.isOn(getContext())) {
             mProgressBar.setVisibility(View.VISIBLE);
@@ -619,7 +618,6 @@ public class EventHolderFragment extends Fragment {
         requestConfig.setResponseFormat(BaseRequest.ResponseFormat.JSON);
         requestConfig.setRequestFormat(BaseRequest.RequestFormat.JSON);
         requestConfig.setResponseClassSpecifier(Schedule.class);
-        L.e("Start fetchSharedEventsByCode");
 
         BaseRequest request = new BaseRequest(BaseRequest.RequestMethod.GET, App.getContext().getString(R.string.api_value_base_url) + "getSchedule/" + scheduleCode, requestConfig);
 
@@ -627,9 +625,7 @@ public class EventHolderFragment extends Fragment {
         client.performRequest(request, "Fetch Shared Events By Code", new DrupalClient.OnResponseListener() {
             @Override
             public void onResponseReceived(ResponseData data, Object tag) {
-                L.e("End fetchSharedEventsByCode");
                 Schedule schedule = (Schedule) data.getData();
-
                 ArrayList<SharedEvents> sharedSchedules = new ArrayList<>();
                 for (Long eventId : schedule.getEvents()) {
                     sharedSchedules.add(new SharedEvents(eventId, schedule.getCode()));
@@ -643,6 +639,7 @@ public class EventHolderFragment extends Fragment {
             @Override
             public void onError(ResponseData data, Object tag) {
                 ToastManager.messageSync(App.getContext(), "Schedule not found. Please check your code");
+                mProgressBar.setVisibility(View.GONE);
             }
 
             @Override
