@@ -66,14 +66,11 @@ public class AddScheduleDialog extends DialogFragment {
                     ToastManager.message(getContext(), "Please enter code");
                 } else {
                     long code = Long.parseLong(text);
-                    if (!Model.instance().getSharedScheduleManager().checkIfCodeIsExist(code)) {
-                        if (Model.instance().getSharedScheduleManager().getMyScheduleCode() == code) {
-                            ToastManager.message(getContext(), "Your own code was entered");
-                        } else {
-                            getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, getActivity().getIntent().putExtra(EXTRA_SCHEDULE_CODE, code));
-                            dialog.dismiss();
-
-                        }
+                    if (Model.instance().getSharedScheduleManager().getMyScheduleCode() == code) {
+                        ToastManager.message(getContext(), "Your own code was entered");
+                    } else {
+                        getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, getActivity().getIntent().putExtra(EXTRA_SCHEDULE_CODE, code));
+                        dialog.dismiss();
                     }
 
                 }

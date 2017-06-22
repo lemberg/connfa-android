@@ -238,18 +238,10 @@ public class EventHolderFragment extends Fragment {
         final long sharedScheduleCode = getArguments().getLong(SHARED_SCHEDULE_CODE_EXTRAS);
         L.e("New schedule code = " + sharedScheduleCode);
         if (sharedScheduleCode > 0) {
-            if (!Model.instance().getSharedScheduleManager().checkIfCodeIsExist(sharedScheduleCode)) {
-                fetchSharedEventsByCode(sharedScheduleCode, "Test test");
-//                Model.instance().getSharedScheduleManager().fetchSharedEventsByCode(sharedScheduleCode, "Test test", new Listener<ResponseData, ResponseData>() {
-//                    @Override
-//                    public void onSucceeded(ResponseData result) {
-//                        showSetNameDialog(sharedScheduleCode);
-//                    }
-//
-//                    @Override
-//                    public void onFailed(ResponseData result) {
-//                    }
-//                });
+            if (Model.instance().getSharedScheduleManager().checkIfCodeIsExist(sharedScheduleCode)) {
+                refreshSpinner();
+            } else {
+                fetchSharedEventsByCode(sharedScheduleCode, "Schedule " + sharedScheduleCode);
             }
         }
 
@@ -545,7 +537,11 @@ public class EventHolderFragment extends Fragment {
                 switch (resultCode) {
                     case Activity.RESULT_OK:
                         long newScheduleCode = data.getLongExtra(AddScheduleDialog.EXTRA_SCHEDULE_CODE, SharedScheduleManager.MY_DEFAULT_SCHEDULE_CODE);
-                        fetchSharedEventsByCode(newScheduleCode, "Test test");
+                        if (Model.instance().getSharedScheduleManager().checkIfCodeIsExist(newScheduleCode)) {
+                            refreshSpinner();
+                        } else {
+                            fetchSharedEventsByCode(newScheduleCode, "Schedule " + newScheduleCode);
+                        }
                         break;
                     case Activity.RESULT_CANCELED:
                         mProgressBar.setVisibility(View.GONE);

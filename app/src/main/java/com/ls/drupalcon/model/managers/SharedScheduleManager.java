@@ -219,8 +219,6 @@ public class SharedScheduleManager {
 
         StringBuilder url = new StringBuilder();
         url.append("getSchedules?");
-//        url.append("codes[]=");
-
         for (SharedSchedule schedule : schedules) {
             Long id = schedule.getId();
             if (id != MY_DEFAULT_SCHEDULE_CODE) {
@@ -255,6 +253,7 @@ public class SharedScheduleManager {
     public boolean checkIfCodeIsExist(long code) {
         for (SharedSchedule item : schedules) {
             if (item.getId() == code) {
+                currentSchedule = item;
                 Toast.makeText(App.getContext(), "This schedule schedule already exist", Toast.LENGTH_LONG).show();
                 return true;
             }
