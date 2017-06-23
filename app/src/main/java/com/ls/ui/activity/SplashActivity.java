@@ -99,15 +99,15 @@ public class SplashActivity extends AppCompatActivity {
     private void startMainActivity() {
         Uri data = this.getIntent().getData();
         if (data != null && data.isHierarchical()) {
-            L.e("Uri = " + data.toString());
-            String uri = this.getIntent().getDataString();
-            String substring = uri.substring(uri.length() - 4, uri.length());
-            Long code = Long.valueOf(substring);
-//            SharedScheduleManager sharedScheduleManager = Model.instance().getSharedScheduleManager();
-//
-//            sharedScheduleManager.saveNewSharedSchedule(code);
-//            sharedScheduleManager.fetchSharedEventsByCode(code);
-            HomeActivity.startThisActivity(this, code);
+            String uriString = this.getIntent().getDataString();
+            Uri uri = Uri.parse(uriString);
+            String codeString = uri.getQueryParameter("code");
+            if(TextUtils.isEmpty(codeString)){
+                HomeActivity.startThisActivity(this, SharedScheduleManager.MY_DEFAULT_SCHEDULE_CODE);
+            }else {
+                Long code = Long.valueOf(codeString);
+                HomeActivity.startThisActivity(this, code);
+            }
         } else {
             HomeActivity.startThisActivity(this, SharedScheduleManager.MY_DEFAULT_SCHEDULE_CODE);
         }

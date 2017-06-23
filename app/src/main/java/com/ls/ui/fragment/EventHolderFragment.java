@@ -1,15 +1,9 @@
 package com.ls.ui.fragment;
 
 import com.astuetz.PagerSlidingTabStrip;
-import com.ls.drupal.DrupalClient;
 import com.ls.drupalcon.model.Listener;
-import com.ls.drupalcon.model.data.Schedule;
-import com.ls.drupalcon.model.data.SharedEvents;
-import com.ls.drupalcon.model.managers.ScheduleManager;
 import com.ls.drupalcon.model.managers.SharedScheduleManager;
 import com.ls.drupalcon.model.managers.ToastManager;
-import com.ls.http.base.BaseRequest;
-import com.ls.http.base.RequestConfig;
 import com.ls.http.base.ResponseData;
 import com.ls.ui.dialog.AddScheduleDialog;
 import com.ls.ui.dialog.CreateScheduleDialog;
@@ -48,9 +42,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -60,13 +52,10 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class EventHolderFragment extends Fragment {
@@ -110,20 +99,6 @@ public class EventHolderFragment extends Fragment {
             updateFavorites();
         }
     });
-
-//    private Listener<ResponseData, ResponseData> listener = new Listener<ResponseData, ResponseData>() {
-//        @Override
-//        public void onSucceeded(ResponseData result) {
-//            showSetNameDialog(newScheduleCode);
-//            mProgressBar.setVisibility(View.GONE);
-//        }
-//
-//        @Override
-//        public void onFailed(ResponseData result) {
-//            ToastManager.messageSync(App.getContext(), "Schedule not found. Please check your code");
-//            mProgressBar.setVisibility(View.GONE);
-//        }
-//    };
 
     public static EventHolderFragment newInstance(EventMode eventMode) {
         EventHolderFragment fragment = new EventHolderFragment();
@@ -344,7 +319,7 @@ public class EventHolderFragment extends Fragment {
         int item = 0;
         for (Long millis : days) {
             if (DateUtils.getInstance().isToday(millis) ||
-                    DateUtils.getInstance().isAfterCurrentFate(millis)) {
+                    DateUtils.getInstance().isAfterCurrentDate(millis)) {
                 mViewPager.setCurrentItem(item);
                 break;
             }
@@ -489,7 +464,7 @@ public class EventHolderFragment extends Fragment {
 
         Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND);
-        sendIntent.putExtra(Intent.EXTRA_SUBJECT, "Add a schedule");
+        sendIntent.putExtra(Intent.EXTRA_SUBJECT, "My Schedule");
         sendIntent.putExtra(Intent.EXTRA_TEXT, getEmailBody().toString());
         sendIntent.setType("text/plain");
         startActivity(sendIntent);
@@ -537,13 +512,24 @@ public class EventHolderFragment extends Fragment {
                 switch (resultCode) {
                     case Activity.RESULT_OK:
                         long newScheduleCode = data.getLongExtra(AddScheduleDialog.EXTRA_SCHEDULE_CODE, SharedScheduleManager.MY_DEFAULT_SCHEDULE_CODE);
-                        if (Model.instance().getSharedScheduleManager().checkIfCodeIsExist(newScheduleCode)) {
+                        if(newScheduleCode == 100){
                             refreshSpinner();
-                        } else {
-                            fetchSharedEventsByCode(newScheduleCode, "Schedule " + newScheduleCode);
+                        }else {
+                            showSetNameDialog(newScheduleCode);
                         }
+//                        if (Model.instance().getSharedScheduleManager().checkIfCodeIsExist(newScheduleCode)) {
+//                            refreshSpinner();
+//                        } else {
+//                            fetchSharedEventsByCode(newScheduleCode, "Schedule " + newScheduleCode);
+//                        }
+//                        showSetNameDialog(newScheduleCode);
                         break;
                     case Activity.RESULT_CANCELED:
+                        mProgressBar.setVisibility(View.GONE);
+                        break;
+                    case AddScheduleDialog.RESULT_OK_CODE_IS_EXIST:
+                        refreshSpinner();
+                        L.e("Weeeeeeeeeeeee");
                         mProgressBar.setVisibility(View.GONE);
                         break;
                 }

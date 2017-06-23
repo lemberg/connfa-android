@@ -95,7 +95,7 @@ public class SharedScheduleManager {
         return schedules.indexOf(currentSchedule);
     }
 
-    public void saveNewSharedSchedule(long scheduleCode, String name) {
+    private void saveNewSharedSchedule(long scheduleCode, String name) {
         SharedSchedule schedule = generateSchedule(scheduleCode, name);
         currentSchedule = schedule;
         schedules.add(schedule);
@@ -141,7 +141,7 @@ public class SharedScheduleManager {
     }
 
 
-    public List<SharedEvents> getAllFriendsFavorite() {
+    private List<SharedEvents> getAllFriendsFavorite() {
         return sharedEvents;
     }
 
@@ -173,7 +173,7 @@ public class SharedScheduleManager {
         sharedEvents.addAll(items);
     }
 
-    public void saveFavoriteEventsSafe(ArrayList<SharedEvents> items) {
+    private void saveFavoriteEventsSafe(ArrayList<SharedEvents> items) {
         L.e("saveFavoriteEventsSafe = " + items);
         sharedEvents.addAll(items);
         sharedEventsDao.saveDataSafe(items);
