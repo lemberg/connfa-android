@@ -188,9 +188,8 @@ public class EventHolderFragment extends Fragment {
                 break;
             case R.id.actionRemoveSchedule:
                 undo(Model.instance().getSharedScheduleManager().getCurrentFriendScheduleName() + " is removed");
-                Model.instance().getSharedScheduleManager().deleteSharedSchedule();
+                Model.instance().getSharedScheduleManager().deleteSharedScheduleFromCache();
                 refreshSpinner();
-                new LoadData().execute();
                 break;
 
             case R.id.actionRefresh:
@@ -556,8 +555,20 @@ public class EventHolderFragment extends Fragment {
                 refreshSpinner();
             }
         });
+
+        snack.getView().addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
+            @Override
+            public void onViewAttachedToWindow(View v) {
+            }
+
+            @Override
+            public void onViewDetachedFromWindow(View v) {
+                Model.instance().getSharedScheduleManager().deleteSharedSchedule();
+            }
+        });
         snack.setActionTextColor(Color.parseColor("#65B6AA"));
         snack.show();
+
     }
 
     private void refreshSpinner() {

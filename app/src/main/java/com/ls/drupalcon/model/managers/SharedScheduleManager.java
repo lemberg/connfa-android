@@ -35,16 +35,19 @@ public class SharedScheduleManager {
     private boolean isInitialized;
     private SharedScheduleDao sharedScheduleDao;
     private SharedEventsDao sharedEventsDao;
+    private EventDao mEventDao;
+
     private List<SharedEvents> sharedEvents = new ArrayList<>();
     private List<SharedSchedule> schedules = new ArrayList<>();
+    private List<Long> favoriteEventsIds = new ArrayList<>();
     private SharedSchedule currentSchedule;
     private List<SharedSchedule> schedulesTemp;
     private SharedSchedule scheduleTemp;
-    private Timer timer = new Timer();
 
     public SharedScheduleManager() {
         this.sharedScheduleDao = new SharedScheduleDao();
         this.sharedEventsDao = new SharedEventsDao();
+        this. mEventDao = new EventDao(App.getContext());
     }
 
     //must called in background
@@ -59,6 +62,7 @@ public class SharedScheduleManager {
                 sharedScheduleDao.saveOrUpdateSafe(currentSchedule);
             }
             schedules.addAll(allSchedules);
+            favoriteEventsIds.addAll(getFavoriteEventsSafe());
         }
     }
 
@@ -95,6 +99,18 @@ public class SharedScheduleManager {
         return schedules.indexOf(currentSchedule);
     }
 
+    public List<Long> getFavoriteEventDays() {
+        return mEventDao.selectDistrictFavoriteDateSafe();
+    }
+
+    public List<Long> getFavoriteEventsSafe() {
+        return mEventDao.selectFavoriteEventsSafe();
+    }
+
+    public void setFavoriteEvent(long eventId, boolean isFavorite) {
+        mEventDao.setFavoriteSafe(eventId, isFavorite);
+    }
+
     private void saveNewSharedSchedule(long scheduleCode, String name) {
         SharedSchedule schedule = generateSchedule(scheduleCode, name);
         currentSchedule = schedule;
@@ -118,16 +134,9 @@ public class SharedScheduleManager {
 
     }
 
-    public void deleteSharedSchedule() {
+    public void deleteSharedScheduleFromCache() {
         schedulesTemp = new ArrayList<>(schedules);
         scheduleTemp = currentSchedule;
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                sharedScheduleDao.deleteDataSafe(scheduleTemp.getId());
-                sharedEventsDao.deleteDataSafe(scheduleTemp.getId());
-            }
-        }, 2000);
         schedules.remove(currentSchedule);
         currentSchedule = schedules.get(0);
 
@@ -136,8 +145,11 @@ public class SharedScheduleManager {
     public void restoreSchedule() {
         schedules = schedulesTemp;
         currentSchedule = scheduleTemp;
-        timer.cancel();
-        timer = new Timer();
+    }
+
+    public void deleteSharedSchedule() {
+        sharedScheduleDao.deleteDataSafe(scheduleTemp.getId());
+        sharedEventsDao.deleteDataSafe(scheduleTemp.getId());
     }
 
 
@@ -157,7 +169,7 @@ public class SharedScheduleManager {
     }
 
     private List<Long> getMyFavoriteEventIds() {
-        return Model.instance().getFavoriteManager().getFavoriteEventsSafe();
+        return getFavoriteEventsSafe();
     }
 
     public List<Event> getAllFriendsFavoriteEvent() {

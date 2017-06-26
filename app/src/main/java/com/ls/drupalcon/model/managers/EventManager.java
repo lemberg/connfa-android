@@ -3,6 +3,7 @@ package com.ls.drupalcon.model.managers;
 import com.ls.drupal.AbstractBaseDrupalEntity;
 import com.ls.drupal.DrupalClient;
 import com.ls.drupalcon.app.App;
+import com.ls.drupalcon.model.Model;
 import com.ls.drupalcon.model.dao.EventDao;
 import com.ls.drupalcon.model.data.Event;
 import com.ls.drupalcon.model.data.EventDetailsEvent;
@@ -79,8 +80,7 @@ public class EventManager extends SynchronousItemManager<Event.Holder, Object, S
     }
 
     public List<Event> getEventsByIdsAndDaySafe(long day) {
-        FavoriteManager favoriteManager = new FavoriteManager();
-        List<Long> favoriteEventIds = favoriteManager.getFavoriteEventsSafe();
+        List<Long> favoriteEventIds = Model.instance().getSharedScheduleManager().getFavoriteEventsSafe();
         return mEventDao.selectEventsByIdsAndDaySafe(favoriteEventIds, day);
     }
 
