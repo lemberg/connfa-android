@@ -47,7 +47,7 @@ public class SharedScheduleManager {
     public SharedScheduleManager() {
         this.sharedScheduleDao = new SharedScheduleDao();
         this.sharedEventsDao = new SharedEventsDao();
-        this. mEventDao = new EventDao(App.getContext());
+        this.mEventDao = new EventDao(App.getContext());
     }
 
     //must called in background
@@ -103,12 +103,23 @@ public class SharedScheduleManager {
         return mEventDao.selectDistrictFavoriteDateSafe();
     }
 
-    public List<Long> getFavoriteEventsSafe() {
+    private List<Long> getFavoriteEventsSafe() {
         return mEventDao.selectFavoriteEventsSafe();
     }
 
-    public void setFavoriteEvent(long eventId, boolean isFavorite) {
-        mEventDao.setFavoriteSafe(eventId, isFavorite);
+    public void setFavoriteEvent(final long eventId, final boolean isFavorite) {
+        if (isFavorite) {
+            favoriteEventsIds.add(eventId);
+        } else {
+            favoriteEventsIds.remove(eventId);
+        }
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                mEventDao.setFavoriteSafe(eventId, isFavorite);
+            }
+        }).start();
+
     }
 
     private void saveNewSharedSchedule(long scheduleCode, String name) {
@@ -168,8 +179,8 @@ public class SharedScheduleManager {
         return favoriteEventIds;
     }
 
-    private List<Long> getMyFavoriteEventIds() {
-        return getFavoriteEventsSafe();
+    public List<Long> getMyFavoriteEventIds() {
+        return favoriteEventsIds;
     }
 
     public List<Event> getAllFriendsFavoriteEvent() {
@@ -211,12 +222,18 @@ public class SharedScheduleManager {
 
 
     public void postAllSchedules() {
-        PreferencesManager instance = PreferencesManager.getInstance();
-        if (instance.getMyScheduleCode() == MY_DEFAULT_SCHEDULE_CODE) {
-            postSchedules();
-        } else {
-            updateSchedules();
-        }
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                PreferencesManager instance = PreferencesManager.getInstance();
+                if (instance.getMyScheduleCode() == MY_DEFAULT_SCHEDULE_CODE) {
+                    postSchedules();
+                } else {
+                    updateSchedules();
+                }
+            }
+        }).start();
+
     }
 
     private Map<String, List<Long>> getObjectToPost(List<Long> ids) {
@@ -288,7 +305,7 @@ public class SharedScheduleManager {
         final PreferencesManager instance = PreferencesManager.getInstance();
 
         BaseRequest request = new BaseRequest(BaseRequest.RequestMethod.PUT, App.getContext().getString(R.string.api_value_base_url) + "updateSchedule/" + instance.getMyScheduleCode(), requestConfig);
-        request.setObjectToPost(getObjectToPost(getMyFavoriteEventIds()));
+        request.setObjectToPost(getObjectToPost(favoriteEventsIds));
 
         DrupalClient client = Model.instance().getClient();
         client.performRequest(request, false);
@@ -301,7 +318,7 @@ public class SharedScheduleManager {
         requestConfig.setResponseClassSpecifier(PostResponse.class);
 
         BaseRequest request = new BaseRequest(BaseRequest.RequestMethod.POST, App.getContext().getString(R.string.api_value_base_url) + "createSchedule", requestConfig);
-        request.setObjectToPost(getObjectToPost(getMyFavoriteEventIds()));
+        request.setObjectToPost(getObjectToPost(favoriteEventsIds));
 
         DrupalClient client = Model.instance().getClient();
         client.performRequest(request, "post", new DrupalClient.OnResponseListener() {

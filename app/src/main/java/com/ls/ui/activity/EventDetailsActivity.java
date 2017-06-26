@@ -406,14 +406,9 @@ public class EventDetailsActivity extends StackKeeperActivity {
 
     private void setFavorite() {
         final SharedScheduleManager sharedScheduleManager = Model.instance().getSharedScheduleManager();
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                Model.instance().getSharedScheduleManager().setFavoriteEvent(mEventId, mIsFavorite);
-                sharedScheduleManager.postAllSchedules();
 
-            }
-        }).start();
+        Model.instance().getSharedScheduleManager().setFavoriteEvent(mEventId, mIsFavorite);
+        sharedScheduleManager.postAllSchedules();
         setToNotificationQueue();
 
         AnalyticsManager.detailsScreenTracker(this, R.string.event_category, mEvent.getEventName());

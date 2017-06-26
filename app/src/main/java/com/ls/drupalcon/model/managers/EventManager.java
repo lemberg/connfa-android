@@ -80,7 +80,7 @@ public class EventManager extends SynchronousItemManager<Event.Holder, Object, S
     }
 
     public List<Event> getEventsByIdsAndDaySafe(long day) {
-        List<Long> favoriteEventIds = Model.instance().getSharedScheduleManager().getFavoriteEventsSafe();
+        List<Long> favoriteEventIds = Model.instance().getSharedScheduleManager().getMyFavoriteEventIds();
         return mEventDao.selectEventsByIdsAndDaySafe(favoriteEventIds, day);
     }
 

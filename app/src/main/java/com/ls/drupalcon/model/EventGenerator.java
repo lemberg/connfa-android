@@ -90,7 +90,7 @@ public class EventGenerator {
     }
 
     public List<EventListItem> generateForFavorites(long day, @NotNull EventItemCreator eventItemCreator) {
-        List<Long> favoriteEventIds = Model.instance().getSharedScheduleManager().getFavoriteEventsSafe();
+        List<Long> favoriteEventIds = Model.instance().getSharedScheduleManager().getMyFavoriteEventIds();
         List<EventListItem> eventListItems = mProgramManager.getFavoriteProgramItemsSafe(favoriteEventIds, day);
         if (mShouldBreak) {
             return new ArrayList<>();

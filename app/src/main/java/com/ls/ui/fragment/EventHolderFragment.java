@@ -595,12 +595,7 @@ public class EventHolderFragment extends Fragment {
     }
 
     private void postAllSchedulesAsynchronously() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                Model.instance().getSharedScheduleManager().postAllSchedules();
-            }
-        }).run();
+        Model.instance().getSharedScheduleManager().postAllSchedules();
     }
 
     private void refreshContent() {
