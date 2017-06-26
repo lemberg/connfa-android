@@ -76,7 +76,6 @@ public class EventHolderFragment extends Fragment {
     private TextView mTextViewNoContent;
     private boolean mIsFilterUsed;
     private EventHolderFragmentStrategy strategy;
-    private boolean isMySchedule = true;
     private boolean isItemRefreshEnabled = true;
     private ArrayAdapter<String> spinnerAdapter;
     private Spinner navigationSpinner;
@@ -149,7 +148,7 @@ public class EventHolderFragment extends Fragment {
         if (isFavoriteScreen()) {
             menu.clear();
             MenuInflater menuInflater = getActivity().getMenuInflater();
-            if (isMySchedule) {
+            if (strategy.isMySchedule()) {
                 showSearchPrompt();
                 menuInflater.inflate(R.menu.menu_my_schedule, menu);
             } else {
@@ -409,12 +408,10 @@ public class EventHolderFragment extends Fragment {
                 Model.instance().getSharedScheduleManager().setCurrentSchedule(position);
                 if (position == 0) {
                     strategy = new FavoritesStrategy();
-                    isMySchedule = true;
                     getActivity().invalidateOptionsMenu();
 
                 } else {
                     strategy = new FriendFavoritesStrategy();
-                    isMySchedule = false;
                     getActivity().invalidateOptionsMenu();
                 }
                 new LoadData().execute();
@@ -512,25 +509,12 @@ public class EventHolderFragment extends Fragment {
                 switch (resultCode) {
                     case Activity.RESULT_OK:
                         long newScheduleCode = data.getLongExtra(AddScheduleDialog.EXTRA_SCHEDULE_CODE, SharedScheduleManager.MY_DEFAULT_SCHEDULE_CODE);
-                        if(newScheduleCode == 100){
-                            refreshSpinner();
-                        }else {
-                            showSetNameDialog(newScheduleCode);
-                        }
-//                        if (Model.instance().getSharedScheduleManager().checkIfCodeIsExist(newScheduleCode)) {
-//                            refreshSpinner();
-//                        } else {
-//                            fetchSharedEventsByCode(newScheduleCode, "Schedule " + newScheduleCode);
-//                        }
-//                        showSetNameDialog(newScheduleCode);
+                        showSetNameDialog(newScheduleCode);
                         break;
                     case Activity.RESULT_CANCELED:
-                        mProgressBar.setVisibility(View.GONE);
                         break;
                     case AddScheduleDialog.RESULT_OK_CODE_IS_EXIST:
                         refreshSpinner();
-                        L.e("Weeeeeeeeeeeee");
-                        mProgressBar.setVisibility(View.GONE);
                         break;
                 }
                 break;
@@ -582,12 +566,10 @@ public class EventHolderFragment extends Fragment {
         if (allSchedulesNameList.size() == 1) {
             disableCustomToolBar();
             setToolbarTitle();
-            isMySchedule = true;
             //todo check this: setSpinnerPosition
             setSpinnerPosition(0);
             strategy = new FavoritesStrategy();
         } else {
-            isMySchedule = false;
             setCustomToolBar();
             spinnerAdapter.clear();
             spinnerAdapter.addAll(allSchedulesNameList);

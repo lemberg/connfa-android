@@ -40,4 +40,9 @@ public class FavoritesStrategy implements EventHolderFragmentStrategy {
     public EventMode getEventMode() {
         return EventMode.Favorites;
     }
+
+    @Override
+    public boolean isMySchedule() {
+        return true;
+    }
 }

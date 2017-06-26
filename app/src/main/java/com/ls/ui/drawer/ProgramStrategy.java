@@ -42,4 +42,9 @@ public class ProgramStrategy implements EventHolderFragmentStrategy {
     public EventMode getEventMode() {
         return EventMode.Program;
     }
+
+    @Override
+    public boolean isMySchedule() {
+        return false;
+    }
 }

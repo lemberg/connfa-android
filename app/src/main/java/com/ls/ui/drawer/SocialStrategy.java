@@ -42,4 +42,9 @@ public class SocialStrategy implements EventHolderFragmentStrategy {
     public EventMode getEventMode() {
         return EventMode.Social;
     }
+
+    @Override
+    public boolean isMySchedule() {
+        return false;
+    }
 }

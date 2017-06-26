@@ -17,4 +17,6 @@ public interface EventHolderFragmentStrategy {
     boolean update(List<UpdateRequest> requests);
 
     EventMode getEventMode();
+
+    boolean isMySchedule();
 }

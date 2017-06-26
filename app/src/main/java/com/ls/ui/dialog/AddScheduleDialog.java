@@ -70,7 +70,7 @@ public class AddScheduleDialog extends DialogFragment {
                 } else {
                     final long code = Long.parseLong(text);
                     if (Model.instance().getSharedScheduleManager().checkIfCodeIsExist(code)) {
-                        getTargetFragment().onActivityResult(getTargetRequestCode(), RESULT_OK_CODE_IS_EXIST, getActivity().getIntent().putExtra(EXTRA_SCHEDULE_CODE, 100l));
+                        getTargetFragment().onActivityResult(getTargetRequestCode(), RESULT_OK_CODE_IS_EXIST, getActivity().getIntent());
                         dialog.dismiss();
                     } else {
                         if (Model.instance().getSharedScheduleManager().getMyScheduleCode() == code) {

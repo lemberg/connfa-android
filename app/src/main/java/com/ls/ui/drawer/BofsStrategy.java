@@ -42,4 +42,9 @@ public class BofsStrategy implements EventHolderFragmentStrategy {
     public EventMode getEventMode() {
         return EventMode.Bofs;
     }
+
+    @Override
+    public boolean isMySchedule() {
+        return false;
+    }
 }
