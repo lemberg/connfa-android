@@ -33,7 +33,6 @@ public class BaseEventDaysPagerAdapter extends FragmentStatePagerAdapter  {
     public void setData(List<Long> eventDays, EventHolderFragmentStrategy strategy) {
         mDays.clear();
         mDays.addAll(eventDays);
-        L.e("mDays = "  + eventDays.toString());
         this.strategy = strategy;
         notifyDataSetChanged();
     }

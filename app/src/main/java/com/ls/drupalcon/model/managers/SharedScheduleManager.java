@@ -40,21 +40,20 @@ public class SharedScheduleManager {
     private List<SharedEvents> sharedEvents = new ArrayList<>();
     private List<SharedSchedule> schedules = new ArrayList<>();
     private List<Long> favoriteEventsIds = new ArrayList<>();
-    private SharedSchedule currentSchedule;
-    private List<SharedSchedule> schedulesTemp;
-    private SharedSchedule scheduleTemp;
+    private CurrentScheduleManager currentScheduleManager;
 
     public SharedScheduleManager() {
         this.sharedScheduleDao = new SharedScheduleDao();
         this.sharedEventsDao = new SharedEventsDao();
         this.mEventDao = new EventDao(App.getContext());
+        this.currentScheduleManager = new CurrentScheduleManager();
     }
 
     //must called in background
     public void initialize() {
         if (!isInitialized) {
             isInitialized = true;
-            this.currentSchedule = new SharedSchedule(MY_DEFAULT_SCHEDULE_CODE, App.getContext().getString(R.string.my_schedule));
+            SharedSchedule currentSchedule = currentScheduleManager.getCurrentSchedule();
             List<SharedSchedule> allSchedules = sharedScheduleDao.getAllSafe();
             sharedEvents = sharedEventsDao.getAllSafe();
             if (!allSchedules.contains(currentSchedule)) {
@@ -75,20 +74,19 @@ public class SharedScheduleManager {
         for (SharedSchedule item : schedules) {
             result.add(item.getScheduleName());
         }
-        L.e("All Schedules Name List = " + schedules);
         return result;
     }
 
     public void setCurrentSchedule(int scheduleOrder) {
-        this.currentSchedule = schedules.get(scheduleOrder);
+        currentScheduleManager.setCurrentSchedule(scheduleOrder);
     }
 
     private SharedSchedule getCurrentSchedule() {
-        return currentSchedule;
+        return currentScheduleManager.getCurrentSchedule();
     }
 
     public long getCurrentScheduleId() {
-        return currentSchedule.getId();
+        return currentScheduleManager.getCurrentScheduleId();
     }
 
     public String getCurrentFriendScheduleName() {
@@ -96,7 +94,7 @@ public class SharedScheduleManager {
     }
 
     public int getItemPosition() {
-        return schedules.indexOf(currentSchedule);
+        return currentScheduleManager.getItemPosition();
     }
 
     public List<Long> getFavoriteEventDays() {
@@ -124,21 +122,26 @@ public class SharedScheduleManager {
 
     private void saveNewSharedSchedule(long scheduleCode, String name) {
         SharedSchedule schedule = generateSchedule(scheduleCode, name);
-        currentSchedule = schedule;
+        currentScheduleManager.setCurrentSchedule(schedule);
         schedules.add(schedule);
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+            }
+        }).start();
         this.sharedScheduleDao.saveDataSafe(schedule);
     }
 
     public void renameSchedule(String newScheduleName) {
-        int currentItemIndex = schedules.indexOf(currentSchedule);
-        SharedSchedule schedule = schedules.get(currentItemIndex);
+        SharedSchedule schedule = schedules.get(currentScheduleManager.getItemPosition());
         schedule.setScheduleName(newScheduleName);
-
-        currentSchedule = schedule;
+        currentScheduleManager.setCurrentSchedule(schedule);
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
-                sharedScheduleDao.saveOrUpdateSafe(currentSchedule);
+                sharedScheduleDao.saveOrUpdateSafe(currentScheduleManager.getCurrentSchedule());
             }
         });
 
@@ -146,21 +149,15 @@ public class SharedScheduleManager {
     }
 
     public void deleteSharedScheduleFromCache() {
-        schedulesTemp = new ArrayList<>(schedules);
-        scheduleTemp = currentSchedule;
-        schedules.remove(currentSchedule);
-        currentSchedule = schedules.get(0);
-
+        currentScheduleManager.deleteSharedScheduleFromCache();
     }
 
     public void restoreSchedule() {
-        schedules = schedulesTemp;
-        currentSchedule = scheduleTemp;
+        currentScheduleManager.restoreSchedule();
     }
 
     public void deleteSharedSchedule() {
-        sharedScheduleDao.deleteDataSafe(scheduleTemp.getId());
-        sharedEventsDao.deleteDataSafe(scheduleTemp.getId());
+        currentScheduleManager.deleteSharedSchedule();
     }
 
 
@@ -188,18 +185,30 @@ public class SharedScheduleManager {
         return eventDao.selectEventsByIdsSafe(getFriendsFavoriteEventIds());
     }
 
-    public void saveSharedEvents(ArrayList<SharedEvents> items) {
-        sharedEventsDao.deleteAllSafe();
-        sharedEventsDao.saveDataSafe(items);
+    public void saveSharedEvents(final ArrayList<SharedEvents> items) {
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                sharedEventsDao.deleteAllSafe();
+                sharedEventsDao.saveDataSafe(items);
+            }
+        }).start();
+
 
         sharedEvents.clear();
         sharedEvents.addAll(items);
     }
 
-    private void saveFavoriteEventsSafe(ArrayList<SharedEvents> items) {
-        L.e("saveFavoriteEventsSafe = " + items);
+    private void saveFavoriteEventsSafe(final ArrayList<SharedEvents> items) {
         sharedEvents.addAll(items);
-        sharedEventsDao.saveDataSafe(items);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                sharedEventsDao.saveDataSafe(items);
+            }
+        }).start();
+
     }
 
     public SharedEventsDao getSharedEventsDao() {
@@ -216,7 +225,6 @@ public class SharedScheduleManager {
         for (SharedSchedule schedule : list) {
             namesList.add(schedule.getScheduleName());
         }
-        L.e("getSharedSchedulesNamesById = " + namesList.toString());
         return namesList;
     }
 
@@ -282,7 +290,7 @@ public class SharedScheduleManager {
     public boolean checkIfCodeIsExist(long code) {
         for (SharedSchedule item : schedules) {
             if (item.getId() == code) {
-                currentSchedule = item;
+                currentScheduleManager.setCurrentSchedule(item);
                 Toast.makeText(App.getContext(), "This schedule schedule already exist", Toast.LENGTH_LONG).show();
                 return true;
             }
@@ -375,6 +383,65 @@ public class SharedScheduleManager {
             public void onCancel(Object tag) {
             }
         }, false);
+
+    }
+
+    private class CurrentScheduleManager {
+        private SharedSchedule currentSchedule;
+        private List<SharedSchedule> schedulesTemp;
+        private SharedSchedule scheduleTemp;
+
+        public CurrentScheduleManager() {
+            this.currentSchedule = new SharedSchedule(MY_DEFAULT_SCHEDULE_CODE, App.getContext().getString(R.string.my_schedule));
+        }
+
+        public void setCurrentSchedule(int scheduleOrder) {
+            this.currentSchedule = schedules.get(scheduleOrder);
+        }
+
+        public void setCurrentSchedule(SharedSchedule currentSchedule) {
+            this.currentSchedule = currentSchedule;
+        }
+
+        private SharedSchedule getCurrentSchedule() {
+            return currentSchedule;
+        }
+
+        public long getCurrentScheduleId() {
+            return currentSchedule.getId();
+        }
+
+        public String getCurrentFriendScheduleName() {
+            return getCurrentSchedule().getScheduleName();
+        }
+
+        public int getItemPosition() {
+            return schedules.indexOf(currentSchedule);
+        }
+
+        public void deleteSharedScheduleFromCache() {
+            schedulesTemp = new ArrayList<>(schedules);
+            scheduleTemp = currentSchedule;
+            schedules.remove(currentSchedule);
+            currentSchedule = schedules.get(0);
+
+        }
+
+        public void restoreSchedule() {
+            schedules = schedulesTemp;
+            currentSchedule = scheduleTemp;
+        }
+
+        public void deleteSharedSchedule() {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    sharedScheduleDao.deleteDataSafe(scheduleTemp.getId());
+                    sharedEventsDao.deleteDataSafe(scheduleTemp.getId());
+                }
+            }).start();
+
+        }
 
     }
 

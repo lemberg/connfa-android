@@ -232,7 +232,7 @@ public class SpeakerDetailsActivity extends StackKeeperActivity implements View.
         new AsyncTask<Void, Void, List<SpeakerDetailsEvent>>() {
             @Override
             protected List<SpeakerDetailsEvent> doInBackground(Void... params) {
-                EventDao eventDao = new EventDao(App.getContext());
+                EventDao eventDao = Model.instance().getEventManager().getEventDao();
                 return eventDao.getEventsBySpeakerId(speaker.getId());
             }
 

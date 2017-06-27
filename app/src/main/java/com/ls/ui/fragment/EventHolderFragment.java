@@ -209,7 +209,6 @@ public class EventHolderFragment extends Fragment {
         initView();
         new LoadData().execute();
         final long sharedScheduleCode = getArguments().getLong(SHARED_SCHEDULE_CODE_EXTRAS);
-        L.e("New schedule code = " + sharedScheduleCode);
         if (sharedScheduleCode > 0) {
             if (Model.instance().getSharedScheduleManager().checkIfCodeIsExist(sharedScheduleCode)) {
                 refreshSpinner();

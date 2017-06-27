@@ -260,8 +260,6 @@ public class HomeActivity extends StateActivity implements FilterDialog.OnFilter
                 mAdapter.notifyDataSetChanged();
 
                 AnalyticsManager.drawerFragmentTracker(this, mPresentTitle);
-                L.e("changeFragment, mPresentTitle = " + getString(mPresentTitle));
-                L.e("changeFragment, mSelectedItem = " + mSelectedItem);
             }
         }
     }
@@ -296,7 +294,6 @@ public class HomeActivity extends StateActivity implements FilterDialog.OnFilter
         }
         AnalyticsManager.drawerFragmentTracker(this, drawerMenuItem.getName());
         mPresentTitle = drawerMenuItem.getName();
-        L.e("setDefaultFragment mPresentTitle = " + getString(mPresentTitle));
         setToolBarTitle(mPresentTitle);
     }
 
