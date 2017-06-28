@@ -43,6 +43,7 @@ public class AddScheduleDialog extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         ViewGroup contentView = (ViewGroup) LayoutInflater.from(getActivity()).inflate(R.layout.dialog_add_shedule, null);
+
         final EditText editTextId = (EditText) contentView.findViewById(R.id.uniqueCode);
 
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());

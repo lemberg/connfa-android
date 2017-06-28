@@ -67,7 +67,6 @@ public class CreateScheduleDialog extends DialogFragment {
 
         ViewGroup contentView = (ViewGroup) LayoutInflater.from(getActivity()).inflate(R.layout.dialog_shedule_name, null);
         final EditText editTextId = (EditText) contentView.findViewById(R.id.scheduleName);
-
         editTextId.setText(getScheduleName());
 
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
@@ -82,7 +81,6 @@ public class CreateScheduleDialog extends DialogFragment {
         });
         final AlertDialog dialog = alertDialogBuilder.create();
         dialog.show();
-
         dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.favorite));
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.favorite));
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {

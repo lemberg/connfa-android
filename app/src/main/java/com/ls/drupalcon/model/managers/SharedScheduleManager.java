@@ -421,6 +421,7 @@ public class SharedScheduleManager {
             scheduleTemp = currentSchedule;
             schedules.remove(currentSchedule);
             currentSchedule = schedules.get(0);
+            L.e("currentSchedule = " + currentSchedule);
 
         }
 

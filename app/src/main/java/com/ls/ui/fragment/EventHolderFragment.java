@@ -576,16 +576,15 @@ public class EventHolderFragment extends Fragment {
         if (allSchedulesNameList.size() == 1) {
             disableCustomToolBar();
             setToolbarTitle();
-            //todo check this: setSpinnerPosition
-            setSpinnerPosition(0);
             strategy = new FavoritesStrategy();
+            refreshContent();
         } else {
             setCustomToolBar();
             spinnerAdapter.clear();
             spinnerAdapter.addAll(allSchedulesNameList);
-            setSpinnerPosition(Model.instance().getSharedScheduleManager().getItemPosition());
             strategy = new FriendFavoritesStrategy();
         }
+        setSpinnerPosition(Model.instance().getSharedScheduleManager().getItemPosition());
         getActivity().invalidateOptionsMenu();
     }
 
