@@ -1,7 +1,7 @@
 package com.ls.drupalcon.model.managers;
 
+import android.net.Uri;
 import android.os.AsyncTask;
-import android.view.View;
 import android.widget.Toast;
 
 import com.ls.drupal.DrupalClient;
@@ -27,8 +27,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class SharedScheduleManager {
     public static final long MY_DEFAULT_SCHEDULE_CODE = -1;
@@ -36,7 +34,6 @@ public class SharedScheduleManager {
     private SharedScheduleDao sharedScheduleDao;
     private SharedEventsDao sharedEventsDao;
     private EventDao mEventDao;
-
     private List<SharedEvents> sharedEvents = new ArrayList<>();
     private List<SharedSchedule> schedules = new ArrayList<>();
     private List<Long> favoriteEventsIds = new ArrayList<>();
@@ -254,18 +251,18 @@ public class SharedScheduleManager {
     public String getPath() {
         List<SharedSchedule> schedules = Model.instance().getSharedScheduleManager().getSchedules();
 
-        StringBuilder url = new StringBuilder();
-        url.append("getSchedules?");
+        Uri.Builder builder = new Uri.Builder();
+        builder.appendPath("getSchedules");
+
         for (SharedSchedule schedule : schedules) {
             Long id = schedule.getId();
             if (id != MY_DEFAULT_SCHEDULE_CODE) {
-                url.append("&codes[]=");
-                url.append(schedule.getId());
+                builder.appendQueryParameter("codes[]=", schedule.getId().toString());
             }
         }
 
-        L.e("Get URL = " + url.toString());
-        return url.toString();
+        L.e("Get URL = " + builder.build().toString());
+        return builder.build().toString();
 
     }
 
