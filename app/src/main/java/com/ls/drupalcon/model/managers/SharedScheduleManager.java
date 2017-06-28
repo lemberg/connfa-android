@@ -288,7 +288,7 @@ public class SharedScheduleManager {
         for (SharedSchedule item : schedules) {
             if (item.getId() == code) {
                 currentScheduleManager.setCurrentSchedule(item);
-                Toast.makeText(App.getContext(), "This schedule schedule already exist", Toast.LENGTH_LONG).show();
+                Toast.makeText(App.getContext(), R.string.this_schedule_already_exist, Toast.LENGTH_LONG).show();
                 return true;
             }
         }
