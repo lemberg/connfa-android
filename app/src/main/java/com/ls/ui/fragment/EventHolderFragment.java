@@ -577,7 +577,7 @@ public class EventHolderFragment extends Fragment {
             disableCustomToolBar();
             setToolbarTitle();
             strategy = new FavoritesStrategy();
-            refreshContent();
+            new LoadData().execute();
         } else {
             setCustomToolBar();
             spinnerAdapter.clear();
