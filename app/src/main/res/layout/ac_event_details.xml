@@ -131,7 +131,9 @@
                     android:paddingRight="@dimen/padding"
                     android:paddingTop="@dimen/padding_small"
                     android:text="Speakers"
-                    android:textColor="@color/item_selection" />
+                    android:textColor="@color/item_selection"
+                    app:custom_font="@string/medium_font"
+                    />
 
                 <LinearLayout
                     android:id="@+id/holderSpeakers"
@@ -148,19 +150,20 @@
                 <LinearLayout
                     android:id="@+id/whoIsGoingButton"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="48dp"
                     android:orientation="horizontal"
-                    android:paddingBottom="@dimen/padding_small"
                     android:paddingLeft="@dimen/padding"
                     android:paddingRight="@dimen/padding"
-                    android:paddingTop="@dimen/padding_small">
+                    android:gravity="center_vertical"
+                    >
 
                     <com.ls.ui.view.FontTextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="Who is going?"
-                        android:textColor="@color/item_selection" />
+                        android:textColor="@color/item_selection"
+                        app:custom_font="@string/medium_font"/>
 
                     <ImageView
                         android:id="@+id/expandIndicator"
