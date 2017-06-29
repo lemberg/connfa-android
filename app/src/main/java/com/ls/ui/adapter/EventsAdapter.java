@@ -7,6 +7,7 @@ import com.ls.drupalcon.model.dao.SharedEventsDao;
 import com.ls.drupalcon.model.data.Event;
 import com.ls.drupalcon.model.data.SharedEvents;
 import com.ls.drupalcon.model.data.Level;
+import com.ls.drupalcon.model.data.SharedSchedule;
 import com.ls.drupalcon.model.data.Type;
 import com.ls.ui.adapter.item.BofsItem;
 import com.ls.ui.adapter.item.EventListItem;
@@ -239,6 +240,8 @@ public class EventsAdapter extends BaseAdapter {
         }
         if (mEventMode != EventMode.SharedSchedules) {
             SharedEventsDao sharedEventsDao = Model.instance().getSharedScheduleManager().getSharedEventsDao();
+            List<SharedEvents> allFriendsFavorite = Model.instance().getSharedScheduleManager().getAllFriendsFavorite();
+            L.e("SharedSchedules = " + allFriendsFavorite);
             List<SharedEvents> favoritesById = sharedEventsDao.getFavoritesById(event.getId());
             if (favoritesById.isEmpty()) {
                 holder.iconFriends.setVisibility(View.GONE);

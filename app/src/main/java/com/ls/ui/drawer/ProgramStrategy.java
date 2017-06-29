@@ -35,7 +35,7 @@ public class ProgramStrategy implements EventHolderFragmentStrategy {
 
     @Override
     public boolean update(List<UpdateRequest> requests) {
-        return requests.contains(request);
+        return requests.contains(request) || requests.contains(UpdateRequest.SCHEDULES);
     }
 
     @Override

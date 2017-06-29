@@ -158,7 +158,7 @@ public class SharedScheduleManager {
     }
 
 
-    private List<SharedEvents> getAllFriendsFavorite() {
+    public List<SharedEvents> getAllFriendsFavorite() {
         return sharedEvents;
     }
 
