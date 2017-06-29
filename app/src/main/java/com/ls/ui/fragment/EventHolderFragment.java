@@ -213,7 +213,12 @@ public class EventHolderFragment extends Fragment {
             if (Model.instance().getSharedScheduleManager().checkIfCodeIsExist(sharedScheduleCode)) {
                 refreshSpinner();
             } else {
-                fetchSharedEventsByCode(sharedScheduleCode, "Schedule " + sharedScheduleCode);
+                if (NetworkUtils.isOn(getContext())) {
+                    fetchSharedEventsByCode(sharedScheduleCode, "Schedule " + sharedScheduleCode);
+                } else {
+                    ToastManager.messageSync(getContext(), getString(R.string.NoConnectionMessage));
+                }
+
             }
         }
 
