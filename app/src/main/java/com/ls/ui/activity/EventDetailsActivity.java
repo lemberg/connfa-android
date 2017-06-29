@@ -339,10 +339,10 @@ public class EventDetailsActivity extends StackKeeperActivity {
                 public void onClick(View v) {
                     if (holder.isShown()) {
                         holder.setVisibility(View.GONE);
-                        indicator.setImageResource(R.drawable.ic_expand_more_black_24dp);
+                        indicator.setImageResource(R.drawable.ic_group_arrow_down);
                     } else {
                         holder.setVisibility(View.VISIBLE);
-                        indicator.setImageResource(R.drawable.ic_expand_less_black_24dp);
+                        indicator.setImageResource(R.drawable.ic_group_arrow_up);
                     }
 
                 }
