@@ -169,7 +169,6 @@ public class SharedScheduleManager {
             if (favorite.getSharedScheduleCode() == (Model.instance().getSharedScheduleManager().getCurrentScheduleId()))
                 favoriteEventIds.add(favorite.getEventId());
         }
-        L.e("getFriendsFavoriteEventIds = " + favoriteEventIds);
         return favoriteEventIds;
     }
 
@@ -212,6 +211,10 @@ public class SharedScheduleManager {
         return sharedEventsDao;
     }
 
+    public SharedScheduleDao getSharedScheduleDao() {
+        return sharedScheduleDao;
+    }
+
     private List<SharedSchedule> getSharedSchedulesById(long eventId) {
         return sharedScheduleDao.getScheduleNameId(eventId);
     }
@@ -223,6 +226,15 @@ public class SharedScheduleManager {
             namesList.add(schedule.getScheduleName());
         }
         return namesList;
+    }
+
+    public boolean checkIfFriendIsGoing(long eventId) {
+        for (SharedEvents events : sharedEvents) {
+            if (events.getEventId() == eventId) {
+                return true;
+            }
+        }
+        return false;
     }
 
 
@@ -277,7 +289,8 @@ public class SharedScheduleManager {
     public boolean checkIfNameIsExist(String name) {
         for (SharedSchedule item : schedules) {
             if (item.getScheduleName().equals(name)) {
-                Toast.makeText(App.getContext(), "This schedule name already exist", Toast.LENGTH_LONG).show();
+                ToastManager.messageSync(App.getContext(), App.getContext().getString(R.string.this_schedule_name_already_exist));
+//                Toast.makeText(App.getContext(), R.string.this_schedule_name_already_exist, Toast.LENGTH_LONG).show();
                 return true;
             }
         }
@@ -420,8 +433,11 @@ public class SharedScheduleManager {
             schedulesTemp = new ArrayList<>(schedules);
             scheduleTemp = currentSchedule;
             schedules.remove(currentSchedule);
+//            sharedEvents.remove(currentSchedule.getId());
+            removeSharedEvents();
             currentSchedule = schedules.get(0);
             L.e("currentSchedule = " + currentSchedule);
+
 
         }
 
@@ -441,6 +457,16 @@ public class SharedScheduleManager {
 
         }
 
+
+        private void removeSharedEvents() {
+            for (SharedEvents events : sharedEvents) {
+                if (events.getId() == currentSchedule.getId()){
+                    sharedEvents.remove(events);
+                }
+            }
+            L.e("removeSharedEvents = " + sharedEvents.toString());
+        }
     }
+
 
 }

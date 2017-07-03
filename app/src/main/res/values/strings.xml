@@ -68,4 +68,5 @@
     <string name="schedule_name">Schedule name</string>
     <string name="you_may_get_this_code_from_a_person_who_has_already_shared_his_her_own_schedule_with_you">You may get this code from a person who has already shared his/her own schedule with you.</string>
     <string name="this_schedule_already_exist">This schedule already exist</string>
+    <string name="this_schedule_name_already_exist">This schedule name already exist</string>
 </resources>
