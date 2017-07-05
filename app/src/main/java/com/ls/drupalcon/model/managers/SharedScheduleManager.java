@@ -166,7 +166,7 @@ public class SharedScheduleManager {
 
         ArrayList<Long> favoriteEventIds = new ArrayList<>();
         for (SharedEvents favorite : getAllFriendsFavorite()) {
-            if (favorite.getSharedScheduleCode() == (Model.instance().getSharedScheduleManager().getCurrentScheduleId()))
+            if (favorite.getId() == (Model.instance().getSharedScheduleManager().getCurrentScheduleId()))
                 favoriteEventIds.add(favorite.getEventId());
         }
         return favoriteEventIds;
@@ -460,7 +460,7 @@ public class SharedScheduleManager {
         private void removeSharedEvents() {
             List<SharedEvents> removeList = new ArrayList<>();
             for (SharedEvents events : sharedEvents) {
-                if (events.getSharedScheduleCode() == scheduleTemp.getId()){
+                if (events.getId() == scheduleTemp.getId()){
                     removeList.add(events);
                 }
             }

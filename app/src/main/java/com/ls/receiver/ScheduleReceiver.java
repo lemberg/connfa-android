@@ -12,12 +12,9 @@ public class ScheduleReceiver extends WakefulBroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        L.e("ScheduleReceiver");
         Uri data = intent.getData();
         if (data != null && data.isHierarchical()) {
             String uri = intent.getDataString();
-            com.ls.util.L.e("ScheduleReceiver Deep link clicked " + uri);
-
             throw new UnsupportedOperationException("Not yet implemented");
         }
     }

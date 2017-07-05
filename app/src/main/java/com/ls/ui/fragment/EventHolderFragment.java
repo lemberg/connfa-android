@@ -610,9 +610,6 @@ public class EventHolderFragment extends Fragment {
     }
 
     private void refreshContent() {
-        L.e("Shared Events DAO 1= " + Model.instance().getSharedScheduleManager().getSharedEventsDao().getAllSafe());
-        L.e("Schedule DAO 2 = " + Model.instance().getSharedScheduleManager().getSharedScheduleDao().getAllSafe());
-        L.e("SharedEvents cache  = " + Model.instance().getSharedScheduleManager().getAllFriendsFavorite());
         if (NetworkUtils.isOn(getContext())) {
             mProgressBar.setVisibility(View.VISIBLE);
             UpdatesManager manager = Model.instance().getUpdatesManager();

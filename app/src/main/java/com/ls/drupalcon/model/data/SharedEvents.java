@@ -65,10 +65,6 @@ public class SharedEvents extends AbstractEntity<Long> implements Comparable<Sha
         this.eventId = eventId;
     }
 
-    public long getSharedScheduleCode() {
-        return sharedScheduleCode;
-    }
-
     public void setSharedScheduleCode(long sharedScheduleCode) {
         this.sharedScheduleCode = sharedScheduleCode;
     }
