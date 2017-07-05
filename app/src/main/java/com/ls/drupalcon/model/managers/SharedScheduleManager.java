@@ -433,10 +433,7 @@ public class SharedScheduleManager {
             schedulesTemp = new ArrayList<>(schedules);
             scheduleTemp = currentSchedule;
             schedules.remove(currentSchedule);
-//            sharedEvents.remove(currentSchedule.getId());
-            removeSharedEvents();
             currentSchedule = schedules.get(0);
-            L.e("currentSchedule = " + currentSchedule);
 
 
         }
@@ -447,11 +444,13 @@ public class SharedScheduleManager {
         }
 
         public void deleteSharedSchedule() {
+            removeSharedEvents();
             new Thread(new Runnable() {
                 @Override
                 public void run() {
                     sharedScheduleDao.deleteDataSafe(scheduleTemp.getId());
                     sharedEventsDao.deleteDataSafe(scheduleTemp.getId());
+
                 }
             }).start();
 
@@ -459,11 +458,13 @@ public class SharedScheduleManager {
 
 
         private void removeSharedEvents() {
+            List<SharedEvents> removeList = new ArrayList<>();
             for (SharedEvents events : sharedEvents) {
-                if (events.getId() == currentSchedule.getId()){
-                    sharedEvents.remove(events);
+                if (events.getSharedScheduleCode() == scheduleTemp.getId()){
+                    removeList.add(events);
                 }
             }
+            sharedEvents.removeAll(removeList);
             L.e("removeSharedEvents = " + sharedEvents.toString());
         }
     }

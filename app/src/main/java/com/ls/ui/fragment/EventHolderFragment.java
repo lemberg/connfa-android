@@ -81,6 +81,7 @@ public class EventHolderFragment extends Fragment {
     private Spinner navigationSpinner;
     private SharedScheduleManager scheduleManager = Model.instance().getSharedScheduleManager();
     private ProgressBar mProgressBar;
+    private boolean undoWasClicked;
 
     private UpdatesManager.DataUpdatedListener updateReceiver = new UpdatesManager.DataUpdatedListener() {
         @Override
@@ -550,13 +551,15 @@ public class EventHolderFragment extends Fragment {
     }
 
     private void undo(String message) {
-        Snackbar snack = Snackbar.make(getView(), message, Snackbar.LENGTH_LONG);
+        final Snackbar snack = Snackbar.make(getView(), message, Snackbar.LENGTH_LONG);
         snack.setAction(R.string.undo, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 SharedScheduleManager manager = Model.instance().getSharedScheduleManager();
                 manager.restoreSchedule();
                 refreshSpinner();
+                undoWasClicked = true;
+
             }
         });
 
@@ -567,7 +570,12 @@ public class EventHolderFragment extends Fragment {
 
             @Override
             public void onViewDetachedFromWindow(View v) {
-                Model.instance().getSharedScheduleManager().deleteSharedSchedule();
+                if (!undoWasClicked) {
+                    Model.instance().getSharedScheduleManager().deleteSharedSchedule();
+                    refreshContent();
+                }
+                undoWasClicked = false;
+
             }
         });
         snack.setActionTextColor(Color.parseColor("#65B6AA"));
@@ -602,8 +610,9 @@ public class EventHolderFragment extends Fragment {
     }
 
     private void refreshContent() {
-        L.e("Test DAO 1= " + Model.instance().getSharedScheduleManager().getSharedEventsDao().getAllSafe());
-        L.e("Test DAO 2 = " + Model.instance().getSharedScheduleManager().getSharedScheduleDao().getAllSafe());
+        L.e("Shared Events DAO 1= " + Model.instance().getSharedScheduleManager().getSharedEventsDao().getAllSafe());
+        L.e("Schedule DAO 2 = " + Model.instance().getSharedScheduleManager().getSharedScheduleDao().getAllSafe());
+        L.e("SharedEvents cache  = " + Model.instance().getSharedScheduleManager().getAllFriendsFavorite());
         if (NetworkUtils.isOn(getContext())) {
             mProgressBar.setVisibility(View.VISIBLE);
             UpdatesManager manager = Model.instance().getUpdatesManager();
