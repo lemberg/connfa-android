@@ -6,6 +6,7 @@ import com.ls.drupalcon.model.PreferencesManager;
 import com.ls.drupalcon.model.UpdateCallback;
 import com.ls.drupalcon.model.UpdatesManager;
 import com.ls.drupalcon.model.managers.SharedScheduleManager;
+import com.ls.drupalcon.model.managers.ToastManager;
 import com.ls.ui.dialog.NoConnectionDialog;
 import com.ls.util.L;
 import com.ls.utils.NetworkUtils;
@@ -103,6 +104,7 @@ public class SplashActivity extends AppCompatActivity {
             Uri uri = Uri.parse(uriString);
             String codeString = uri.getQueryParameter("code");
             if(TextUtils.isEmpty(codeString)){
+                ToastManager.message(this, getString(R.string.url_is_corrupted));
                 HomeActivity.startThisActivity(this, SharedScheduleManager.MY_DEFAULT_SCHEDULE_CODE);
             }else {
                 Long code = Long.valueOf(codeString);
