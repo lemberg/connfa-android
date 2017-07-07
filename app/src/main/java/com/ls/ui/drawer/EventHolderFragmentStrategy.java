@@ -12,11 +12,11 @@ public interface EventHolderFragmentStrategy {
 
     int getImageResId();
 
-    boolean enableOptionMenu();
-
     boolean updateFavorites();
 
     boolean update(List<UpdateRequest> requests);
 
     EventMode getEventMode();
+
+    boolean isMySchedule();
 }

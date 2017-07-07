@@ -7,6 +7,7 @@ import com.ls.drupalcon.model.UpdateRequest;
 import com.ls.drupalcon.model.UpdatesManager;
 import com.ls.drupalcon.model.data.Level;
 import com.ls.drupalcon.model.data.Track;
+import com.ls.drupalcon.model.managers.SharedScheduleManager;
 import com.ls.drupalcon.model.managers.TracksManager;
 import com.ls.ui.adapter.item.EventListItem;
 import com.ls.ui.dialog.FilterDialog;
@@ -27,6 +28,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -38,14 +40,13 @@ import java.util.Comparator;
 import java.util.List;
 
 public class HomeActivity extends StateActivity implements FilterDialog.OnFilterApplied {
-
+    private static final String NAVIGATE_TO_SCHEDULE_EXTRA_KEY = "navigate_to_schedule_extra_key";
     private DrawerManager mFrManager;
     private DrawerAdapter mAdapter;
     private int mPresentTitle;
     private int mSelectedItem = 0;
     private boolean isIntentHandled = false;
 
-    private Toolbar mToolbar;
     private DrawerLayout mDrawerLayout;
 
     public FilterDialog mFilterDialog;
@@ -53,13 +54,16 @@ public class HomeActivity extends StateActivity implements FilterDialog.OnFilter
 
     private UpdatesManager.DataUpdatedListener updateReceiver = new UpdatesManager.DataUpdatedListener() {
         @Override
-        public void onDataUpdated( List<UpdateRequest> requests) {
+        public void onDataUpdated(List<UpdateRequest> requests) {
             initFilterDialog();
         }
     };
 
-    public static void startThisActivity(Activity activity) {
+    public static void startThisActivity(Activity activity, long scheduleCode) {
         Intent intent = new Intent(activity, HomeActivity.class);
+        intent.putExtra(NAVIGATE_TO_SCHEDULE_EXTRA_KEY, scheduleCode);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         activity.startActivity(intent);
     }
 
@@ -69,12 +73,14 @@ public class HomeActivity extends StateActivity implements FilterDialog.OnFilter
         setContentView(R.layout.ac_main);
         Model.instance().getUpdatesManager().registerUpdateListener(updateReceiver);
 
+        long code = getIntent().getLongExtra(NAVIGATE_TO_SCHEDULE_EXTRA_KEY, SharedScheduleManager.MY_DEFAULT_SCHEDULE_CODE);
+        L.e("Navigate code = " + code);
         initToolbar();
-        initNavigationDrawer();
+
         initNavigationDrawerList();
         initFilterDialog();
 
-        initFragmentManager();
+        initFragmentManager(code);
         if (getIntent().getExtras() != null) {
             isIntentHandled = true;
         }
@@ -102,15 +108,14 @@ public class HomeActivity extends StateActivity implements FilterDialog.OnFilter
     }
 
     private void initToolbar() {
-        mPresentTitle = DrawerMenu.getNavigationDrawerItems().get(0).getName();
-        mToolbar = (Toolbar) findViewById(R.id.toolBar);
-        mToolbar.setTitle(mPresentTitle);
-        setSupportActionBar(mToolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolBar);
+        setSupportActionBar(toolbar);
+        initNavigationDrawer(toolbar);
     }
 
-    private void initNavigationDrawer() {
+    private void initNavigationDrawer(Toolbar toolbar) {
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
-        ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar, R.string.app_name, R.string.app_name);
+        ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.app_name, R.string.app_name);
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
         mDrawerLayout.closeDrawers();
         mDrawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
@@ -215,9 +220,12 @@ public class HomeActivity extends StateActivity implements FilterDialog.OnFilter
         if (intent.getExtras() != null) {
             long eventId = intent.getLongExtra(EventDetailsActivity.EXTRA_EVENT_ID, -1);
             long day = intent.getLongExtra(EventDetailsActivity.EXTRA_DAY, -1);
-            redirectToDetails(eventId, day);
-            isIntentHandled = false;
-            new ScheduleManager(this).cancelAlarm(eventId);
+            if (eventId != -1 && day != -1) {
+                redirectToDetails(eventId, day);
+                isIntentHandled = false;
+                new ScheduleManager(this).cancelAlarm(eventId);
+            }
+
         }
     }
 
@@ -243,9 +251,10 @@ public class HomeActivity extends StateActivity implements FilterDialog.OnFilter
 
         {
             if (mFrManager != null) {
-                mFrManager.setFragment(DrawerMenu.getNavigationDrawerItems().get(mSelectedItem).getEventMode());
+                mFrManager.setFragment(DrawerMenu.getNavigationDrawerItems().get(mSelectedItem).getEventMode(), SharedScheduleManager.MY_DEFAULT_SCHEDULE_CODE);
                 mPresentTitle = DrawerMenu.getNavigationDrawerItems().get(mSelectedItem).getName();
-                mToolbar.setTitle(mPresentTitle);
+
+                setToolBarTitle(mPresentTitle);
 
                 mAdapter.setSelectedPos(mSelectedItem);
                 mAdapter.notifyDataSetChanged();
@@ -255,10 +264,10 @@ public class HomeActivity extends StateActivity implements FilterDialog.OnFilter
         }
     }
 
-    private void initFragmentManager() {
+    private void initFragmentManager(long code) {
         mFrManager = DrawerManager.getInstance(getSupportFragmentManager(), R.id.mainFragment);
-        AnalyticsManager.drawerFragmentTracker(this, mPresentTitle = DrawerMenu.getNavigationDrawerItems().get(0).getName());
-        mFrManager.setFragment(DrawerMenu.getNavigationDrawerItems().get(0).getEventMode());
+
+        setDefaultFragment(code);
     }
 
     private void showIrrelevantTimezoneDialogIfNeeded() {
@@ -270,4 +279,30 @@ public class HomeActivity extends StateActivity implements FilterDialog.OnFilter
             ft.commitAllowingStateLoss();
         }
     }
+
+    private void setDefaultFragment(long code) {
+        DrawerMenuItem drawerMenuItem;
+        if (code == SharedScheduleManager.MY_DEFAULT_SCHEDULE_CODE) {
+            drawerMenuItem = DrawerMenu.getNavigationDrawerItems().get(mSelectedItem);
+            mFrManager.setFragment(drawerMenuItem.getEventMode(), SharedScheduleManager.MY_DEFAULT_SCHEDULE_CODE);
+        } else {
+            mSelectedItem = DrawerMenu.MY_SCHEDULE_POSITION;
+            drawerMenuItem = DrawerMenu.getMyScheduleDrawerMenuItem();
+            mAdapter.setSelectedPos(mSelectedItem);
+            mFrManager.setFragment(drawerMenuItem.getEventMode(), code);
+            AnalyticsManager.drawerFragmentTracker(this, drawerMenuItem.getName());
+        }
+        AnalyticsManager.drawerFragmentTracker(this, drawerMenuItem.getName());
+        mPresentTitle = drawerMenuItem.getName();
+        setToolBarTitle(mPresentTitle);
+    }
+
+    private void setToolBarTitle(int title){
+        ActionBar supportActionBar = getSupportActionBar();
+        if (supportActionBar != null) {
+            supportActionBar.setTitle(title);
+        }
+    }
+
+
 }

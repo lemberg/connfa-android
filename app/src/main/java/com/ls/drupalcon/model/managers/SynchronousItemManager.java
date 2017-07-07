@@ -3,6 +3,7 @@ package com.ls.drupalcon.model.managers;
 import com.ls.drupal.AbstractBaseDrupalEntity;
 import com.ls.drupal.DrupalClient;
 import com.ls.http.base.ResponseData;
+import com.ls.utils.L;
 
 public abstract class SynchronousItemManager<FetchRequestResponseToManage ,ParametersClass,TagClass> {
     private DrupalClient client;
@@ -21,8 +22,8 @@ public abstract class SynchronousItemManager<FetchRequestResponseToManage ,Param
         AbstractBaseDrupalEntity request = getEntityToFetch(this.client, requestParams);
         TagClass tag = getEntityRequestTag(requestParams);
         ResponseData response = request.pullFromServer(true, tag, null);
-
         int statusCode = response.getStatusCode();
+        L.e("Response code = " + statusCode);
         if (statusCode > 0 && statusCode < 400) {
 
             FetchRequestResponseToManage responseObj = (FetchRequestResponseToManage)response.getData();

@@ -34,7 +34,6 @@ public class App extends MultiDexApplication {
         mContext = getApplicationContext();
 
         LAPIDBRegister.getInstance().register(mContext, new AppDatabaseInfo(mContext));
-        PreferencesManager.initializeInstance(mContext);
         Model.instance(mContext);
         DrupalImageView.setupSharedClient(new DrupalClient(null, Model.instance().createNewQueue(getApplicationContext()), BaseRequest.RequestFormat.JSON, null));
         Fabric.with(this, new Crashlytics(), new Twitter(authConfig));

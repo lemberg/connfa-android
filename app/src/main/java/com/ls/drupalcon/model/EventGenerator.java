@@ -6,7 +6,6 @@ import com.ls.drupalcon.model.data.TimeRange;
 import com.ls.drupalcon.model.data.Track;
 import com.ls.drupalcon.model.managers.BofsManager;
 import com.ls.drupalcon.model.managers.EventManager;
-import com.ls.drupalcon.model.managers.FavoriteManager;
 import com.ls.drupalcon.model.managers.ProgramManager;
 import com.ls.drupalcon.model.managers.SocialManager;
 import com.ls.drupalcon.model.managers.SpeakerManager;
@@ -15,7 +14,6 @@ import com.ls.ui.adapter.item.EventItemCreator;
 import com.ls.ui.adapter.item.EventListItem;
 import com.ls.ui.adapter.item.ProgramItem;
 import com.ls.ui.adapter.item.TimeRangeItem;
-import com.ls.utils.L;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -25,8 +23,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
 
 public class EventGenerator {
 
@@ -94,9 +90,18 @@ public class EventGenerator {
     }
 
     public List<EventListItem> generateForFavorites(long day, @NotNull EventItemCreator eventItemCreator) {
+        List<Long> favoriteEventIds = Model.instance().getSharedScheduleManager().getMyFavoriteEventIds();
+        List<EventListItem> eventListItems = mProgramManager.getFavoriteProgramItemsSafe(favoriteEventIds, day);
+        if (mShouldBreak) {
+            return new ArrayList<>();
+        }
 
-        FavoriteManager favoriteManager = new FavoriteManager();
-        List<Long> favoriteEventIds = favoriteManager.getFavoriteEventsSafe();
+        return sortFavorites(favoriteEventIds, eventListItems, day, eventItemCreator);
+    }
+
+    public List<EventListItem> generateForFriendsFavorites(long day, @NotNull EventItemCreator eventItemCreator) {
+
+        List<Long> favoriteEventIds = Model.instance().getSharedScheduleManager().getFriendsFavoriteEventIds();
 
         List<EventListItem> eventListItems = mProgramManager.getFavoriteProgramItemsSafe(favoriteEventIds, day);
         if (mShouldBreak) {
@@ -127,21 +132,17 @@ public class EventGenerator {
                 socials.add(eventListItem);
             }
         }
-//        List<TimeRange> ranges = new ArrayList<>();
         if (!schedules.isEmpty()) {
-//            ranges.addAll(mEventManager.getDistrictFavoriteTimeRangeSafe(Event.PROGRAM_CLASS, favoriteEventIds, day));
             List<TimeRange> ranges = mEventManager.getDistrictFavoriteTimeRangeSafe(Event.PROGRAM_CLASS, favoriteEventIds, day);
             schedules = getEventItems(eventItemCreator, schedules, ranges);
         }
 
         if (!bofs.isEmpty()) {
-//            addRange(mEventManager.getDistrictFavoriteTimeRangeSafe(Event.SOCIALS_CLASS, favoriteEventIds, day), favoriteEventIds, day);
             List<TimeRange> ranges = mEventManager.getDistrictFavoriteTimeRangeSafe(Event.BOFS_CLASS, favoriteEventIds, day);
             bofs = getEventItems(eventItemCreator, bofs, ranges);
         }
 
         if (!socials.isEmpty()) {
-//            addRange(mEventManager.getDistrictFavoriteTimeRangeSafe(Event.SOCIALS_CLASS, favoriteEventIds, day), favoriteEventIds, day);
             List<TimeRange> ranges = mEventManager.getDistrictFavoriteTimeRangeSafe(Event.SOCIALS_CLASS, favoriteEventIds, day);
             socials = getEventItems(eventItemCreator, socials, ranges);
 
@@ -166,7 +167,6 @@ public class EventGenerator {
 
             }
         });
-//        return getEventItems(eventItemCreator, result, ranges);
         return result;
     }
 

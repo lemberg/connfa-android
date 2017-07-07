@@ -4,6 +4,7 @@ package com.ls.ui.adapter;
 import com.ls.ui.drawer.EventHolderFragmentStrategy;
 import com.ls.ui.fragment.EventFragment;
 import com.ls.utils.DateUtils;
+import com.ls.utils.L;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -12,7 +13,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BaseEventDaysPagerAdapter extends FragmentStatePagerAdapter {
+public class BaseEventDaysPagerAdapter extends FragmentStatePagerAdapter  {
 
     private EventHolderFragmentStrategy strategy;
 
@@ -26,8 +27,7 @@ public class BaseEventDaysPagerAdapter extends FragmentStatePagerAdapter {
     @Override
     public Fragment getItem(int position) {
         Long date = getDate(position);
-        Fragment fragment = EventFragment.newInstance(date, strategy.getEventMode());
-        return fragment;
+        return EventFragment.newInstance(date, strategy.getEventMode());
     }
 
     public void setData(List<Long> eventDays, EventHolderFragmentStrategy strategy) {

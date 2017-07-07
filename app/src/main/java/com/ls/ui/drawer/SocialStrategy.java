@@ -14,10 +14,8 @@ public class SocialStrategy implements EventHolderFragmentStrategy {
 
     @Override
     public List<Long> getDayList() {
-        List<Long> dayList = new ArrayList<>();
         SocialManager manager = Model.instance().getSocialManager();
-        dayList.addAll(manager.getSocialsDays());
-        return dayList;
+        return manager.getSocialsDays();
     }
 
     @Override
@@ -31,22 +29,22 @@ public class SocialStrategy implements EventHolderFragmentStrategy {
     }
 
     @Override
-    public boolean enableOptionMenu() {
-        return true;
-    }
-
-    @Override
     public boolean updateFavorites() {
         return false;
     }
 
     @Override
     public boolean update(List<UpdateRequest> requests) {
-        return requests.contains(request);
+        return requests.contains(request) || requests.contains(UpdateRequest.SCHEDULES);
     }
 
     @Override
     public EventMode getEventMode() {
         return EventMode.Social;
+    }
+
+    @Override
+    public boolean isMySchedule() {
+        return false;
     }
 }

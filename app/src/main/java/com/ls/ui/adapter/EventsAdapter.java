@@ -2,9 +2,11 @@ package com.ls.ui.adapter;
 
 import com.ls.drupalcon.R;
 import com.ls.drupalcon.app.App;
+import com.ls.drupalcon.model.Model;
 import com.ls.drupalcon.model.data.Event;
 import com.ls.drupalcon.model.data.Level;
 import com.ls.drupalcon.model.data.Type;
+import com.ls.drupalcon.model.managers.SharedScheduleManager;
 import com.ls.ui.adapter.item.BofsItem;
 import com.ls.ui.adapter.item.EventListItem;
 import com.ls.ui.adapter.item.ProgramItem;
@@ -13,6 +15,7 @@ import com.ls.ui.adapter.item.TimeRangeItem;
 import com.ls.ui.drawer.EventMode;
 import com.ls.ui.view.RoundedBackgroundSpan;
 import com.ls.utils.DateUtils;
+import com.ls.utils.L;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -123,7 +126,7 @@ public class EventsAdapter extends BaseAdapter {
         TimeRangeItem timeRange = (TimeRangeItem) getItem(position);
         Event event = timeRange.getEvent();
         fillDate(holder, event);
-        fillIcon(holder, event.getType());
+        fillIcon(holder, event);
         fillEventInfo(holder, event, timeRange.getTrack(), timeRange.getSpeakers());
         fillDivider(holder, timeRange.isFirst());
         fillFavorite(holder);
@@ -147,7 +150,7 @@ public class EventsAdapter extends BaseAdapter {
         BofsItem bofsItem = (BofsItem) getItem(position);
         Event event = bofsItem.getEvent();
 
-        fillIcon(holder, event.getType());
+        fillIcon(holder, event);
         fillEventInfo(holder, event, null, bofsItem.getSpeakers());
         fillEventClickAbility(holder.layoutRoot, holder.txtPlace, event, position);
         fillFavorite(holder);
@@ -174,7 +177,7 @@ public class EventsAdapter extends BaseAdapter {
         Event event = programItem.getEvent();
 
         fillEventInfo(holder, event, programItem.getTrack(), programItem.getSpeakers());
-        fillIcon(holder, event.getType());
+        fillIcon(holder, event);
         fillDivider(holder, !programItem.isLast());
         fillFavorite(holder);
         fillEventClickAbility(holder.layoutRoot, holder.txtPlace, event, position);
@@ -198,7 +201,7 @@ public class EventsAdapter extends BaseAdapter {
 
         SocialItem socialItem = (SocialItem) getItem(position);
         Event event = socialItem.getEvent();
-        fillIcon(holder, event.getType());
+        fillIcon(holder, event);
         fillEventInfo(holder, event, null, socialItem.getSpeakers());
         fillFavorite(holder);
         fillEventClickAbility(holder.layoutRoot, holder.txtPlace, event, position);
@@ -224,18 +227,27 @@ public class EventsAdapter extends BaseAdapter {
         holder.txtTo.setVisibility(View.VISIBLE);
     }
 
-    private void fillIcon(EventHolder holder, long type) {
+    private void fillIcon(EventHolder holder, Event event) {
+        long type = event.getType();
         if (Type.getIcon(type) != 0) {
             holder.icon.setVisibility(View.VISIBLE);
             holder.icon.setImageResource(Type.getIcon(type));
         } else {
             holder.icon.setVisibility(View.GONE);
         }
+        if (mEventMode != EventMode.SharedSchedules) {
+            SharedScheduleManager sharedScheduleManager = Model.instance().getSharedScheduleManager();
+            if (sharedScheduleManager.checkIfFriendIsGoing(event.getId())) {
+                holder.iconFriends.setVisibility(View.VISIBLE);
+            } else {
+                holder.iconFriends.setVisibility(View.GONE);
+            }
+        }
     }
 
     private void fillEventInfo(EventHolder holder, Event event, @Nullable String track, @Nullable List<String> speakerNameList) {
         setRoundedBackgroundSpan(event, holder);
-        if (event.isFavorite()) {
+        if (event.isFavorite() && mEventMode != EventMode.Favorites) {
             holder.txtTitle.setTextColor(mContext.getResources().getColor(R.color.link));
         } else {
             holder.txtTitle.setTextColor(mContext.getResources().getColor(R.color.black_100));
@@ -315,7 +327,7 @@ public class EventsAdapter extends BaseAdapter {
 
     private void setRoundedBackgroundSpan(Event event, EventHolder holder) {
         String eventName = event.getName();
-        if (mEventMode == EventMode.Favorites) {
+        if (mEventMode == EventMode.Favorites || mEventMode == EventMode.SharedSchedules) {
             String marker = null;
             if (event.getEventClass() == Event.PROGRAM_CLASS) {
                 marker = mContext.getString(R.string.Session);
@@ -358,6 +370,7 @@ public class EventsAdapter extends BaseAdapter {
         holder.txtSpeakers = (TextView) resultView.findViewById(R.id.txtSpeakers);
         holder.txtTrack = (TextView) resultView.findViewById(R.id.txtTrack);
         holder.txtPlace = (TextView) resultView.findViewById(R.id.txtPlace);
+        holder.iconFriends = (ImageView) resultView.findViewById(R.id.iconFriends);
         return holder;
     }
 
@@ -366,6 +379,7 @@ public class EventsAdapter extends BaseAdapter {
         LinearLayout layoutRoot;
         ImageView icon;
         ImageView expIcon;
+        ImageView iconFriends;
         View divider;
         View marginDivider;
         LinearLayout layoutTime;

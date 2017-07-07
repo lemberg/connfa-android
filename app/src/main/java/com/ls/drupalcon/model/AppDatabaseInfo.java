@@ -4,10 +4,12 @@ import com.ls.drupalcon.R;
 import com.ls.drupalcon.app.App;
 import com.ls.drupalcon.model.dao.EventDao;
 import com.ls.drupalcon.model.dao.FloorPlanDao;
+import com.ls.drupalcon.model.dao.SharedEventsDao;
 import com.ls.drupalcon.model.dao.InfoDao;
 import com.ls.drupalcon.model.dao.LevelDao;
 import com.ls.drupalcon.model.dao.LocationDao;
 import com.ls.drupalcon.model.dao.POIDao;
+import com.ls.drupalcon.model.dao.SharedScheduleDao;
 import com.ls.drupalcon.model.dao.SpeakerDao;
 import com.ls.drupalcon.model.dao.TrackDao;
 import com.ls.drupalcon.model.dao.TypeDao;
@@ -30,6 +32,7 @@ public class AppDatabaseInfo implements DBInfo, IMigrationTask {
 
     private static final String TABLE_EVENT_SPEAKER = "table_event_and_speaker";
     private static final String TABLE_FAVORITE_EVENTS = "table_favorite_events";
+    private static final String TABLE_FRIENDS_FAVORITE_EVENTS = "table_friends_favorite_events";
     private static final String DELETE_TABLE_IF_EXIST = "DROP TABLE IF EXISTS ";
 
     private Resources mResources;
@@ -56,7 +59,10 @@ public class AppDatabaseInfo implements DBInfo, IMigrationTask {
         dbTableNameList.add(InfoDao.TABLE_NAME);
         dbTableNameList.add(TABLE_EVENT_SPEAKER);
         dbTableNameList.add(TABLE_FAVORITE_EVENTS);
+        dbTableNameList.add(TABLE_FRIENDS_FAVORITE_EVENTS);
         dbTableNameList.add(FloorPlanDao.TABLE_NAME);
+        dbTableNameList.add(SharedEventsDao.TABLE_NAME);
+        dbTableNameList.add(SharedScheduleDao.TABLE_NAME);
         return dbTableNameList;
     }
 
@@ -112,6 +118,8 @@ public class AppDatabaseInfo implements DBInfo, IMigrationTask {
         addStringWithIdToList(dbSchemaQueryList, R.string.create_table_info);
         addStringWithIdToList(dbSchemaQueryList, R.string.create_table_poi);
         addStringWithIdToList(dbSchemaQueryList, R.string.create_table_floor_plans);
+        addStringWithIdToList(dbSchemaQueryList, R.string.create_table_friends_favorite_events);
+        addStringWithIdToList(dbSchemaQueryList, R.string.create_table_shared_schedules);
         return dbSchemaQueryList;
     }
 

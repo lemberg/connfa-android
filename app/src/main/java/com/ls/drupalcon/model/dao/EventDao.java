@@ -129,6 +129,14 @@ public class EventDao extends AbstractEntityDAO<Event, Long> {
         return querySafe(String.format(query, getArrayAsString(eventIds)), selectionArgs);
     }
 
+    public List<Event> selectFriendsFavoritesSafe() {
+        String[] selectionArgs = ArrayUtils.build(Event.BOFS_CLASS);
+        String query = mContext.getString(R.string.select_events_by_class);
+
+        return querySafe(query, selectionArgs);
+    }
+
+
     private String getArrayAsString(List<Long> eventIds) {
         StringBuilder builder = new StringBuilder();
 

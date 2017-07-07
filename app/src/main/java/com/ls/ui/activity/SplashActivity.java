@@ -5,11 +5,13 @@ import com.ls.drupalcon.model.Model;
 import com.ls.drupalcon.model.PreferencesManager;
 import com.ls.drupalcon.model.UpdateCallback;
 import com.ls.drupalcon.model.UpdatesManager;
+import com.ls.drupalcon.model.managers.SharedScheduleManager;
+import com.ls.drupalcon.model.managers.ToastManager;
 import com.ls.ui.dialog.NoConnectionDialog;
 import com.ls.util.L;
-import com.ls.utils.AnalyticsManager;
 import com.ls.utils.NetworkUtils;
 
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -26,6 +28,12 @@ public class SplashActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ac_splash);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Model.instance().getSharedScheduleManager().initialize();
+            }
+        }).run();
 
         mHandler = new Handler();
         mHandler.postDelayed(new Runnable() {
@@ -34,6 +42,8 @@ public class SplashActivity extends AppCompatActivity {
                 startSplash();
             }
         }, SPLASH_DURATION);
+
+
     }
 
     @Override
@@ -45,7 +55,6 @@ public class SplashActivity extends AppCompatActivity {
     private void startSplash() {
         String lastUpdate = PreferencesManager.getInstance().getLastUpdateDate();
         boolean isOnline = NetworkUtils.isOn(SplashActivity.this);
-
         if (isOnline) {
             checkForUpdates();
         } else if (TextUtils.isEmpty(lastUpdate)) {
@@ -89,7 +98,22 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     private void startMainActivity() {
-        HomeActivity.startThisActivity(this);
+        Uri data = this.getIntent().getData();
+        if (data != null && data.isHierarchical()) {
+            String uriString = this.getIntent().getDataString();
+            Uri uri = Uri.parse(uriString);
+            String codeString = uri.getQueryParameter("code");
+            if(TextUtils.isEmpty(codeString)){
+                ToastManager.message(this, getString(R.string.url_is_corrupted));
+                HomeActivity.startThisActivity(this, SharedScheduleManager.MY_DEFAULT_SCHEDULE_CODE);
+            }else {
+                Long code = Long.valueOf(codeString);
+                HomeActivity.startThisActivity(this, code);
+            }
+        } else {
+            HomeActivity.startThisActivity(this, SharedScheduleManager.MY_DEFAULT_SCHEDULE_CODE);
+        }
+
         finish();
     }
 

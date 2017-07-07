@@ -14,10 +14,8 @@ public class ProgramStrategy implements EventHolderFragmentStrategy {
 
     @Override
     public List<Long> getDayList() {
-        List<Long> dayList = new ArrayList<>();
         ProgramManager programManager = Model.instance().getProgramManager();
-        dayList.addAll(programManager.getProgramDays());
-        return dayList;
+        return programManager.getProgramDays();
     }
 
     @Override
@@ -31,22 +29,22 @@ public class ProgramStrategy implements EventHolderFragmentStrategy {
     }
 
     @Override
-    public boolean enableOptionMenu() {
-        return true;
-    }
-
-    @Override
     public boolean updateFavorites() {
         return false;
     }
 
     @Override
     public boolean update(List<UpdateRequest> requests) {
-        return requests.contains(request);
+        return requests.contains(request) || requests.contains(UpdateRequest.SCHEDULES);
     }
 
     @Override
     public EventMode getEventMode() {
         return EventMode.Program;
+    }
+
+    @Override
+    public boolean isMySchedule() {
+        return false;
     }
 }
