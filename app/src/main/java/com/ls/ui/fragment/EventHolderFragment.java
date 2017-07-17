@@ -399,8 +399,26 @@ public class EventHolderFragment extends Fragment {
         SharedScheduleManager sharedScheduleManager = Model.instance().getSharedScheduleManager();
         spinnerAdapter = new ArrayAdapter<>(getContext(), R.layout.item_spinner, sharedScheduleManager.getAllSchedulesNameList());
         spinnerAdapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item);
+
         navigationSpinner = new Spinner(getContext());
         navigationSpinner.setAdapter(spinnerAdapter);
+        navigationSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
+        {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
+            {
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent)
+            {
+
+            }
+        });
+//        navigationSpinner.setPopupBackgroundResource(R.drawable.selector_light);
+//        navigationSpinner.setBackgroundResource(R.drawable.selector_light);
+
+
         if (toolbar != null) {
             toolbar.setCustomView(navigationSpinner);
             toolbar.setDisplayShowCustomEnabled(true);
