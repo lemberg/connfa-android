@@ -66,5 +66,9 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:layout_gravity="center"
+        android:elevation="2dp"
+        android:background="@drawable/progressbar_bg"
+        style="@style/Widget.AppCompat.ProgressBar"
+        android:theme="@style/CircularProgress"
         android:visibility="gone"/>
 </RelativeLayout>
