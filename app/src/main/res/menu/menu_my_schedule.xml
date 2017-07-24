@@ -13,13 +13,13 @@
     <item
         android:id="@+id/actionAddSchedule"
         android:orderInCategory="100"
-        android:title="Add a schedule"
+        android:title="@string/add_a_schedule"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/actionShareMySchedule"
         android:orderInCategory="100"
-        android:title="Share My Schedule"
+        android:title="@string/share_my_schedule"
         app:showAsAction="never" />
 
 </menu>

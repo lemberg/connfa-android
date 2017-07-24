@@ -59,7 +59,8 @@
     <string name="Socials">\u202F\u202F\u202FSocials\u202F\u202F\u202F</string>
 
     <string name="share_your_schedule_with_friends">Share your schedule with friends</string>
-    <string name="tap_the_three_dots">Tap on the three dots and choose \'Share My Schedule\' option</string>
+    <string name="tap_the_three_dots">Tap on the three dots and choose \'Share My Schedule\' option\n</string>
+    <string name="warning_text">\nIt’s a beta version. \nWe’re looking forward to getting your feedback on this feature. Thanks in advance!</string>
     <string name="add_a_schedule">Add a schedule</string>
     <string name="add">Add</string>
     <string name="undo">Undo</string>
@@ -71,4 +72,5 @@
     <string name="this_schedule_already_exist">This schedule already exist</string>
     <string name="this_schedule_name_already_exist">This schedule name already exist</string>
     <string name="url_is_corrupted">Your share url is corrupted</string>
+    <string name="share_my_schedule">Share My Schedule\u202F</string>
 </resources>
