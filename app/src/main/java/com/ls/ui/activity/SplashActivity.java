@@ -11,6 +11,8 @@ import com.ls.ui.dialog.NoConnectionDialog;
 import com.ls.util.L;
 import com.ls.utils.NetworkUtils;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -23,6 +25,14 @@ public class SplashActivity extends AppCompatActivity {
 
     private static final int SPLASH_DURATION = 1500;
     private Handler mHandler;
+
+
+    public static void startThisActivity(Activity activity) {
+        Intent intent = new Intent(activity, SplashActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        activity.startActivity(intent);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
