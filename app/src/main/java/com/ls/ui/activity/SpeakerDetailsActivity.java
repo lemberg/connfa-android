@@ -347,6 +347,7 @@ public class SpeakerDetailsActivity extends StackKeeperActivity implements View.
     private void openBrowser(String url) {
         try {
             Intent getBrowser = new Intent(Intent.ACTION_VIEW);
+
             getBrowser.setData(Uri.parse("https://stackoverflow.com"));
 
             List<ResolveInfo> resolveInfoList = getPackageManager().queryIntentActivities(getBrowser, 0);
@@ -358,6 +359,8 @@ public class SpeakerDetailsActivity extends StackKeeperActivity implements View.
                 intent.setData(Uri.parse(url));
                 intent.setPackage(browserPackageName);
                 startActivity(intent);
+            }else {
+                Toast.makeText(this, getString(R.string.no_apps_can_perform_this_action), Toast.LENGTH_SHORT).show();
             }
         } catch (Exception e) {
             Toast.makeText(this, getString(R.string.no_apps_can_perform_this_action), Toast.LENGTH_SHORT).show();

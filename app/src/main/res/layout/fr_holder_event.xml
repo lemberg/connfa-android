@@ -62,9 +62,14 @@
 
     <ProgressBar
         android:id="@+id/progressBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:padding="@dimen/padding_small"
         android:layout_centerInParent="true"
         android:layout_gravity="center"
+        android:elevation="2dp"
+        android:background="@drawable/progressbar_bg"
+        style="@style/Widget.AppCompat.ProgressBar"
+        android:theme="@style/CircularProgress"
         android:visibility="gone"/>
 </RelativeLayout>

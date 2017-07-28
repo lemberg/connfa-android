@@ -26,6 +26,8 @@ import com.ls.utils.L;
 import com.ls.utils.NetworkUtils;
 
 import android.app.Activity;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -131,6 +133,7 @@ public class EventFragment extends Fragment implements EventsAdapter.Listener{
         if (getView() != null) {
             mProgressBar = (ProgressBar) getView().findViewById(R.id.progressBar);
 
+            mProgressBar.setIndeterminate(true);
             mAdapter = new EventsAdapter(getActivity());
             mAdapter.setOnItemClickListener(this);
 

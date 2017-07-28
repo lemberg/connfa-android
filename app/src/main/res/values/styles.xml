@@ -45,6 +45,9 @@
 
     <style name="Theme.DrupalCon.Home.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="CircularProgress" parent="Theme.AppCompat.Light">
+        <item name="colorAccent">@color/primary</item>
+    </style>
 
     <!--<style name="SpinnerItem" parent="@android:style/Widget.TextView.SpinnerItem">-->
     <!--<item name="android:textColor">#00FF00</item>-->

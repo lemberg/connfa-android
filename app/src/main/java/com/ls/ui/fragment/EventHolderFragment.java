@@ -26,7 +26,6 @@ import com.ls.ui.drawer.ProgramStrategy;
 import com.ls.ui.drawer.SocialStrategy;
 import com.ls.ui.receiver.ReceiverManager;
 import com.ls.utils.DateUtils;
-import com.ls.utils.L;
 import com.ls.utils.NetworkUtils;
 
 import org.jetbrains.annotations.NotNull;
@@ -43,6 +42,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -152,6 +153,7 @@ public class EventHolderFragment extends Fragment {
             if (strategy.isMySchedule()) {
                 showSearchPrompt();
                 menuInflater.inflate(R.menu.menu_my_schedule, menu);
+                updateMenuTitles(menu);
             } else {
                 menuInflater.inflate(R.menu.menu_added_schedule, menu);
             }
@@ -373,11 +375,13 @@ public class EventHolderFragment extends Fragment {
 
 
     public void showSearchPrompt() {
+
         if (!PreferencesManager.getInstance().getFirstRunFlag()) {
             PreferencesManager.getInstance().saveFirstRunFlag();
             new MaterialTapTargetPrompt.Builder(getActivity())
                     .setPrimaryText(R.string.share_your_schedule_with_friends)
-                    .setSecondaryText(R.string.tap_the_three_dots)
+                    .setSecondaryText(setAltitudeSpan())
+                    .setSecondaryTextSize(R.dimen.text_size_small)
                     .setAnimationInterpolator(new FastOutSlowInInterpolator())
                     .setMaxTextWidth(1000f)
                     .setIcon(R.drawable.ic_menu_more)
@@ -399,8 +403,23 @@ public class EventHolderFragment extends Fragment {
         SharedScheduleManager sharedScheduleManager = Model.instance().getSharedScheduleManager();
         spinnerAdapter = new ArrayAdapter<>(getContext(), R.layout.item_spinner, sharedScheduleManager.getAllSchedulesNameList());
         spinnerAdapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item);
+
         navigationSpinner = new Spinner(getContext());
         navigationSpinner.setAdapter(spinnerAdapter);
+        navigationSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+//        navigationSpinner.setPopupBackgroundResource(R.drawable.selector_light);
+//        navigationSpinner.setBackgroundResource(R.drawable.selector_light);
+
+
         if (toolbar != null) {
             toolbar.setCustomView(navigationSpinner);
             toolbar.setDisplayShowCustomEnabled(true);
@@ -637,6 +656,26 @@ public class EventHolderFragment extends Fragment {
                 mProgressBar.setVisibility(View.GONE);
             }
         });
+    }
+
+    private Spannable setAltitudeSpan() {
+        String messageText = getString(R.string.tap_the_three_dots);
+        String warningText = getString(R.string.warning_text);
+
+        Spannable span = new SpannableString(messageText + warningText);
+//        span.setSpan(new RelativeSizeSpan(0.8f), messageText.length(), messageText.length() + warningText.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        return span;
+    }
+
+    private void updateMenuTitles(Menu menu) {
+        MenuItem bedMenuItem = menu.findItem(R.id.actionShareMySchedule);
+        Long myScheduleCode = Model.instance().getSharedScheduleManager().getMyScheduleCode();
+        if (myScheduleCode != SharedScheduleManager.MY_DEFAULT_SCHEDULE_CODE) {
+            bedMenuItem.setTitle(getString(R.string.share_my_schedule) + myScheduleCode);
+        }else {
+            bedMenuItem.setEnabled(false);
+        }
     }
 
 

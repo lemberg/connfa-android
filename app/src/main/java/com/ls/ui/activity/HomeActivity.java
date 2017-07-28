@@ -70,6 +70,9 @@ public class HomeActivity extends StateActivity implements FilterDialog.OnFilter
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if(savedInstanceState != null){
+            SplashActivity.startThisActivity(this);
+        }
         setContentView(R.layout.ac_main);
         Model.instance().getUpdatesManager().registerUpdateListener(updateReceiver);
 

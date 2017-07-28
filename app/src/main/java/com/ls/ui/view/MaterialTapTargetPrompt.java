@@ -116,12 +116,12 @@ public class MaterialTapTargetPrompt
     /**
      * The primary text to display.
      */
-    String mPrimaryText;
+    CharSequence mPrimaryText;
 
     /**
      * The secondary text to display.
      */
-    String mSecondaryText;
+    CharSequence mSecondaryText;
 
     /**
      * The maximum width that the displayed text can be.
@@ -816,7 +816,7 @@ public class MaterialTapTargetPrompt
      * @param textAlignment Alignment for the resulting {@link StaticLayout}
      * @return the newly constructed {@link StaticLayout} object
      */
-    private StaticLayout createStaticTextLayout(final String text, final TextPaint paint,
+    private StaticLayout createStaticTextLayout(final CharSequence text, final TextPaint paint,
                                     final int maxTextWidth, final Layout.Alignment textAlignment)
     {
         final StaticLayout layout;
@@ -1153,7 +1153,7 @@ public class MaterialTapTargetPrompt
         /**
          * The text to display.
          */
-        private String mPrimaryText, mSecondaryText;
+        private CharSequence mPrimaryText, mSecondaryText;
         private int mPrimaryTextColour, mSecondaryTextColour, mBackgroundColour, mFocalColour;
 
         /**
@@ -1435,7 +1435,7 @@ public class MaterialTapTargetPrompt
          *
          * @return This Builder object to allow for chaining of calls to set methods
          */
-        public Builder setSecondaryText(final String text)
+        public Builder setSecondaryText(final CharSequence text)
         {
             mSecondaryText = text;
             return this;

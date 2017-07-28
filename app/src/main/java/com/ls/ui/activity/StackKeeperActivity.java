@@ -22,6 +22,10 @@ public class StackKeeperActivity extends StateActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (savedInstanceState != null) {
+            SplashActivity.startThisActivity(this);
+        }
         mReceiver = new StackKeeperReceiver();
 
         sendMessage(OPEN_STATE);
