@@ -55,7 +55,7 @@
                     android:textColor="@color/white"
                     android:textSize="@dimen/text_size_16"
                     android:textStyle="bold"
-                    app:custom_font="@string/montserrat_regular_font"
+                    app:custom_font="@string/custom_regular_font"
                     tools:text="@string/lorem_ipsum" />
 
                 <com.ls.ui.view.FontTextView
@@ -91,7 +91,7 @@
                         android:layout_marginBottom="4dp"
                         android:textColor="@color/grey_500"
                         android:textSize="@dimen/text_size_15"
-                        app:custom_font="@string/custom_regular_font"
+                        app:custom_font="@string/regular_font"
                         tools:text="@string/lorem_ipsum" />
 
                     <LinearLayout
