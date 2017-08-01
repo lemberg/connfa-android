@@ -53,7 +53,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/text_size_20"
+                    android:textSize="@dimen/text_size_16"
                     android:textStyle="bold"
                     app:custom_font="@string/custom_regular_font"
                     tools:text="@string/lorem_ipsum" />
