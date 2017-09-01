@@ -232,7 +232,7 @@ public class SpeakerDetailsActivity extends StackKeeperActivity implements View.
         new AsyncTask<Void, Void, List<SpeakerDetailsEvent>>() {
             @Override
             protected List<SpeakerDetailsEvent> doInBackground(Void... params) {
-                EventDao eventDao = new EventDao(App.getContext());
+                EventDao eventDao = Model.instance().getEventManager().getEventDao();
                 return eventDao.getEventsBySpeakerId(speaker.getId());
             }
 
@@ -347,6 +347,7 @@ public class SpeakerDetailsActivity extends StackKeeperActivity implements View.
     private void openBrowser(String url) {
         try {
             Intent getBrowser = new Intent(Intent.ACTION_VIEW);
+
             getBrowser.setData(Uri.parse("https://stackoverflow.com"));
 
             List<ResolveInfo> resolveInfoList = getPackageManager().queryIntentActivities(getBrowser, 0);
@@ -354,12 +355,12 @@ public class SpeakerDetailsActivity extends StackKeeperActivity implements View.
             if (resolveInfoList.size() > 0) {
                 ResolveInfo info = resolveInfoList.get(0);
                 String browserPackageName = info.activityInfo.packageName;
-                L.e("packageName = " + browserPackageName);
-
                 Intent intent = new Intent(Intent.ACTION_VIEW);
                 intent.setData(Uri.parse(url));
                 intent.setPackage(browserPackageName);
                 startActivity(intent);
+            }else {
+                Toast.makeText(this, getString(R.string.no_apps_can_perform_this_action), Toast.LENGTH_SHORT).show();
             }
         } catch (Exception e) {
             Toast.makeText(this, getString(R.string.no_apps_can_perform_this_action), Toast.LENGTH_SHORT).show();

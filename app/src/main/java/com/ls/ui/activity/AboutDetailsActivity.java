@@ -23,7 +23,7 @@ public class AboutDetailsActivity extends StateActivity {
 
     public static final String EXTRA_DETAILS_ID = "EXTRA_DETAILS_ID";
     public static final String EXTRA_DETAILS_CONTENT = "EXTRA_DETAILS_CONTENT";
-    public static final String EXTRA_DETAILS_TITLE = "EXTRA_DETAILS_TITLE";
+    public static final String EXTRA_DETAILS_TITLE = "EXTRA_SCHEDULE_NAME";
 
     private UpdatesManager.DataUpdatedListener updateListener = new UpdatesManager.DataUpdatedListener() {
         @Override

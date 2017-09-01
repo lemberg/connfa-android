@@ -2,29 +2,41 @@ package com.ls.ui.fragment;
 
 import com.ls.drupalcon.R;
 import com.ls.drupalcon.model.EventGenerator;
+import com.ls.drupalcon.model.Model;
 import com.ls.drupalcon.model.PreferencesManager;
+import com.ls.drupalcon.model.UpdateRequest;
+import com.ls.drupalcon.model.UpdatesManager;
 import com.ls.drupalcon.model.data.Event;
+import com.ls.drupalcon.model.managers.SharedScheduleManager;
+import com.ls.drupalcon.model.managers.ToastManager;
 import com.ls.sponsors.GoldSponsors;
 import com.ls.sponsors.SponsorItem;
 import com.ls.sponsors.SponsorManager;
 import com.ls.ui.activity.EventDetailsActivity;
+import com.ls.ui.adapter.BaseEventDaysPagerAdapter;
 import com.ls.ui.adapter.EventsAdapter;
 import com.ls.ui.adapter.item.EventListItem;
 import com.ls.ui.adapter.item.SimpleTimeRangeCreator;
 import com.ls.ui.adapter.item.TimeRangeItem;
-import com.ls.ui.drawer.DrawerMenu;
 import com.ls.ui.drawer.EventMode;
 import com.ls.ui.receiver.ReceiverManager;
 import com.ls.utils.AnalyticsManager;
 import com.ls.utils.DateUtils;
+import com.ls.utils.L;
+import com.ls.utils.NetworkUtils;
 
 import android.app.Activity;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
@@ -33,7 +45,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
 
-public class EventFragment extends Fragment implements EventsAdapter.Listener {
+public class EventFragment extends Fragment implements EventsAdapter.Listener{
 
     private static final String EXTRAS_ARG_MODE = "EXTRAS_ARG_MODE";
     private static final String EXTRAS_ARG_DAY = "EXTRAS_ARG_DAY";
@@ -60,8 +72,8 @@ public class EventFragment extends Fragment implements EventsAdapter.Listener {
                 }
             });
 
-    public static Fragment newInstance(long day, EventMode mode) {
-        Fragment fragment = new EventFragment();
+    public static EventFragment newInstance(long day, EventMode mode) {
+        EventFragment fragment = new EventFragment();
         Bundle args = new Bundle();
         args.putSerializable(EXTRAS_ARG_MODE, mode);
         args.putLong(EXTRAS_ARG_DAY, day);
@@ -70,18 +82,21 @@ public class EventFragment extends Fragment implements EventsAdapter.Listener {
         return fragment;
     }
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
         return inflater.inflate(R.layout.fr_event, container, false);
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        receiverManager.register(getActivity());
+
         initData();
         initViews();
         new LoadData().execute();
-        receiverManager.register(getActivity());
     }
 
     @Override
@@ -90,11 +105,17 @@ public class EventFragment extends Fragment implements EventsAdapter.Listener {
     }
 
     @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+    }
+
+    @Override
     public void onDestroy() {
         mGenerator.setShouldBreak(true);
         receiverManager.unregister(getActivity());
         super.onDestroy();
     }
+
 
     private void initData() {
         Bundle bundle = getArguments();
@@ -112,11 +133,13 @@ public class EventFragment extends Fragment implements EventsAdapter.Listener {
         if (getView() != null) {
             mProgressBar = (ProgressBar) getView().findViewById(R.id.progressBar);
 
+            mProgressBar.setIndeterminate(true);
             mAdapter = new EventsAdapter(getActivity());
             mAdapter.setOnItemClickListener(this);
 
             mListView = (ListView) getView().findViewById(R.id.listView);
             mListView.setAdapter(mAdapter);
+
         }
     }
 
@@ -160,6 +183,9 @@ public class EventFragment extends Fragment implements EventsAdapter.Listener {
                 break;
             case Favorites:
                 eventList.addAll(mGenerator.generateForFavorites(mDay, new SimpleTimeRangeCreator()));
+                break;
+            case SharedSchedules:
+                eventList.addAll(mGenerator.generateForFriendsFavorites(mDay, new SimpleTimeRangeCreator()));
                 break;
         }
         return eventList;

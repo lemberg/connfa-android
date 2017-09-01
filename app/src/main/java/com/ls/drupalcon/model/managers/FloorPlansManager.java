@@ -52,7 +52,6 @@ public class FloorPlansManager extends SynchronousItemManager<FloorPlan.Holder, 
             return false;
         }
 
-        L.e("Plans loaded:" + plans);
         mFloorPlansDAO.saveOrUpdateDataSafe(plans);
         for (FloorPlan floor : plans) {
             if (floor != null) {

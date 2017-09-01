@@ -15,8 +15,9 @@ import com.ls.drupalcon.model.http.hurl.HURLCookieStore;
 import com.ls.drupalcon.model.http.hurl.RedirectHurlStack;
 import com.ls.drupalcon.model.managers.BofsManager;
 import com.ls.drupalcon.model.managers.EventManager;
-import com.ls.drupalcon.model.managers.FavoriteManager;
 import com.ls.drupalcon.model.managers.FloorPlansManager;
+import com.ls.drupalcon.model.managers.ScheduleManager;
+import com.ls.drupalcon.model.managers.SharedScheduleManager;
 import com.ls.drupalcon.model.managers.InfoManager;
 import com.ls.drupalcon.model.managers.LevelsManager;
 import com.ls.drupalcon.model.managers.LocationManager;
@@ -48,10 +49,9 @@ public class Model {
     public static final int REQUEST_TIMEOUT_MLLIS = 60 * 1000;
 
     private static Model instance;
-    public static Model instance(Context theContext)
-    {
-        if (instance == null)
-        {
+
+    public static Model instance(Context theContext) {
+        if (instance == null) {
             instance = new Model(theContext);
         }
 
@@ -59,10 +59,8 @@ public class Model {
     }
 
 
-    public static Model instance()
-    {
-        if (instance == null)
-        {
+    public static Model instance() {
+        if (instance == null) {
             throw new IllegalStateException("Called method on uninitialized model");
         }
 
@@ -89,9 +87,10 @@ public class Model {
     private InfoManager infoManager;
     private EventManager eventManager;
     private UpdatesManager updatesManager;
-    private FavoriteManager favoriteManager;
     private SettingsManager settingsManager;
     private FloorPlansManager floorPlansManager;
+    private SharedScheduleManager sharedScheduleManager;
+    private ScheduleManager scheduleManager;
 
     public DrupalClient getClient() {
         return client;
@@ -162,16 +161,12 @@ public class Model {
         return eventManager;
     }
 
-    public FavoriteManager getFavoriteManager() {
-        return favoriteManager;
-    }
 
     public SettingsManager getSettingsManager() {
         return settingsManager;
     }
 
-    public FloorPlansManager getFloorPlansManager()
-    {
+    public FloorPlansManager getFloorPlansManager() {
         return floorPlansManager;
     }
 
@@ -179,22 +174,33 @@ public class Model {
         this.settingsManager = settingsManager;
     }
 
+    public SharedScheduleManager getSharedScheduleManager() {
+        return sharedScheduleManager;
+    }
+
+    public ScheduleManager getScheduleManager() {
+        return scheduleManager;
+    }
+
+    public PreferencesManager getPreferencesManager() {
+        return PreferencesManager.getInstance();
+    }
+
     /**
      * NOTE: login is performed in synchroneus way so you must never call it from UI thread.
+     *
      * @param userName
      * @param password
      * @return
      */
-    public ResponseData performLogin(String userName, String password)
-    {
+    public ResponseData performLogin(String userName, String password) {
         return this.loginManager.login(userName, password, queue);
     }
 
-    private Model(Context context)
-    {
+    private Model(Context context) {
         loginManager = new LoginManager();
         queue = createNoCachedQueue(context);
-        client = new DrupalClient(context.getString(R.string.api_value_base_url),queue, BaseRequest.RequestFormat.JSON,loginManager);
+        client = new DrupalClient(context.getString(R.string.api_value_base_url), queue, BaseRequest.RequestFormat.JSON, loginManager);
         client.setRequestTimeout(REQUEST_TIMEOUT_MLLIS);
 
         typesManager = new TypesManager(client);
@@ -208,18 +214,18 @@ public class Model {
         infoManager = new InfoManager(client);
         programManager = new ProgramManager(client);
         eventManager = new EventManager(client);
-        favoriteManager = new FavoriteManager();
-
         updatesManager = new UpdatesManager(client);
         settingsManager = new SettingsManager(client);
         floorPlansManager = new FloorPlansManager(client);
+        sharedScheduleManager = new SharedScheduleManager();
+        scheduleManager = new ScheduleManager(client);
+        PreferencesManager.initializeInstance(context);
     }
 
 
     //Initialization
 
-    public RequestQueue createNewQueue(Context context)
-    {
+    public RequestQueue createNewQueue(Context context) {
         cookieStore = new HURLCookieStore(context);
         CookieManager cmrCookieMan = new CookieManager(cookieStore, CookiePolicy.ACCEPT_ALL);
         CookieHandler.setDefault(cmrCookieMan);
@@ -235,8 +241,7 @@ public class Model {
         }
 
 
-        stack =  new RedirectHurlStack();
-
+        stack = new RedirectHurlStack();
 
 
         return newRequestQueue(context, stack);
@@ -257,13 +262,14 @@ public class Model {
         } catch (PackageManager.NameNotFoundException e) {
         }
 
-        stack =  new RedirectHurlStack();
+        stack = new RedirectHurlStack();
 
         return newNoCachedRequestQueue(stack);
     }
 
     /**
      * volley's default implementation uses internal cache only so we've implemented our, allowing external cache usage.
+     *
      * @param context
      * @param stack
      * @return
@@ -286,7 +292,7 @@ public class Model {
 
         Network network = new BasicNetwork(stack);
 
-        RequestQueue queue = new RequestQueue(new DiskBasedCache(cacheDir, CACHE_DISK_USAGE_BYTES), network,1);
+        RequestQueue queue = new RequestQueue(new DiskBasedCache(cacheDir, CACHE_DISK_USAGE_BYTES), network, 1);
         queue.start();
 
         return queue;
@@ -298,7 +304,7 @@ public class Model {
         }
 
         Network network = new BasicNetwork(stack);
-        RequestQueue queue = new RequestQueue(new NoCache(), network,1);
+        RequestQueue queue = new RequestQueue(new NoCache(), network, 1);
         queue.start();
 
         return queue;

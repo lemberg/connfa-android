@@ -385,4 +385,29 @@ public class Event extends AbstractEntity<Long> implements Comparable<Event>{
             return result;
         }
     }
+
+    @Override
+    public String toString() {
+        return "Event{" +
+                "mId=" + mId +
+                ", mFromTime='" + mFromTime + '\'' +
+                ", mToTime='" + mToTime + '\'' +
+                ", mType=" + mType +
+                ", mName='" + mName + '\'' +
+                ", mSpeakers=" + mSpeakers +
+                ", mTrack=" + mTrack +
+                ", mExperienceLevel=" + mExperienceLevel +
+                ", mPlace='" + mPlace + '\'' +
+                ", mDescription='" + mDescription + '\'' +
+                ", mLink='" + mLink + '\'' +
+                ", mOrder=" + mOrder +
+                ", mDeleted=" + mDeleted +
+                ", mDate=" + mDate +
+                ", mTimeRange=" + mTimeRange +
+                ", fromMillis=" + fromMillis +
+                ", toMillis=" + toMillis +
+                ", mEventClass=" + mEventClass +
+                ", mIsFavorite=" + mIsFavorite +
+                '}';
+    }
 }

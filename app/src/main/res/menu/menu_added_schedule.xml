@@ -1,0 +1,25 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.example.toolbar.MainActivity">
+
+    <item
+        android:id="@+id/actionRefresh"
+        android:icon="@drawable/ic_refresh_black_24px"
+        android:orderInCategory="100"
+        android:title="@string/refresh"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/actionEditSchedule"
+        android:orderInCategory="100"
+        android:title="Edit"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/actionRemoveSchedule"
+        android:orderInCategory="100"
+        android:title="Remove"
+        app:showAsAction="never" />
+
+</menu>

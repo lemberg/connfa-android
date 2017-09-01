@@ -76,7 +76,7 @@ public class DateUtils {
         return isToday;
     }
 
-    public boolean isAfterCurrentFate(long millis) {
+    public boolean isAfterCurrentDate(long millis) {
         return millis > System.currentTimeMillis();
     }
 

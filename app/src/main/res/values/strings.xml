@@ -11,6 +11,7 @@
     <string name="social_events">Social Events</string>
     <string name="search">Search</string>
     <string name="filter">Filter</string>
+    <string name="refresh">Refresh</string>
     <string name="experience_level">Experience level:</string>
     <string name="tracks">Tracks</string>
     <string name="exp_levels">Experience Levels</string>
@@ -35,6 +36,7 @@
     <string name="placeholder_social_events">Currently there are no social events</string>
     <string name="placeholder_speakers">Currently there are no speakers</string>
     <string name="placeholder_schedule">Your schedule is empty. Please add some events</string>
+    <string name="placeholder_shared_schedule">Currently shared schedule is empty</string>
     <string name="placeholder_floor_plan">Currently there are no floor plans</string>
     <string name="placeholder_location">The address is not specified</string>
     <string name="placeholder_social_media">Currently there are no tweets</string>
@@ -56,14 +58,19 @@
     <string name="BoF">\u202F\u202F\u202FBoF\u202F\u202F\u202F</string>
     <string name="Socials">\u202F\u202F\u202FSocial\u202F\u202F\u202F</string>
 
-    <string-array name="months">
-        <item>January</item>
-        <item>February</item>
-        <item>March</item>
-        <item>April</item>
-        <item>May</item>
-        <item>June</item>
-        <item>July</item>
-        <item>August</item>
-    </string-array>
+    <string name="share_your_schedule_with_friends">Share your schedule with friends</string>
+    <string name="tap_the_three_dots">Tap on the three dots and choose \'Share My Schedule\' option\n</string>
+    <string name="warning_text">\nIt’s a beta version. \nWe’re looking forward to getting your feedback on this feature. Thanks in advance!</string>
+    <string name="add_a_schedule">Add a schedule</string>
+    <string name="add">Add</string>
+    <string name="undo">Undo</string>
+    <string name="schedule">Schedule\u0020</string>
+
+    <string name="title_activity_test">TestActivity</string>
+    <string name="schedule_name">Schedule name</string>
+    <string name="you_may_get_this_code_from_a_person_who_has_already_shared_his_her_own_schedule_with_you">You may get this code from a person who has already shared his/her own schedule with you.</string>
+    <string name="this_schedule_already_exist">This schedule already exist</string>
+    <string name="this_schedule_name_already_exist">This schedule name already exist</string>
+    <string name="url_is_corrupted">Your share url is corrupted</string>
+    <string name="share_my_schedule">Share My Schedule\u202F</string>
 </resources>

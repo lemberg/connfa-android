@@ -70,4 +70,14 @@ public class ResponseData {
         target.parsedErrorResponse = parsedErrorResponse;
     }
 
+	@Override
+	public String toString() {
+		return "ResponseData{" +
+				"data=" + data +
+				", headers=" + headers +
+				", statusCode=" + statusCode +
+				", error=" + error +
+				", parsedErrorResponse=" + parsedErrorResponse +
+				'}';
+	}
 }

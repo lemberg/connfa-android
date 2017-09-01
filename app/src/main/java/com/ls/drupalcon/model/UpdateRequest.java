@@ -28,8 +28,7 @@ public enum UpdateRequest {
     @SerializedName("11")
     INFO(11),
     @SerializedName("12")
-    SCHEDULE(12);
-
+    SCHEDULES(12);
     private int requestId;
 
     UpdateRequest(int id) {

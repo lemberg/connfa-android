@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-  <!--==============================================================-->
-  <!--CREATE TABLES-->
-  <!--==============================================================-->
+    <!--==============================================================-->
+    <!--CREATE TABLES-->
+    <!--==============================================================-->
 
   <string name="create_table_type" translatable="false">
         CREATE TABLE table_type (
@@ -147,9 +147,24 @@
         )
     </string>
 
-  <!--==============================================================-->
-  <!--INSERT-->
-  <!--==============================================================-->
+    <string name="create_table_friends_favorite_events" translatable="false">
+        CREATE TABLE table_friends_favorite_events (
+        _id                 	 INTEGER,
+        _event_id	             INTEGER
+        )
+    </string>
+
+    <string name="create_table_shared_schedules" translatable="false">
+        CREATE TABLE table_shared_schedules (
+        _id				         INTEGER,
+        _schedule_name_id		 STRING
+        )
+    </string>
+
+
+    <!--==============================================================-->
+    <!--INSERT-->
+    <!--==============================================================-->
 
   <string name="insert_event_speaker" translatable="false">
         INSERT INTO table_event_and_speaker (_event_id, _speaker_id)
@@ -161,9 +176,14 @@
         VALUES (?)
     </string>
 
-  <!--==============================================================-->
-  <!--UPDATE -->
-  <!--==============================================================-->
+      <string name="insert_friends_favorite_event" translatable="false">
+        INSERT INTO table_friends_favorite_events (_event_id, _friend_id)
+        VALUES (?,?)
+    </string>
+
+    <!--==============================================================-->
+    <!--UPDATE -->
+    <!--==============================================================-->
 
   <string name="update_event_favorite" translatable="false">
         UPDATE table_event
@@ -171,9 +191,9 @@
         WHERE _id=?
     </string>
 
-  <!--==============================================================-->
-  <!--DELETE  -->
-  <!--==============================================================-->
+    <!--==============================================================-->
+    <!--DELETE  -->
+    <!--==============================================================-->
 
   <string name="delete_event_favorite" translatable="false">
         DELETE FROM table_favorite_events
@@ -199,9 +219,14 @@
         WHERE _event_id =? AND _speaker_id =?
     </string>
 
-  <!--==============================================================-->
-  <!--SELECT-->
-  <!--==============================================================-->
+      <string name="delete_friends_event_favorite" translatable="false">
+        DELETE FROM table_friends_favorite_events
+        WHERE _event_id=?
+    </string>
+
+    <!--==============================================================-->
+    <!--SELECT-->
+    <!--==============================================================-->
 
   <string name="select_speaker_events" translatable="false">
         SELECT _event_id
@@ -334,7 +359,7 @@
         SELECT *
         FROM table_event
         WHERE _id IN (%s)
-        ORDER BY _order
+        ORDER BY _date
     </string>
 
   <string name="select_events_by_ids_and_date" translatable="false">
@@ -473,6 +498,18 @@
         SELECT *
         FROM table_speaker
         ORDER BY first_name|| \' \' ||last_name COLLATE NOCASE, _order
+    </string>
+
+      <string name="select_friends_favorite_events" translatable="false">
+        SELECT *
+        FROM table_friends_favorite_events
+        ORDER BY _event_id
+    </string>
+
+      <string name="select_favorite_day" translatable="false">
+        SELECT _date
+        FROM table_event
+        WHERE _id=?
     </string>
 
 </resources>

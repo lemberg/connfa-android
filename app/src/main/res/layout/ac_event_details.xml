@@ -7,10 +7,26 @@
     android:layout_height="match_parent"
     android:background="@color/white">
 
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:padding="@dimen/padding_small"
+        android:layout_centerInParent="true"
+        android:layout_gravity="center"
+        android:elevation="2dp"
+        android:background="@drawable/progressbar_bg"
+        style="@style/Widget.AppCompat.ProgressBar"
+        android:theme="@style/CircularProgress"
+        />
+
     <com.ls.ui.view.NotifyingScrollView
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
         android:visibility="visible">
 
         <RelativeLayout
@@ -39,7 +55,7 @@
                     android:textColor="@color/white"
                     android:textSize="@dimen/text_size_16"
                     android:textStyle="bold"
-                    app:custom_font="@string/montserrat_regular_font"
+                    app:custom_font="@string/custom_regular_font"
                     tools:text="@string/lorem_ipsum" />
 
                 <com.ls.ui.view.FontTextView
@@ -75,7 +91,7 @@
                         android:layout_marginBottom="4dp"
                         android:textColor="@color/grey_500"
                         android:textSize="@dimen/text_size_15"
-                        app:custom_font="@string/custom_regular_font"
+                        app:custom_font="@string/regular_font"
                         tools:text="@string/lorem_ipsum" />
 
                     <LinearLayout
@@ -90,9 +106,9 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="bottom"
                             android:layout_marginRight="8dp"
-                            app:custom_font="@string/regular_font"
                             android:textColor="@color/grey_500"
                             android:textSize="@dimen/text_size_15"
+                            app:custom_font="@string/regular_font"
                             tools:text="@string/lorem_ipsum" />
 
                         <ImageView
@@ -105,27 +121,86 @@
 
                 </LinearLayout>
 
+                <View
+                    android:id="@+id/topSpeakersDivider"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/white_200" />
+
+                <com.ls.ui.view.FontTextView
+                    android:id="@+id/holderHeader"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:paddingBottom="@dimen/padding_small"
+                    android:paddingLeft="@dimen/padding"
+                    android:paddingRight="@dimen/padding"
+                    android:paddingTop="@dimen/padding_small"
+                    android:text="Speakers"
+                    android:textColor="@color/item_selection"
+                    app:custom_font="@string/medium_font"
+                    />
+
                 <LinearLayout
-                        android:id="@+id/holderSpeakers"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"/>
+                    android:id="@+id/holderSpeakers"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
 
                 <View
-                        android:id="@+id/botDivider"
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginLeft="72dp"
-                        android:background="@color/white_200"/>
+                    android:id="@+id/botSpeakersDivider"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/white_200" />
+
+                <LinearLayout
+                    android:id="@+id/whoIsGoingButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:orientation="horizontal"
+                    android:paddingLeft="@dimen/padding"
+                    android:paddingRight="@dimen/padding"
+                    android:gravity="center_vertical"
+                    >
+
+                    <com.ls.ui.view.FontTextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Who is going?"
+                        android:textColor="@color/item_selection"
+                        app:custom_font="@string/medium_font"/>
+
+                    <ImageView
+                        android:id="@+id/expandIndicator"
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:src="@drawable/ic_group_arrow_down" />
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/friendsHolder"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp" />
+
+                <View
+                    android:id="@+id/botFriendsDivider"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/white_200" />
 
                 <LinearLayout
                     android:id="@+id/imgEmptyView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginTop="60dp"
                     android:orientation="vertical"
-                    android:visibility="gone"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                    android:visibility="gone">
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -134,15 +209,15 @@
                         android:src="@drawable/ic_no_details" />
 
                     <com.ls.ui.view.FontTextView
-                        android:layout_gravity="center"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center"
                         android:layout_marginTop="5dp"
-                        app:custom_font="@string/regular_font"
                         android:clickable="false"
+                        android:text="No Details"
                         android:textColor="#bbbbbb"
                         android:textSize="@dimen/text_size_medium"
-                        android:text="No Details" />
+                        app:custom_font="@string/regular_font" />
 
                 </LinearLayout>
 
@@ -150,12 +225,12 @@
                     android:id="@+id/webView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:visibility="gone"
-                    tools:visibility="visible"
-                    android:layout_marginTop="20dp"
                     android:layout_marginBottom="16dp"
                     android:layout_marginLeft="16dp"
-                    android:layout_marginRight="16dp"/>
+                    android:layout_marginRight="16dp"
+                    android:layout_marginTop="20dp"
+                    android:visibility="gone"
+                    tools:visibility="visible" />
 
             </LinearLayout>
 
@@ -197,7 +272,7 @@
         android:id="@+id/viewShadow"
         android:layout_width="match_parent"
         android:layout_height="56dp"
-        android:background="@drawable/shape_shadow"/>
+        android:background="@drawable/shape_shadow" />
 
     <View
         android:id="@+id/viewToolbar"
@@ -224,14 +299,6 @@
             android:textStyle="bold"
             tools:text="DrupalCon" />
     </android.support.v7.widget.Toolbar>
-
-    <ProgressBar
-        android:id="@+id/progressBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:layout_gravity="center" />
-
 </RelativeLayout>
 
 

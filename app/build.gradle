@@ -69,6 +69,7 @@ dependencies {
     compile "com.android.support:appcompat-v7:$project.ANDROID_SUPPORT_LIBRARY_VERSION"
     compile "com.android.support:appcompat-v7:$project.ANDROID_SUPPORT_LIBRARY_VERSION"
     compile "com.android.support:support-v4:$project.ANDROID_SUPPORT_LIBRARY_VERSION"
+    compile "com.android.support:design:$project.ANDROID_SUPPORT_LIBRARY_VERSION"
     compile 'com.google.android.gms:play-services-analytics:9.0.0'
     compile 'com.google.android.gms:play-services-maps:9.0.0'
     compile 'com.google.code.gson:gson:2.2.4'
@@ -78,4 +79,5 @@ dependencies {
         transitive = true;
     }
     compile 'com.android.support:multidex:1.0.1'
+
 }

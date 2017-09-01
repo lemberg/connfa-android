@@ -26,7 +26,7 @@ public class DrawerManager {
 		this.fragmentHolderId = theMainFragmentId;
 	}
 
-	public void setFragment(@NotNull EventMode mode) {
+	public void setFragment(@NotNull EventMode mode, long code) {
 		Fragment fragment;
 		String fragmentTag = null;
 
@@ -47,7 +47,7 @@ public class DrawerManager {
 				break;
 
 			case Favorites:
-				fragment = EventHolderFragment.newInstance(mode);
+				fragment = EventHolderFragment.newInstance(mode, code);
 				fragmentTag = EventHolderFragment.TAG;
 				break;
 

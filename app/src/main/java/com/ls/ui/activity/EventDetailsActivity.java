@@ -9,7 +9,7 @@ import com.ls.drupalcon.model.data.EventDetailsEvent;
 import com.ls.drupalcon.model.data.Level;
 import com.ls.drupalcon.model.data.Speaker;
 import com.ls.drupalcon.model.managers.EventManager;
-import com.ls.drupalcon.model.managers.FavoriteManager;
+import com.ls.drupalcon.model.managers.SharedScheduleManager;
 import com.ls.drupalcon.model.managers.SpeakerManager;
 import com.ls.sponsors.GoldSponsors;
 import com.ls.sponsors.SponsorItem;
@@ -19,7 +19,6 @@ import com.ls.ui.view.CircleImageView;
 import com.ls.ui.view.NotifyingScrollView;
 import com.ls.utils.AnalyticsManager;
 import com.ls.utils.DateUtils;
-import com.ls.utils.L;
 import com.ls.utils.ScheduleManager;
 import com.ls.utils.WebviewUtils;
 
@@ -27,10 +26,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.PersistableBundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.ShareCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
@@ -50,8 +46,6 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 public class EventDetailsActivity extends StackKeeperActivity {
@@ -59,6 +53,7 @@ public class EventDetailsActivity extends StackKeeperActivity {
     public static final String EXTRA_EVENT_ID = "EXTRA_EVENT_ID";
     public static final String EXTRA_DAY = "EXTRA_DAY";
     public static final String EXTRA_HEADER = "EXTRA_HEADER";
+    private static boolean showFriendsContainer = true;
 
     private TextView mToolbarTitle;
     private View mViewToolbar;
@@ -107,6 +102,7 @@ public class EventDetailsActivity extends StackKeeperActivity {
         initToolbar();
         initViews();
         setHeaderView();
+
     }
 
     @Override
@@ -208,6 +204,7 @@ public class EventDetailsActivity extends StackKeeperActivity {
         fillSpeakers(mEvent);
         fillDescription(mEvent);
         updatePlaceholderVisibility(mEvent);
+        fillFriends();
     }
 
     private void fillToolbar(@NonNull EventDetailsEvent event) {
@@ -305,7 +302,6 @@ public class EventDetailsActivity extends StackKeeperActivity {
 
     private void fillFavoriteState(@NonNull EventDetailsEvent event) {
         mIsFavorite = event.isFavorite();
-
         final CheckBox checkBoxFavorite = (CheckBox) findViewById(R.id.checkBoxFavorite);
         checkBoxFavorite.setChecked(mIsFavorite);
 
@@ -320,6 +316,46 @@ public class EventDetailsActivity extends StackKeeperActivity {
         });
     }
 
+    private void fillFriends() {
+        SharedScheduleManager sharedScheduleManager = Model.instance().getSharedScheduleManager();
+        ArrayList<String> data = sharedScheduleManager.getSharedSchedulesNamesById(mEventId);
+
+        final LayoutInflater inflater = LayoutInflater.from(EventDetailsActivity.this);
+        final LinearLayout holder = (LinearLayout) findViewById(R.id.friendsHolder);
+        holder.removeAllViewsInLayout();
+
+        if (!data.isEmpty()) {
+            for (String friend : data) {
+                View speakerView = inflater.inflate(R.layout.item_friend, null);
+                TextView txtName = (TextView) speakerView.findViewById(R.id.idFriendName);
+                txtName.setText(friend);
+                holder.addView(speakerView);
+            }
+            final ImageView indicator = (ImageView) findViewById(R.id.expandIndicator);
+            findViewById(R.id.botFriendsDivider).setVisibility(View.VISIBLE);
+            findViewById(R.id.whoIsGoingButton).setVisibility(View.VISIBLE);
+            findViewById(R.id.whoIsGoingButton).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (holder.isShown()) {
+                        holder.setVisibility(View.GONE);
+                        indicator.setImageResource(R.drawable.ic_group_arrow_down);
+                    } else {
+                        holder.setVisibility(View.VISIBLE);
+                        indicator.setImageResource(R.drawable.ic_group_arrow_up);
+                    }
+
+                }
+            });
+
+        } else {
+            findViewById(R.id.botFriendsDivider).setVisibility(View.GONE);
+            findViewById(R.id.whoIsGoingButton).setVisibility(View.GONE);
+        }
+
+
+    }
+
     private void fillSpeakers(@NonNull EventDetailsEvent event) {
         List<Speaker> speakerList = new ArrayList<>();
         speakerList.addAll(mSpeakerList);
@@ -330,13 +366,15 @@ public class EventDetailsActivity extends StackKeeperActivity {
 
         if (!speakerList.isEmpty()) {
             for (Speaker speaker : speakerList) {
-                View speakerView = inflater.inflate(R.layout.item_speaker_no_letter, null);
+                View speakerView = inflater.inflate(R.layout.item_speaker_no_letter, null, false);
                 fillSpeakerView(speaker, speakerView);
                 holderSpeakers.addView(speakerView);
             }
-            findViewById(R.id.botDivider).setVisibility(View.VISIBLE);
+            findViewById(R.id.holderHeader).setVisibility(View.VISIBLE);
+            findViewById(R.id.botSpeakersDivider).setVisibility(View.VISIBLE);
         } else {
-            findViewById(R.id.botDivider).setVisibility(View.GONE);
+            findViewById(R.id.holderHeader).setVisibility(View.GONE);
+            findViewById(R.id.botSpeakersDivider).setVisibility(View.GONE);
         }
     }
 
@@ -367,13 +405,10 @@ public class EventDetailsActivity extends StackKeeperActivity {
     }
 
     private void setFavorite() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                FavoriteManager manager = new FavoriteManager();
-                manager.setFavoriteEvent(mEventId, mIsFavorite);
-            }
-        }).start();
+        final SharedScheduleManager sharedScheduleManager = Model.instance().getSharedScheduleManager();
+
+        Model.instance().getSharedScheduleManager().setFavoriteEvent(mEventId, mIsFavorite);
+        sharedScheduleManager.postAllSchedules();
         setToNotificationQueue();
 
         AnalyticsManager.detailsScreenTracker(this, R.string.event_category, mEvent.getEventName());
@@ -450,4 +485,5 @@ public class EventDetailsActivity extends StackKeeperActivity {
             mViewToolbar.setAlpha(headerRatio);
         }
     };
+
 }
