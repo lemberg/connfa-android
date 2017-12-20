@@ -13,6 +13,7 @@ These are all the properties and API keys you'll need to set up Connfa correctly
  * A Google Maps API key (you can obtain it [here](https://developers.google.com/maps/documentation/android-api/signup))
  * A Fabric API key (you'll obtain it by adding the app to Fabric through the [Android Studio plugin](https://fabric.io/downloads/android-studio))
  * A Twitter API key and secret, which you can get by adding the Twitter kit to Fabric (you can add it through the [Android Studio plugin](https://fabric.io/downloads/android-studio))
+ * A OneSignal API key (you can get it [here](https://onesignal.com/))
 
 ## How to set the properties up
 

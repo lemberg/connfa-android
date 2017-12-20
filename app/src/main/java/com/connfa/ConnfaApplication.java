@@ -10,6 +10,7 @@ import com.crashlytics.android.Crashlytics;
 import com.ls.drupal.DrupalClient;
 import com.ls.http.base.BaseRequest;
 import com.ls.util.image.DrupalImageView;
+import com.onesignal.OneSignal;
 import com.twitter.sdk.android.core.TwitterAuthConfig;
 import com.twitter.sdk.android.core.TwitterCore;
 import com.twitter.sdk.android.tweetui.TweetUi;
@@ -24,6 +25,7 @@ public class ConnfaApplication extends Application {
         super.onCreate();
 
         setupTracking();
+        setupPushNotifications();
 
         LAPIDBRegister.getInstance().register(this, new AppDatabaseInfo(this));
 
@@ -57,5 +59,12 @@ public class ConnfaApplication extends Application {
                 getString(R.string.api_value_twitter_secret)
         );
         Fabric.with(this, new Crashlytics(), new TwitterCore(authConfig), new TweetUi());
+    }
+
+    private void setupPushNotifications() {
+        OneSignal.startInit(this)
+                .inFocusDisplaying(OneSignal.OSInFocusDisplayOption.Notification)
+                .unsubscribeWhenNotificationsAreDisabled(true)
+                .init();
     }
 }
