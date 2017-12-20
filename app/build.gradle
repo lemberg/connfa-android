@@ -10,12 +10,17 @@ buildscript {
     }
 }
 
+plugins {
+    id 'com.onesignal.androidsdk.onesignal-gradle-plugin' version '0.8.0'
+}
+apply plugin: 'com.onesignal.androidsdk.onesignal-gradle-plugin'
 apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
 apply plugin: 'com.novoda.build-properties'
 
 repositories {
     maven { url 'https://maven.fabric.io/public' }
+    maven { url 'https://maven.google.com' }
 }
 
 buildProperties {
@@ -51,7 +56,13 @@ android {
         manifestPlaceholders += [
                 fabricApiKey: buildProperties.secrets['fabricApiKey']
                         .or(buildProperties.env['FABRIC_API_KEY'])
-                        .string
+                        .string,
+
+                onesignal_app_id: buildProperties.secrets['oneSignalKey']
+                        .or("")
+                        .string,
+
+                onesignal_google_project_number: "REMOTE"
         ]
 
         resValueString 'api_value_twitter_api_key', buildProperties.secrets['twitterApiKey']
@@ -119,6 +130,7 @@ dependencies {
         transitive = true
     }
     compile libraries.app.tweetUi
+    compile libraries.app.oneSignal
 }
 
 apply plugin: 'com.google.gms.google-services'
